@@ -51,6 +51,7 @@ from schemas.api.crm.ticket import (
     TicketEditRequest,
     TicketGetRequest,
     TicketSetRatingRequest,
+    TicketSetStatusRequest,
     TicketStatusEnum,
 )
 from schemas.api.files.file import FileGetRequest
@@ -2729,6 +2730,93 @@ class ExternalChatCrmChannelIntegration(ClientBase):
         )
 
     @classmethod
+    async def _set_ticket_status_best_effort(
+        cls,
+        *,
+        connected_integration_id: str,
+        ticket_id: Optional[int],
+        status: TicketStatusEnum,
+        context: str,
+        chat_id: Optional[str] = None,
+        publish_event: bool = False,
+    ) -> Optional[Dict[str, Any]]:
+        safe_ticket_id = _parse_int(ticket_id, None)
+        if not safe_ticket_id:
+            return None
+
+        cached_state = await cls._get_cached_ticket_state(
+            connected_integration_id,
+            int(safe_ticket_id),
+        )
+        status_value = _enum_value(status).strip()
+        if cached_state:
+            if cached_state.get("ticket_closed") and status_value != TicketStatusEnum.Closed.value:
+                return cached_state
+            if _enum_value(cached_state.get("ticket_status")).strip() == status_value:
+                return cached_state
+
+        try:
+            async with RegosAPI(connected_integration_id=connected_integration_id) as api:
+                response = await api.crm.ticket.set_status(
+                    TicketSetStatusRequest(id=int(safe_ticket_id), status=status)
+                )
+            if not response.ok:
+                logger.warning(
+                    "Ticket/SetStatus rejected: ci=%s ticket_id=%s status=%s context=%s payload=%s",
+                    connected_integration_id,
+                    safe_ticket_id,
+                    status_value,
+                    context,
+                    response.result,
+                )
+                return cached_state
+        except Exception as error:
+            logger.warning(
+                "Ticket/SetStatus failed: ci=%s ticket_id=%s status=%s context=%s error=%s",
+                connected_integration_id,
+                safe_ticket_id,
+                status_value,
+                context,
+                error,
+            )
+            return cached_state
+
+        ticket_closed = status_value == TicketStatusEnum.Closed.value
+        state = await cls._cache_ticket_state(
+            connected_integration_id,
+            int(safe_ticket_id),
+            {
+                "ticket_status": status_value,
+                "ticket_closed": ticket_closed,
+                "can_write": not ticket_closed,
+            },
+        )
+
+        safe_chat_id = str(chat_id or "").strip()
+        if safe_chat_id:
+            await cls._set_ticket_chat_index(
+                connected_integration_id,
+                int(safe_ticket_id),
+                safe_chat_id,
+            )
+        if publish_event and safe_chat_id:
+            revision = await cls._bump_chat_revision(connected_integration_id, safe_chat_id)
+            await cls._publish_chat_event(
+                connected_integration_id,
+                chat_id=safe_chat_id,
+                event_type="ticket_state_changed",
+                source_action=context,
+                chat_revision=int(revision or 0),
+                ticket_id=int(safe_ticket_id),
+                force_full=True,
+                payload={
+                    "ticket_status": status_value,
+                    "ticket_closed": ticket_closed,
+                },
+            )
+        return state
+
+    @classmethod
     async def _create_client(
         cls,
         api: RegosAPI,
@@ -4934,6 +5022,14 @@ class ExternalChatCrmChannelIntegration(ClientBase):
                         connected_integration_id,
                         context,
                     )
+                    await cls._set_ticket_status_best_effort(
+                        connected_integration_id=connected_integration_id,
+                        ticket_id=int(context.ticket_id),
+                        status=TicketStatusEnum.WaitingClient,
+                        context="external_chat_staff_message_added",
+                        chat_id=chat_id,
+                        publish_event=True,
+                    )
 
         revision = await cls._bump_chat_revision(connected_integration_id, chat_id)
         await cls._publish_chat_event(
@@ -5494,10 +5590,22 @@ class ExternalChatCrmChannelIntegration(ClientBase):
                     ticket_field_adds=write_params.ticket_field_adds,
                     ticket_field_edits=write_params.ticket_field_edits,
                 )
+                ticket_state = await self._set_ticket_status_best_effort(
+                    connected_integration_id=ci,
+                    ticket_id=int(context.ticket_id),
+                    status=TicketStatusEnum.WaitingStaff,
+                    context="external_chat_client_message_added",
+                    chat_id=str(context.chat_id),
+                    publish_event=True,
+                )
                 await self._delete_pending_params(ci, visitor_id)
                 await self._mark_read(ci, context)
                 chat_revision = await self._get_chat_revision(ci, str(context.chat_id))
-                ticket_view = await self._compose_context_ticket_view(ci, runtime, context)
+                ticket_view = (
+                    self._compose_ticket_view_state(runtime, ticket_state)
+                    if ticket_state
+                    else await self._compose_context_ticket_view(ci, runtime, context)
+                )
                 return await self._with_visitor_revision(ci, visitor_id, context, {
                     "status": "ok",
                     "visitor_id": visitor_id,
@@ -5556,10 +5664,22 @@ class ExternalChatCrmChannelIntegration(ClientBase):
                     ticket_field_adds=write_params.ticket_field_adds,
                     ticket_field_edits=write_params.ticket_field_edits,
                 )
+                ticket_state = await self._set_ticket_status_best_effort(
+                    connected_integration_id=ci,
+                    ticket_id=int(context.ticket_id),
+                    status=TicketStatusEnum.WaitingStaff,
+                    context="external_chat_client_file_added",
+                    chat_id=str(context.chat_id),
+                    publish_event=True,
+                )
                 await self._delete_pending_params(ci, visitor_id)
                 await self._mark_read(ci, context)
                 chat_revision = await self._get_chat_revision(ci, str(context.chat_id))
-                ticket_view = await self._compose_context_ticket_view(ci, runtime, context)
+                ticket_view = (
+                    self._compose_ticket_view_state(runtime, ticket_state)
+                    if ticket_state
+                    else await self._compose_context_ticket_view(ci, runtime, context)
+                )
                 return await self._with_visitor_revision(ci, visitor_id, context, {
                     "status": "ok",
                     "visitor_id": visitor_id,
