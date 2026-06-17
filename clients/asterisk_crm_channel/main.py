@@ -437,7 +437,7 @@ def _translate_direction(direction: str, language: str) -> str:
 
 
 def _safe_subject(template: str, event: CallEvent, language: str = "ru") -> str:
-    subject_template = str(template or "").strip() or "Call {direction} {from_phone}"
+    subject_template = str(template or "").strip() or "Call {direction} {client_phone}"
     translated_direction = _translate_direction(event.direction, language)
     try:
         return subject_template.format(
@@ -1394,7 +1394,7 @@ return 0
             default_responsible_user_id=default_responsible_user_id,
             subject_template=(
                 str(settings_map.get("asterisk_lead_subject_template") or "").strip()
-                or "Call {direction} {from_phone}"
+                or "Call {direction} {client_phone}"
             ),
             allowed_did_set=AsteriskCrmChannelIntegration._parse_allowed_did_set(
                 settings_map.get("asterisk_allowed_did_list"),
@@ -1568,6 +1568,75 @@ return 0
         return True
 
     @classmethod
+    def _autodetected_client_phone_is_usable(
+        cls,
+        runtime: RuntimeConfig,
+        candidate: Any,
+    ) -> bool:
+        normalized = _normalize_phone(candidate)
+        if not normalized:
+            return False
+        if _is_internal_extension(normalized):
+            return False
+        if cls._is_allowed_did_phone(runtime, normalized):
+            return False
+        return True
+
+    @classmethod
+    def _should_ignore_external_congestion_noise(
+        cls,
+        runtime: RuntimeConfig,
+        payload: Dict[str, Any],
+        *,
+        direction: str,
+        client_candidate: Optional[str],
+    ) -> bool:
+        if direction != "inbound":
+            return False
+
+        context_values = [
+            cls._payload_pick(payload, "context"),
+            cls._payload_pick(payload, "destinationcontext", "destination_context"),
+            cls._payload_pick(payload, "dialcontext", "dcontext", "dstcontext"),
+            cls._payload_pick(payload, "destination", "dst", "exten", "lastdata"),
+        ]
+        if not any(
+            "from-sip-external" in str(value or "").strip().lower()
+            for value in context_values
+        ):
+            return False
+
+        app = str(
+            cls._payload_pick(
+                payload,
+                "app",
+                "application",
+                "lastapplication",
+                "last_application",
+            )
+            or ""
+        ).strip().lower()
+        if app != "congestion":
+            return False
+
+        did = cls._payload_pick(
+            payload,
+            "did",
+            "dnid",
+            "did_number",
+            "didnum",
+            "did_num",
+            "did_phone",
+        )
+        if did:
+            if runtime.allowed_did_set and cls._is_allowed_did_phone(runtime, did):
+                return False
+            if not runtime.allowed_did_set and not _is_internal_extension(did):
+                return False
+
+        return _is_internal_extension(client_candidate)
+
+    @classmethod
     def _cdr_disposition(cls, payload: Dict[str, Any]) -> str:
         raw = str(cls._payload_pick(payload or {}, "disposition") or "").strip().lower()
         return re.sub(r"[\s_-]+", "", raw)
@@ -1671,8 +1740,20 @@ return 0
         client_phone = _normalize_phone(
             cls._payload_pick(source, "client_phone", "customer_phone")
         )
+        fallback_client_phone = None
         if not client_phone:
-            client_phone = from_phone if direction == "inbound" else to_phone
+            fallback_client_phone = from_phone if direction == "inbound" else to_phone
+            if cls._autodetected_client_phone_is_usable(runtime, fallback_client_phone):
+                client_phone = fallback_client_phone
+
+        if cls._should_ignore_external_congestion_noise(
+            runtime,
+            source,
+            direction=direction,
+            client_candidate=client_phone or fallback_client_phone or from_phone,
+        ):
+            return None
+
         if (
             not client_phone
             and status not in AsteriskCrmChannelConfig.CLIENT_PHONE_OPTIONAL_STATUSES
