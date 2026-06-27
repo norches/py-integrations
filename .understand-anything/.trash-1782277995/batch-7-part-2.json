@@ -1,0 +1,316 @@
+{
+  "nodes": [
+    {
+      "id": "file:core/api/chat/chat.py",
+      "type": "file",
+      "name": "chat.py",
+      "filePath": "core/api/chat/chat.py",
+      "summary": "REGOS API client service for chat resources, exposing methods to fetch and manipulate chat entities.",
+      "tags": ["service", "api-client", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/chat/chat.py:ChatService",
+      "type": "class",
+      "name": "ChatService",
+      "filePath": "core/api/chat/chat.py",
+      "lineRange": [21, 70],
+      "summary": "Service wrapper around the REGOS chat API endpoints.",
+      "tags": ["service", "api-client", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/chat/chat_message.py",
+      "type": "file",
+      "name": "chat_message.py",
+      "filePath": "core/api/chat/chat_message.py",
+      "summary": "REGOS API client service for chat messages, providing methods to add, fetch, and update chat message records.",
+      "tags": ["service", "api-client", "messaging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/chat/chat_message.py:ChatMessageService",
+      "type": "class",
+      "name": "ChatMessageService",
+      "filePath": "core/api/chat/chat_message.py",
+      "lineRange": [31, 109],
+      "summary": "Service wrapper around the REGOS chat-message API endpoints.",
+      "tags": ["service", "api-client", "messaging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/api/chat/quick_reply.py",
+      "type": "file",
+      "name": "quick_reply.py",
+      "filePath": "core/api/chat/quick_reply.py",
+      "summary": "REGOS API client service for chat quick-reply templates.",
+      "tags": ["service", "api-client", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/chat/quick_reply.py:QuickReplyService",
+      "type": "class",
+      "name": "QuickReplyService",
+      "filePath": "core/api/chat/quick_reply.py",
+      "lineRange": [13, 28],
+      "summary": "Service wrapper around the REGOS quick-reply API endpoints.",
+      "tags": ["service", "api-client", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/crm/channel.py",
+      "type": "file",
+      "name": "channel.py",
+      "filePath": "core/api/crm/channel.py",
+      "summary": "REGOS API client service for CRM channels.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/crm/channel.py:ChannelService",
+      "type": "class",
+      "name": "ChannelService",
+      "filePath": "core/api/crm/channel.py",
+      "lineRange": [19, 58],
+      "summary": "Service wrapper around the REGOS CRM channel API endpoints.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/crm/client.py",
+      "type": "file",
+      "name": "client.py",
+      "filePath": "core/api/crm/client.py",
+      "summary": "REGOS API client service for CRM clients, exposing CRUD and lookup operations on client records.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/crm/client.py:ClientService",
+      "type": "class",
+      "name": "ClientService",
+      "filePath": "core/api/crm/client.py",
+      "lineRange": [23, 162],
+      "summary": "Service wrapper around the REGOS CRM client API endpoints with create, update, and search methods.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/api/crm/deal.py",
+      "type": "file",
+      "name": "deal.py",
+      "filePath": "core/api/crm/deal.py",
+      "summary": "REGOS API client service for CRM deals.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/crm/deal.py:DealService",
+      "type": "class",
+      "name": "DealService",
+      "filePath": "core/api/crm/deal.py",
+      "lineRange": [28, 131],
+      "summary": "Service wrapper around the REGOS CRM deal API endpoints.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/api/crm/lead.py",
+      "type": "file",
+      "name": "lead.py",
+      "filePath": "core/api/crm/lead.py",
+      "summary": "REGOS API client service for CRM leads with create, update, and conversion operations.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/crm/lead.py:LeadService",
+      "type": "class",
+      "name": "LeadService",
+      "filePath": "core/api/crm/lead.py",
+      "lineRange": [32, 158],
+      "summary": "Service wrapper around the REGOS CRM lead API endpoints.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/api/crm/project_task.py",
+      "type": "file",
+      "name": "project_task.py",
+      "filePath": "core/api/crm/project_task.py",
+      "summary": "REGOS API client service for CRM project tasks.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/crm/project_task.py:ProjectTaskService",
+      "type": "class",
+      "name": "ProjectTaskService",
+      "filePath": "core/api/crm/project_task.py",
+      "lineRange": [11, 22],
+      "summary": "Service wrapper around the REGOS CRM project-task API endpoints.",
+      "tags": ["service", "api-client", "crm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/crm/ticket.py",
+      "type": "file",
+      "name": "ticket.py",
+      "filePath": "core/api/crm/ticket.py",
+      "summary": "REGOS API client service for CRM tickets, central to all channel integrations for opening and updating support tickets.",
+      "tags": ["service", "api-client", "crm", "ticket"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/crm/ticket.py:TicketService",
+      "type": "class",
+      "name": "TicketService",
+      "filePath": "core/api/crm/ticket.py",
+      "lineRange": [25, 76],
+      "summary": "Service wrapper around the REGOS CRM ticket API endpoints.",
+      "tags": ["service", "api-client", "crm", "ticket"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/api/files/file.py",
+      "type": "file",
+      "name": "file.py",
+      "filePath": "core/api/files/file.py",
+      "summary": "REGOS API client service for file upload and retrieval.",
+      "tags": ["service", "api-client", "files"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/references/field.py",
+      "type": "file",
+      "name": "field.py",
+      "filePath": "core/api/references/field.py",
+      "summary": "REGOS API client service for reference field definitions.",
+      "tags": ["service", "api-client", "references"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/references/field.py:FieldService",
+      "type": "class",
+      "name": "FieldService",
+      "filePath": "core/api/references/field.py",
+      "lineRange": [11, 22],
+      "summary": "Service wrapper around the REGOS reference-field API endpoints.",
+      "tags": ["service", "api-client", "references"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:core/api/references/retail_customer.py",
+      "type": "file",
+      "name": "retail_customer.py",
+      "filePath": "core/api/references/retail_customer.py",
+      "summary": "REGOS API client service for retail customer reference lookups, used to resolve customer identities from CRM channels.",
+      "tags": ["service", "api-client", "references"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:core/api/references/retail_customer.py:RetailCustomerService",
+      "type": "class",
+      "name": "RetailCustomerService",
+      "filePath": "core/api/references/retail_customer.py",
+      "lineRange": [18, 59],
+      "summary": "Service wrapper around the REGOS retail-customer reference API endpoints.",
+      "tags": ["service", "api-client", "references"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:core/telegram_api.py",
+      "type": "file",
+      "name": "telegram_api.py",
+      "filePath": "core/telegram_api.py",
+      "summary": "Helper module providing Telegram Bot API base-URL, server, bot-factory, and file-URL construction utilities shared by Telegram channel integrations.",
+      "tags": ["utility", "telegram", "api-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:core/telegram_api.py:create_telegram_bot",
+      "type": "function",
+      "name": "create_telegram_bot",
+      "filePath": "core/telegram_api.py",
+      "lineRange": [24, 29],
+      "summary": "Factory that constructs a configured Telegram Bot client instance.",
+      "tags": ["factory", "telegram", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:routes/healthcheck.py",
+      "type": "file",
+      "name": "healthcheck.py",
+      "filePath": "routes/healthcheck.py",
+      "summary": "Defines a simple healthcheck route handler returning service liveness status.",
+      "tags": ["api-handler", "healthcheck", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/healthcheck.py:healthcheck",
+      "type": "function",
+      "name": "healthcheck",
+      "filePath": "routes/healthcheck.py",
+      "lineRange": [7, 11],
+      "summary": "Endpoint handler returning a liveness/health status response.",
+      "tags": ["api-handler", "healthcheck", "route"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:core/api/chat/chat.py", "target": "class:core/api/chat/chat.py:ChatService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/chat/chat.py", "target": "class:core/api/chat/chat.py:ChatService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/chat/chat.py", "target": "file:schemas/api/chat/chat.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/chat/chat_message.py", "target": "class:core/api/chat/chat_message.py:ChatMessageService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/chat/chat_message.py", "target": "class:core/api/chat/chat_message.py:ChatMessageService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/chat/chat_message.py", "target": "file:schemas/api/chat/chat_message.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/chat/quick_reply.py", "target": "class:core/api/chat/quick_reply.py:QuickReplyService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/chat/quick_reply.py", "target": "class:core/api/chat/quick_reply.py:QuickReplyService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/chat/quick_reply.py", "target": "file:schemas/api/chat/quick_reply.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/channel.py", "target": "class:core/api/crm/channel.py:ChannelService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/channel.py", "target": "class:core/api/crm/channel.py:ChannelService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/channel.py", "target": "file:schemas/api/crm/channel.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/client.py", "target": "class:core/api/crm/client.py:ClientService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/client.py", "target": "class:core/api/crm/client.py:ClientService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/client.py", "target": "file:schemas/api/crm/client.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/deal.py", "target": "class:core/api/crm/deal.py:DealService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/deal.py", "target": "class:core/api/crm/deal.py:DealService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/deal.py", "target": "file:schemas/api/crm/deal.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/lead.py", "target": "class:core/api/crm/lead.py:LeadService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/lead.py", "target": "class:core/api/crm/lead.py:LeadService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/lead.py", "target": "file:schemas/api/crm/lead.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/project_task.py", "target": "class:core/api/crm/project_task.py:ProjectTaskService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/project_task.py", "target": "class:core/api/crm/project_task.py:ProjectTaskService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/project_task.py", "target": "file:schemas/api/crm/project_task.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/crm/ticket.py", "target": "class:core/api/crm/ticket.py:TicketService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/crm/ticket.py", "target": "class:core/api/crm/ticket.py:TicketService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/crm/ticket.py", "target": "file:schemas/api/crm/ticket.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/files/file.py", "target": "file:schemas/api/files/file.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/references/field.py", "target": "class:core/api/references/field.py:FieldService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/references/field.py", "target": "class:core/api/references/field.py:FieldService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/references/field.py", "target": "file:schemas/api/references/field.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/api/references/retail_customer.py", "target": "class:core/api/references/retail_customer.py:RetailCustomerService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/api/references/retail_customer.py", "target": "class:core/api/references/retail_customer.py:RetailCustomerService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/api/references/retail_customer.py", "target": "file:core/logger.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:core/api/references/retail_customer.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:core/api/references/retail_customer.py", "target": "file:schemas/api/references/retail_customer.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:core/telegram_api.py", "target": "function:core/telegram_api.py:create_telegram_bot", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:core/telegram_api.py", "target": "function:core/telegram_api.py:create_telegram_bot", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:core/telegram_api.py", "target": "file:config/settings.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:routes/healthcheck.py", "target": "function:routes/healthcheck.py:healthcheck", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:routes/healthcheck.py", "target": "function:routes/healthcheck.py:healthcheck", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

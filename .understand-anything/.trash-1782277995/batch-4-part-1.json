@@ -1,0 +1,1133 @@
+{
+ "nodes": [
+  {
+   "id": "file:clients/instagram_crm_channel/storage.py",
+   "type": "file",
+   "name": "storage.py",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "summary": "MariaDB-backed persistence for the Instagram CRM channel, mapping Instagram business accounts to connected integrations with upsert, reassign, lookup, and deactivation operations.",
+   "tags": [
+    "data-model",
+    "database",
+    "storage",
+    "crm-channel",
+    "instagram"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:clients/instagram_crm_channel/storage.py:BusinessMapConflictError",
+   "type": "class",
+   "name": "BusinessMapConflictError",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    19,
+    23
+   ],
+   "summary": "Exception raised when an Instagram business account is already mapped to a different connected integration.",
+   "tags": [
+    "exception",
+    "validation",
+    "conflict"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/storage.py:ensure_schema",
+   "type": "function",
+   "name": "ensure_schema",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    35,
+    53
+   ],
+   "summary": "Applies the SQL migration files for the Instagram business-map table when MariaDB is enabled.",
+   "tags": [
+    "migration",
+    "schema",
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/storage.py:upsert_business_map",
+   "type": "function",
+   "name": "upsert_business_map",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    56,
+    119
+   ],
+   "summary": "Inserts or updates the mapping between an Instagram business account and a connected integration, raising a conflict error when reassignment is disallowed.",
+   "tags": [
+    "database",
+    "upsert",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/storage.py:reassign_business_map",
+   "type": "function",
+   "name": "reassign_business_map",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    122,
+    174
+   ],
+   "summary": "Forcibly reassigns an Instagram business account to a new connected integration within a transaction.",
+   "tags": [
+    "database",
+    "transaction",
+    "reassign"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/storage.py:get_business_map",
+   "type": "function",
+   "name": "get_business_map",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    177,
+    200
+   ],
+   "summary": "Fetches the stored mapping record for an Instagram business account as a normalized dictionary.",
+   "tags": [
+    "database",
+    "lookup",
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/storage.py:mark_business_map_inactive",
+   "type": "function",
+   "name": "mark_business_map_inactive",
+   "filePath": "clients/instagram_crm_channel/storage.py",
+   "lineRange": [
+    214,
+    251
+   ],
+   "summary": "Marks an Instagram business-account mapping inactive for the given connected integration.",
+   "tags": [
+    "database",
+    "deactivation",
+    "update"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:clients/instagram_crm_channel/ui.py",
+   "type": "file",
+   "name": "ui.py",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "summary": "Renders the localized HTML connection-management UI for the Instagram CRM channel, building mode-specific pages, buttons, language links, and authorization URLs.",
+   "tags": [
+    "ui",
+    "rendering",
+    "localization",
+    "crm-channel",
+    "instagram"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/ui.py:resolve_locale",
+   "type": "function",
+   "name": "resolve_locale",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "lineRange": [
+    44,
+    61
+   ],
+   "summary": "Determines the UI locale from the request envelope query parameters and Accept-Language headers.",
+   "tags": [
+    "localization",
+    "locale",
+    "request-parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/ui.py:t",
+   "type": "function",
+   "name": "t",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "lineRange": [
+    103,
+    117
+   ],
+   "summary": "Translation helper that resolves an i18n key for a locale with fallback to the default and English bundles.",
+   "tags": [
+    "localization",
+    "i18n",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/ui.py:ui_url",
+   "type": "function",
+   "name": "ui_url",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "lineRange": [
+    120,
+    135
+   ],
+   "summary": "Builds a UI action URL with encoded query parameters for the given connected integration, locale, and action.",
+   "tags": [
+    "url",
+    "utility",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/ui.py:_mode_data",
+   "type": "function",
+   "name": "_mode_data",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "lineRange": [
+    170,
+    296
+   ],
+   "summary": "Assembles the template data dictionary for each connection mode (connect, connected, disconnect, error), including buttons, notices, and action lists.",
+   "tags": [
+    "ui",
+    "rendering",
+    "state-machine"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:clients/instagram_crm_channel/ui.py:render_instagram_ui",
+   "type": "function",
+   "name": "render_instagram_ui",
+   "filePath": "clients/instagram_crm_channel/ui.py",
+   "lineRange": [
+    299,
+    331
+   ],
+   "summary": "Renders the final HTML page for the Instagram connection UI by merging mode data into the template and CSS.",
+   "tags": [
+    "ui",
+    "rendering",
+    "html",
+    "entry-point"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "type": "file",
+   "name": "storage.py",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "summary": "MariaDB-backed persistence for the Meta Lead Ads CRM channel, mapping Facebook pages to connected integrations with upsert, reassign, lookup, and deactivation operations.",
+   "tags": [
+    "data-model",
+    "database",
+    "storage",
+    "crm-channel",
+    "meta-leadgen"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:clients/meta_leadgen_crm_channel/storage.py:PageMapConflictError",
+   "type": "class",
+   "name": "PageMapConflictError",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    19,
+    23
+   ],
+   "summary": "Exception raised when a Facebook page is already mapped to a different connected integration.",
+   "tags": [
+    "exception",
+    "validation",
+    "conflict"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:ensure_schema",
+   "type": "function",
+   "name": "ensure_schema",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    35,
+    53
+   ],
+   "summary": "Applies the SQL migration files for the Meta lead-gen page-map table when MariaDB is enabled.",
+   "tags": [
+    "migration",
+    "schema",
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:upsert_page_map",
+   "type": "function",
+   "name": "upsert_page_map",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    56,
+    119
+   ],
+   "summary": "Inserts or updates the mapping between a Facebook page and a connected integration, raising a conflict error when reassignment is disallowed.",
+   "tags": [
+    "database",
+    "upsert",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:reassign_page_map",
+   "type": "function",
+   "name": "reassign_page_map",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    122,
+    174
+   ],
+   "summary": "Forcibly reassigns a Facebook page to a new connected integration within a transaction.",
+   "tags": [
+    "database",
+    "transaction",
+    "reassign"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:get_page_map",
+   "type": "function",
+   "name": "get_page_map",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    177,
+    200
+   ],
+   "summary": "Fetches the stored mapping record for a Facebook page as a normalized dictionary.",
+   "tags": [
+    "database",
+    "lookup",
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:active_connected_integration_ids",
+   "type": "function",
+   "name": "active_connected_integration_ids",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    214,
+    227
+   ],
+   "summary": "Returns the sorted list of connected integration ids that have an active page mapping.",
+   "tags": [
+    "database",
+    "query",
+    "lookup"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:clients/meta_leadgen_crm_channel/storage.py:mark_page_map_inactive",
+   "type": "function",
+   "name": "mark_page_map_inactive",
+   "filePath": "clients/meta_leadgen_crm_channel/storage.py",
+   "lineRange": [
+    230,
+    267
+   ],
+   "summary": "Marks a Facebook page mapping inactive for the given connected integration.",
+   "tags": [
+    "database",
+    "deactivation",
+    "update"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/api/batch.py",
+   "type": "file",
+   "name": "batch.py",
+   "filePath": "core/api/batch.py",
+   "summary": "Service wrapper for the REGOS batch API endpoint, submitting multiple grouped requests and extracting per-step typed results with error handling.",
+   "tags": [
+    "service",
+    "api-handler",
+    "batch",
+    "regos"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:core/api/batch.py:RegosAPIError",
+   "type": "class",
+   "name": "RegosAPIError",
+   "filePath": "core/api/batch.py",
+   "lineRange": [
+    18,
+    26
+   ],
+   "summary": "Exception carrying a REGOS API error code and description returned by a batch step.",
+   "tags": [
+    "exception",
+    "error-handling",
+    "api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:core/api/batch.py:BatchService",
+   "type": "class",
+   "name": "BatchService",
+   "filePath": "core/api/batch.py",
+   "lineRange": [
+    29,
+    80
+   ],
+   "summary": "Runs REGOS batch requests through the API client and maps each step's response into validated typed results.",
+   "tags": [
+    "service",
+    "api-handler",
+    "batch",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/api/client.py",
+   "type": "file",
+   "name": "client.py",
+   "filePath": "core/api/client.py",
+   "summary": "Async HTTP client for the REGOS API with OAuth bearer auth, token-bucket rate limiting, retry/cooldown on 429, gzip handling, and JSON/multipart request support.",
+   "tags": [
+    "service",
+    "api-handler",
+    "http-client",
+    "rate-limiting",
+    "regos"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Async context manager (__aenter__/__aexit__) wrapping httpx.AsyncClient with Redis-backed rate-limit cooldowns."
+  },
+  {
+   "id": "class:core/api/client.py:APIClient",
+   "type": "class",
+   "name": "APIClient",
+   "filePath": "core/api/client.py",
+   "lineRange": [
+    32,
+    554
+   ],
+   "summary": "Central REGOS API client handling authentication, rate limiting, retries, gzip decompression, and serialization for POST and multipart requests.",
+   "tags": [
+    "service",
+    "http-client",
+    "rate-limiting",
+    "api-handler"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:core/api/docs/cash_session.py",
+   "type": "file",
+   "name": "cash_session.py",
+   "filePath": "core/api/docs/cash_session.py",
+   "summary": "Service wrapper exposing REGOS cash-session document retrieval by UUIDs through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/docs/doc_contract.py",
+   "type": "file",
+   "name": "doc_contract.py",
+   "filePath": "core/api/docs/doc_contract.py",
+   "summary": "Service wrapper for REGOS contract documents, providing get, short-get, and add operations via the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:core/api/docs/doc_contract.py:DocContractService",
+   "type": "class",
+   "name": "DocContractService",
+   "filePath": "core/api/docs/doc_contract.py",
+   "lineRange": [
+    19,
+    46
+   ],
+   "summary": "Service exposing REGOS contract document retrieval and creation endpoints.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/docs/invoice_operation.py",
+   "type": "file",
+   "name": "invoice_operation.py",
+   "filePath": "core/api/docs/invoice_operation.py",
+   "summary": "Service wrapper for REGOS invoice operation documents, providing get and add operations via the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/docs/order_delivery.py",
+   "type": "file",
+   "name": "order_delivery.py",
+   "filePath": "core/api/docs/order_delivery.py",
+   "summary": "Service wrapper for REGOS order-delivery documents, supporting retrieval, full add, status changes, and operation listing.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs",
+    "regos"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:core/api/docs/order_delivery.py:DocOrderDeliveryService",
+   "type": "class",
+   "name": "DocOrderDeliveryService",
+   "filePath": "core/api/docs/order_delivery.py",
+   "lineRange": [
+    19,
+    77
+   ],
+   "summary": "Service exposing REGOS order-delivery document operations including add, status update, and operation queries.",
+   "tags": [
+    "service",
+    "api-handler",
+    "docs"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/api/integrations/connected_integration_setting.py",
+   "type": "file",
+   "name": "connected_integration_setting.py",
+   "filePath": "core/api/integrations/connected_integration_setting.py",
+   "summary": "Service wrapper for reading and editing settings of a REGOS connected integration via the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "integrations",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/rate_limiter.py",
+   "type": "file",
+   "name": "rate_limiter.py",
+   "filePath": "core/api/rate_limiter.py",
+   "summary": "In-process token-bucket rate limiter with a shared-limiter registry keyed by name for throttling outbound API calls.",
+   "tags": [
+    "utility",
+    "rate-limiting",
+    "concurrency",
+    "singleton"
+   ],
+   "complexity": "simple",
+   "languageNotes": "asyncio.Lock-guarded token bucket cached in a module-level registry to share limiter state across clients."
+  },
+  {
+   "id": "class:core/api/rate_limiter.py:TokenBucket",
+   "type": "class",
+   "name": "TokenBucket",
+   "filePath": "core/api/rate_limiter.py",
+   "lineRange": [
+    7,
+    39
+   ],
+   "summary": "Async token-bucket implementation that refills over time and awaits available capacity before allowing an acquire.",
+   "tags": [
+    "rate-limiting",
+    "concurrency",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:core/api/rate_limiter.py:get_shared_limiter",
+   "type": "function",
+   "name": "get_shared_limiter",
+   "filePath": "core/api/rate_limiter.py",
+   "lineRange": [
+    47,
+    54
+   ],
+   "summary": "Returns a process-wide shared TokenBucket for a given key, creating it on first use.",
+   "tags": [
+    "factory",
+    "singleton",
+    "rate-limiting"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/rbac/user.py",
+   "type": "file",
+   "name": "user.py",
+   "filePath": "core/api/rbac/user.py",
+   "summary": "Service wrapper exposing REGOS RBAC user retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "rbac",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/brand.py",
+   "type": "file",
+   "name": "brand.py",
+   "filePath": "core/api/references/brand.py",
+   "summary": "Service wrapper for REGOS brand reference data with get, add, edit, and delete operations.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/currency.py",
+   "type": "file",
+   "name": "currency.py",
+   "filePath": "core/api/references/currency.py",
+   "summary": "Service wrapper exposing REGOS currency reference retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "file:core/mariadb.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "class:clients/instagram_crm_channel/storage.py:BusinessMapConflictError",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "class:clients/instagram_crm_channel/storage.py:BusinessMapConflictError",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:ensure_schema",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:ensure_schema",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:upsert_business_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:upsert_business_map",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:reassign_business_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:get_business_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/storage.py",
+   "target": "function:clients/instagram_crm_channel/storage.py:mark_business_map_inactive",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:resolve_locale",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:t",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:ui_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:_mode_data",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:render_instagram_ui",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/instagram_crm_channel/ui.py",
+   "target": "function:clients/instagram_crm_channel/ui.py:render_instagram_ui",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "file:core/mariadb.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "class:clients/meta_leadgen_crm_channel/storage.py:PageMapConflictError",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:ensure_schema",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:upsert_page_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:reassign_page_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:get_page_map",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:active_connected_integration_ids",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:clients/meta_leadgen_crm_channel/storage.py",
+   "target": "function:clients/meta_leadgen_crm_channel/storage.py:mark_page_map_inactive",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "file:schemas/api/batch.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "class:core/api/batch.py:RegosAPIError",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "class:core/api/batch.py:BatchService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/batch.py",
+   "target": "class:core/api/batch.py:BatchService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "config/settings.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "file:core/api/rate_limiter.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "file:core/api/regos_oauth.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "core/redis.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "class:core/api/client.py:APIClient",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/client.py",
+   "target": "class:core/api/client.py:APIClient",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:core/api/client.py:APIClient",
+   "target": "function:core/api/rate_limiter.py:get_shared_limiter",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:core/api/client.py:APIClient",
+   "target": "class:core/api/regos_oauth.py:RegosOAuthProvider",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/api/docs/cash_session.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/cash_session.py",
+   "target": "schemas/api/docs/cash_session.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/cash_session.py",
+   "target": "class:core/api/docs/cash_session.py:DocCashSessionService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/docs/doc_contract.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/doc_contract.py",
+   "target": "schemas/api/docs/doc_contract.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/doc_contract.py",
+   "target": "class:core/api/docs/doc_contract.py:DocContractService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/docs/doc_contract.py",
+   "target": "class:core/api/docs/doc_contract.py:DocContractService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/api/docs/invoice_operation.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/invoice_operation.py",
+   "target": "schemas/api/docs/invoice_operation.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/invoice_operation.py",
+   "target": "class:core/api/docs/invoice_operation.py:InvoiceOperationService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/docs/order_delivery.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/order_delivery.py",
+   "target": "schemas/api/docs/order_delivery.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/docs/order_delivery.py",
+   "target": "class:core/api/docs/order_delivery.py:DocOrderDeliveryService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/docs/order_delivery.py",
+   "target": "class:core/api/docs/order_delivery.py:DocOrderDeliveryService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/api/integrations/connected_integration_setting.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/integrations/connected_integration_setting.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/integrations/connected_integration_setting.py",
+   "target": "schemas/api/integrations/connected_integration_setting.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/integrations/connected_integration_setting.py",
+   "target": "class:core/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/rbac/user.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/rbac/user.py",
+   "target": "schemas/api/rbac/user.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/rbac/user.py",
+   "target": "class:core/api/rbac/user.py:UserService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/brand.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/brand.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/brand.py",
+   "target": "schemas/api/references/brand.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/brand.py",
+   "target": "class:core/api/references/brand.py:BrandService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/currency.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/currency.py",
+   "target": "schemas/api/references/currency.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/currency.py",
+   "target": "class:core/api/references/currency.py:CurrencyService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  }
+ ]
+}

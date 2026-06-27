@@ -1,0 +1,143 @@
+{
+  "nodes": [
+    {
+      "id": "file:core/api/crm/pipeline.py",
+      "type": "file",
+      "name": "pipeline.py",
+      "filePath": "core/api/crm/pipeline.py",
+      "summary": "Service client wrapping the CRM pipeline REGOS API, exposing get/add/edit/delete/set_access/set_stages operations over a shared API caller.",
+      "tags": ["service", "api-handler", "crm", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:core/api/crm/pipeline.py:PipelineService",
+      "type": "class",
+      "name": "PipelineService",
+      "filePath": "core/api/crm/pipeline.py",
+      "lineRange": [19, 46],
+      "summary": "Thin async service that maps CRM pipeline operations (get, add, edit, delete, set_access, set_stages) to underlying REGOS API calls via self.api.call.",
+      "tags": ["service", "crm", "api-client", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/crm/pipeline.py",
+      "type": "file",
+      "name": "pipeline.py",
+      "filePath": "schemas/api/crm/pipeline.py",
+      "summary": "Pydantic request/response schemas and domain models for the CRM pipeline API, including pipeline, stage, and access-control structures.",
+      "tags": ["data-model", "schema-definition", "validation", "crm", "type-definition"],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic models with an enum (CrmEntityTypeEnum) and paired Request/Response schemas per operation following the project's schema conventions."
+    },
+    {
+      "id": "class:schemas/api/crm/pipeline.py:PipelineStage",
+      "type": "class",
+      "name": "PipelineStage",
+      "filePath": "schemas/api/crm/pipeline.py",
+      "lineRange": [18, 32],
+      "summary": "Domain model describing a single pipeline stage with ordering, terminal/success flags, and activity state.",
+      "tags": ["data-model", "crm", "pipeline", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/crm/pipeline.py:Pipeline",
+      "type": "class",
+      "name": "Pipeline",
+      "filePath": "schemas/api/crm/pipeline.py",
+      "lineRange": [35, 49],
+      "summary": "Domain model for a CRM pipeline including entity type, access-control fields, and its ordered list of stages.",
+      "tags": ["data-model", "crm", "pipeline", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:core/api/readme.md",
+      "type": "document",
+      "name": "readme.md",
+      "filePath": "core/api/readme.md",
+      "summary": "Conventions guide for core API service classes (services/*), covering project structure, imports, naming, logging, constructors, method signatures, async usage, error handling, pagination, retries, and a generic service template.",
+      "tags": ["documentation", "conventions", "service", "guidelines"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:schemas/api/readme.md",
+      "type": "document",
+      "name": "readme.md",
+      "filePath": "schemas/api/readme.md",
+      "summary": "Conventions guide for API schema definitions, covering project structure, base rules, an entity-file template, code formatting, and linting.",
+      "tags": ["documentation", "conventions", "schema-definition", "guidelines"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:core/api/crm/pipeline.py",
+      "target": "class:core/api/crm/pipeline.py:PipelineService",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:core/api/crm/pipeline.py",
+      "target": "class:core/api/crm/pipeline.py:PipelineService",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:core/api/crm/pipeline.py",
+      "target": "file:schemas/api/crm/pipeline.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/crm/pipeline.py",
+      "target": "class:schemas/api/crm/pipeline.py:PipelineStage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:schemas/api/crm/pipeline.py",
+      "target": "class:schemas/api/crm/pipeline.py:Pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:schemas/api/crm/pipeline.py",
+      "target": "class:schemas/api/crm/pipeline.py:PipelineStage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/crm/pipeline.py",
+      "target": "class:schemas/api/crm/pipeline.py:Pipeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/crm/pipeline.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "document:schemas/api/readme.md",
+      "target": "file:schemas/api/crm/pipeline.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:core/api/readme.md",
+      "target": "file:core/api/crm/pipeline.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

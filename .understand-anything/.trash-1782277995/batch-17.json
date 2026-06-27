@@ -1,0 +1,57 @@
+{
+  "nodes": [
+    {
+      "id": "config:clients/instagram_crm_channel/i18n/en.json",
+      "type": "config",
+      "name": "en.json",
+      "filePath": "clients/instagram_crm_channel/i18n/en.json",
+      "summary": "English localization dictionary for the Instagram CRM channel UI, holding 66 translation keys for connection states, notices, actions, and setup steps.",
+      "tags": ["configuration", "localization", "i18n", "instagram", "crm-channel"],
+      "complexity": "simple",
+      "languageNotes": "Flat key/value JSON locale bundle; key names are shared verbatim across the en/ru/uz sibling files."
+    },
+    {
+      "id": "config:clients/instagram_crm_channel/i18n/ru.json",
+      "type": "config",
+      "name": "ru.json",
+      "filePath": "clients/instagram_crm_channel/i18n/ru.json",
+      "summary": "Russian localization dictionary for the Instagram CRM channel UI, mirroring the same 66 keys for connection badges, status leads, notices, and onboarding steps.",
+      "tags": ["configuration", "localization", "i18n", "instagram", "crm-channel"],
+      "complexity": "simple",
+      "languageNotes": "Default UI language for the project; structurally identical to en.json and uz.json."
+    },
+    {
+      "id": "config:clients/instagram_crm_channel/i18n/uz.json",
+      "type": "config",
+      "name": "uz.json",
+      "filePath": "clients/instagram_crm_channel/i18n/uz.json",
+      "summary": "Uzbek localization dictionary for the Instagram CRM channel UI, providing the same 66 translation keys used to render connection, error, and disconnect flows.",
+      "tags": ["configuration", "localization", "i18n", "instagram", "crm-channel"],
+      "complexity": "simple",
+      "languageNotes": "Completes the en/ru/uz locale set; all three share an identical key schema."
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:clients/instagram_crm_channel/i18n/ru.json",
+      "target": "config:clients/instagram_crm_channel/i18n/en.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:clients/instagram_crm_channel/i18n/ru.json",
+      "target": "config:clients/instagram_crm_channel/i18n/uz.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:clients/instagram_crm_channel/i18n/en.json",
+      "target": "config:clients/instagram_crm_channel/i18n/uz.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

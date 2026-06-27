@@ -1,0 +1,42 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node 'class:core/api/rate_limiter.py:TokenBucket' has no edges (orphan)",
+    "Node 'class:schemas/api/common/filters.py:Filter' has no edges (orphan)",
+    "Node 'table:clients/instagram_crm_channel/migrations/001_create_igc_business_map.sql:igc_business_map' has no edges (orphan)",
+    "Node 'table:clients/meta_leadgen_crm_channel/migrations/001_create_mlg_page_map.sql:mlg_page_map' has no edges (orphan)",
+    "Node 'document:requirements.txt' has no edges (orphan)",
+    "Node 'document:clients/instagram_crm_channel/migrations/001_create_igc_business_map.md' has no edges (orphan)",
+    "Node 'document:clients/meta_leadgen_crm_channel/migrations/001_create_mlg_page_map.md' has no edges (orphan)",
+    "Node 'file:clients/telegram_bot_quantity/handlers/__init__.py' has no edges (orphan)",
+    "Node 'file:clients/telegram_bot_quantity/services/__init__.py' has no edges (orphan)",
+    "Node 'file:clients/tsd/pwa/i18next-scanner.config.cjs' has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 940,
+    "totalEdges": 2272,
+    "totalLayers": 9,
+    "tourSteps": 13,
+    "nodeTypes": {
+      "file": 219,
+      "function": 327,
+      "class": 352,
+      "service": 3,
+      "table": 2,
+      "document": 23,
+      "config": 14
+    },
+    "edgeTypes": {
+      "contains": 676,
+      "exports": 613,
+      "imports": 738,
+      "calls": 2,
+      "depends_on": 11,
+      "deploys": 2,
+      "related": 11,
+      "documents": 20,
+      "configures": 3,
+      "inherits": 196
+    }
+  }
+}

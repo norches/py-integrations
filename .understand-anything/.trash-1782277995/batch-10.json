@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "service:Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Dockerfile",
+      "summary": "Multi-stage Docker build for the REGOS integrations gateway: a Node 20 stage compiles the TSD PWA client assets, then a Python 3.12-slim stage installs dependencies, copies the app plus built assets, sets the Asia/Tashkent timezone, and launches the FastAPI app via uvicorn on port 80.",
+      "tags": ["containerization", "infrastructure", "deployment", "build-system"],
+      "complexity": "simple",
+      "languageNotes": "Multi-stage build separates the Node client-asset compilation from the final Python runtime image, copying only the built PWA assets into the slim Python image to keep it small."
+    },
+    {
+      "id": "service:Dockerfile:client-builder",
+      "type": "service",
+      "name": "client-builder",
+      "filePath": "Dockerfile",
+      "summary": "Node 20-alpine build stage that runs npm ci and npm run build to compile the TSD PWA frontend assets under clients/tsd/pwa.",
+      "tags": ["containerization", "build-system", "frontend"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:Dockerfile:python",
+      "type": "service",
+      "name": "python",
+      "filePath": "Dockerfile",
+      "summary": "Final python:3.12-slim runtime stage that installs Python requirements, copies the application and the prebuilt PWA assets, configures the Asia/Tashkent timezone, and runs the FastAPI server via uvicorn on port 80.",
+      "tags": ["containerization", "deployment", "runtime"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "service:Dockerfile",
+      "target": "service:Dockerfile:client-builder",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:Dockerfile",
+      "target": "service:Dockerfile:python",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:Dockerfile:python",
+      "target": "service:Dockerfile:client-builder",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

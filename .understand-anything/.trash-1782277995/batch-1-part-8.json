@@ -1,0 +1,1328 @@
+{
+  "nodes": [
+    {
+      "id": "file:routes/clients.py",
+      "type": "file",
+      "name": "clients.py",
+      "filePath": "routes/clients.py",
+      "summary": "FastAPI router dispatching integration, UI, and external webhook requests to the appropriate connected-integration client handlers.",
+      "tags": [
+        "api-handler",
+        "router",
+        "entry-point",
+        "dispatcher",
+        "middleware"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:routes/clients.py:_is_connected_integration_active",
+      "type": "function",
+      "name": "_is_connected_integration_active",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        88,
+        152
+      ],
+      "summary": "Helper function `_is_connected_integration_active` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:routes/clients.py:_inactive_integration_error",
+      "type": "function",
+      "name": "_inactive_integration_error",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        155,
+        164
+      ],
+      "summary": "Helper function `_inactive_integration_error` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_cleanup_integration",
+      "type": "function",
+      "name": "_cleanup_integration",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        167,
+        218
+      ],
+      "summary": "Helper function `_cleanup_integration` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:routes/clients.py:camel_to_snake",
+      "type": "function",
+      "name": "camel_to_snake",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        221,
+        223
+      ],
+      "summary": "Helper function `camel_to_snake` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_resolve_action_method",
+      "type": "function",
+      "name": "_resolve_action_method",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        226,
+        245
+      ],
+      "summary": "Helper function `_resolve_action_method` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_sanitize_headers",
+      "type": "function",
+      "name": "_sanitize_headers",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        248,
+        252
+      ],
+      "summary": "Helper function `_sanitize_headers` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_connected_integration_id_from_external_path",
+      "type": "function",
+      "name": "_connected_integration_id_from_external_path",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        255,
+        259
+      ],
+      "summary": "Helper function `_connected_integration_id_from_external_path` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_read_body_safely",
+      "type": "function",
+      "name": "_read_body_safely",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        262,
+        275
+      ],
+      "summary": "Helper function `_read_body_safely` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:_connected_integration_key_from_id",
+      "type": "function",
+      "name": "_connected_integration_key_from_id",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        278,
+        309
+      ],
+      "summary": "Helper function `_connected_integration_key_from_id` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:handle_integration",
+      "type": "function",
+      "name": "handle_integration",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        328,
+        446
+      ],
+      "summary": "Helper function `handle_integration` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:routes/clients.py:handel_ui",
+      "type": "function",
+      "name": "handel_ui",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        455,
+        569
+      ],
+      "summary": "Helper function `handel_ui` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:routes/clients.py:handle_external_by_connected_integration",
+      "type": "function",
+      "name": "handle_external_by_connected_integration",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        592,
+        626
+      ],
+      "summary": "Helper function `handle_external_by_connected_integration` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:routes/clients.py:handle_external",
+      "type": "function",
+      "name": "handle_external",
+      "filePath": "routes/clients.py",
+      "lineRange": [
+        650,
+        783
+      ],
+      "summary": "Helper function `handle_external` in clients.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/integrations/connected_integration.py",
+      "type": "file",
+      "name": "connected_integration.py",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "summary": "Pydantic schemas for connected-integration records, including owner/handler enums, schedules, and get/edit request-response models.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "data-model",
+        "pydantic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationOwnerEnum",
+      "type": "class",
+      "name": "ConnectedIntegrationOwnerEnum",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        17,
+        19
+      ],
+      "summary": "Class `ConnectedIntegrationOwnerEnum` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationHandlerEnum",
+      "type": "class",
+      "name": "ConnectedIntegrationHandlerEnum",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        22,
+        32
+      ],
+      "summary": "Class `ConnectedIntegrationHandlerEnum` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:IntegrationSchedule",
+      "type": "class",
+      "name": "IntegrationSchedule",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        35,
+        43
+      ],
+      "summary": "Class `IntegrationSchedule` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegration",
+      "type": "class",
+      "name": "ConnectedIntegration",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        46,
+        92
+      ],
+      "summary": "Class `ConnectedIntegration` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetRequest",
+      "type": "class",
+      "name": "ConnectedIntegrationGetRequest",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        95,
+        122
+      ],
+      "summary": "Class `ConnectedIntegrationGetRequest` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditRequest",
+      "type": "class",
+      "name": "ConnectedIntegrationEditRequest",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        125,
+        157
+      ],
+      "summary": "Class `ConnectedIntegrationEditRequest` defined in connected_integration.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetResponse",
+      "type": "class",
+      "name": "ConnectedIntegrationGetResponse",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        160,
+        165
+      ],
+      "summary": "Class `ConnectedIntegrationGetResponse` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditResponse",
+      "type": "class",
+      "name": "ConnectedIntegrationEditResponse",
+      "filePath": "schemas/api/integrations/connected_integration.py",
+      "lineRange": [
+        168,
+        171
+      ],
+      "summary": "Class `ConnectedIntegrationEditResponse` defined in connected_integration.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/integrations/connected_integration_setting.py",
+      "type": "file",
+      "name": "connected_integration_setting.py",
+      "filePath": "schemas/api/integrations/connected_integration_setting.py",
+      "summary": "Pydantic schemas for connected-integration settings and their edit request payloads.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "data-model",
+        "pydantic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSetting",
+      "type": "class",
+      "name": "ConnectedIntegrationSetting",
+      "filePath": "schemas/api/integrations/connected_integration_setting.py",
+      "lineRange": [
+        12,
+        23
+      ],
+      "summary": "Class `ConnectedIntegrationSetting` defined in connected_integration_setting.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingRequest",
+      "type": "class",
+      "name": "ConnectedIntegrationSettingRequest",
+      "filePath": "schemas/api/integrations/connected_integration_setting.py",
+      "lineRange": [
+        26,
+        55
+      ],
+      "summary": "Class `ConnectedIntegrationSettingRequest` defined in connected_integration_setting.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditItem",
+      "type": "class",
+      "name": "ConnectedIntegrationSettingEditItem",
+      "filePath": "schemas/api/integrations/connected_integration_setting.py",
+      "lineRange": [
+        58,
+        90
+      ],
+      "summary": "Class `ConnectedIntegrationSettingEditItem` defined in connected_integration_setting.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditRequest",
+      "type": "class",
+      "name": "ConnectedIntegrationSettingEditRequest",
+      "filePath": "schemas/api/integrations/connected_integration_setting.py",
+      "lineRange": [
+        93,
+        96
+      ],
+      "summary": "Class `ConnectedIntegrationSettingEditRequest` defined in connected_integration_setting.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/integration/base.py",
+      "type": "file",
+      "name": "base.py",
+      "filePath": "schemas/integration/base.py",
+      "summary": "Base Pydantic request/response and error models shared by all integration handlers.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "data-model",
+        "pydantic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/base.py:IntegrationRequest",
+      "type": "class",
+      "name": "IntegrationRequest",
+      "filePath": "schemas/integration/base.py",
+      "lineRange": [
+        5,
+        12
+      ],
+      "summary": "Class `IntegrationRequest` defined in base.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/base.py:IntegrationSuccessResponse",
+      "type": "class",
+      "name": "IntegrationSuccessResponse",
+      "filePath": "schemas/integration/base.py",
+      "lineRange": [
+        15,
+        17
+      ],
+      "summary": "Class `IntegrationSuccessResponse` defined in base.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/base.py:IntegrationErrorModel",
+      "type": "class",
+      "name": "IntegrationErrorModel",
+      "filePath": "schemas/integration/base.py",
+      "lineRange": [
+        20,
+        22
+      ],
+      "summary": "Class `IntegrationErrorModel` defined in base.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/base.py:IntegrationErrorResponse",
+      "type": "class",
+      "name": "IntegrationErrorResponse",
+      "filePath": "schemas/integration/base.py",
+      "lineRange": [
+        25,
+        27
+      ],
+      "summary": "Class `IntegrationErrorResponse` defined in base.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/integration/email_integration_base.py",
+      "type": "file",
+      "name": "email_integration_base.py",
+      "filePath": "schemas/integration/email_integration_base.py",
+      "summary": "Base integration schema specialization for email-sending integrations.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "email",
+        "pydantic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/email_integration_base.py:IntegrationEmailBase",
+      "type": "class",
+      "name": "IntegrationEmailBase",
+      "filePath": "schemas/integration/email_integration_base.py",
+      "lineRange": [
+        11,
+        40
+      ],
+      "summary": "Class `IntegrationEmailBase` defined in email_integration_base.py with 7 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/integration/integration_base.py",
+      "type": "file",
+      "name": "integration_base.py",
+      "filePath": "schemas/integration/integration_base.py",
+      "summary": "Base integration request model defining common fields for all integration requests.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "data-model",
+        "pydantic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/integration_base.py:IntegrationBase",
+      "type": "class",
+      "name": "IntegrationBase",
+      "filePath": "schemas/integration/integration_base.py",
+      "lineRange": [
+        5,
+        54
+      ],
+      "summary": "Class `IntegrationBase` defined in integration_base.py with 6 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/integration/sms_integration_base.py",
+      "type": "file",
+      "name": "sms_integration_base.py",
+      "filePath": "schemas/integration/sms_integration_base.py",
+      "summary": "Base integration schema specialization for SMS-sending integrations.",
+      "tags": [
+        "type-definition",
+        "schema-definition",
+        "sms",
+        "pydantic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/sms_integration_base.py:IntegrationSmsBase",
+      "type": "class",
+      "name": "IntegrationSmsBase",
+      "filePath": "schemas/integration/sms_integration_base.py",
+      "lineRange": [
+        11,
+        40
+      ],
+      "summary": "Class `IntegrationSmsBase` defined in sms_integration_base.py with 7 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_is_connected_integration_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_is_connected_integration_active",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_inactive_integration_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_inactive_integration_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_cleanup_integration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_cleanup_integration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:camel_to_snake",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:camel_to_snake",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_resolve_action_method",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_resolve_action_method",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_sanitize_headers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_sanitize_headers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_connected_integration_id_from_external_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_connected_integration_id_from_external_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_read_body_safely",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_read_body_safely",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_connected_integration_key_from_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:_connected_integration_key_from_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_integration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_integration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handel_ui",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handel_ui",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_external_by_connected_integration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_external_by_connected_integration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_external",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "function:routes/clients.py:handle_external",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationOwnerEnum",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationOwnerEnum",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationHandlerEnum",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationHandlerEnum",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:IntegrationSchedule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:IntegrationSchedule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "class:schemas/api/integrations/connected_integration.py:ConnectedIntegrationEditResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSetting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSetting",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "class:schemas/api/integrations/connected_integration_setting.py:ConnectedIntegrationSettingEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationSuccessResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationSuccessResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationErrorModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationErrorModel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationErrorResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/base.py",
+      "target": "class:schemas/integration/base.py:IntegrationErrorResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/email_integration_base.py",
+      "target": "class:schemas/integration/email_integration_base.py:IntegrationEmailBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/email_integration_base.py",
+      "target": "class:schemas/integration/email_integration_base.py:IntegrationEmailBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/integration_base.py",
+      "target": "class:schemas/integration/integration_base.py:IntegrationBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/integration_base.py",
+      "target": "class:schemas/integration/integration_base.py:IntegrationBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/integration/sms_integration_base.py",
+      "target": "class:schemas/integration/sms_integration_base.py:IntegrationSmsBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/integration/sms_integration_base.py",
+      "target": "class:schemas/integration/sms_integration_base.py:IntegrationSmsBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/asterisk_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/billing_connector/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/edo_didox/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/edo_fakturauz/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/email_sender/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/eskiz_sms/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/external_chat_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/getsms/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/gpt_crm_chat_assistant/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/instagram_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/marketplace_toserver/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/marketplace_uzum_tezkor/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/marketplace_yandex_eats/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/meta_leadgen_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/regos_pay_deals/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/telegram_bot_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/telegram_bot_notification/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/telegram_bot_orders/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/telegram_bot_quantity/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/telegram_business_crm_channel/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:clients/tsd/main.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:core/api/regos_api.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:core/logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:schemas/api/integrations/connected_integration.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/clients.py",
+      "target": "file:schemas/integration/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "file:schemas/api/integrations/connected_integration_setting.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration.py",
+      "target": "file:schemas/api/rbac/user.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/integrations/connected_integration_setting.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/integration/email_integration_base.py",
+      "target": "file:schemas/integration/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/integration/email_integration_base.py",
+      "target": "file:schemas/integration/integration_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/integration/sms_integration_base.py",
+      "target": "file:schemas/integration/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/integration/sms_integration_base.py",
+      "target": "file:schemas/integration/integration_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

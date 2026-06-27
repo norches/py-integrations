@@ -1,0 +1,120 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 25,
+      "nonEmptyLines": 16,
+      "services": [
+        {
+          "name": "client-builder",
+          "image": "node:20-alpine",
+          "ports": [],
+          "startLine": 1,
+          "endLine": 11
+        },
+        {
+          "name": "python",
+          "image": "python:3.12-slim",
+          "ports": [],
+          "startLine": 12,
+          "endLine": 25
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM node:20-alpine AS client-builder",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "WORKDIR /tsd/pwa",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "COPY clients/tsd/pwa/package.json clients/tsd/pwa/package-lock.js",
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "RUN npm ci",
+          "startLine": 6,
+          "endLine": 6
+        },
+        {
+          "name": "COPY clients/tsd/pwa ./",
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "RUN npm run build",
+          "startLine": 9,
+          "endLine": 9
+        },
+        {
+          "name": "FROM python:3.12-slim",
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "RUN pip install --upgrade pip python-multipart",
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "COPY requirements.txt .",
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "RUN pip install -r requirements.txt",
+          "startLine": 16,
+          "endLine": 16
+        },
+        {
+          "name": "COPY . /app",
+          "startLine": 18,
+          "endLine": 18
+        },
+        {
+          "name": "COPY --from=client-builder /tsd/pwa/assets /app/clients/tsd/pwa/a",
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "ENV TZ=Asia/Tashkent",
+          "startLine": 22,
+          "endLine": 22
+        },
+        {
+          "name": "RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >",
+          "startLine": 23,
+          "endLine": 23
+        },
+        {
+          "name": "CMD [\"uvicorn\", \"server:app\", \"--host\", \"0.0.0.0\", \"--port\", \"80",
+          "startLine": 25,
+          "endLine": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 2,
+        "stepCount": 16
+      }
+    }
+  ]
+}

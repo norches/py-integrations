@@ -1,0 +1,1182 @@
+{
+  "scriptCompleted": true,
+  "stats": {
+    "filesScanned": 260,
+    "filesWithImports": 174,
+    "totalEdges": 738
+  },
+  "importMap": {
+    ".understand-anything/.understandignore": [],
+    "AGENTS.md": [],
+    "clients/asterisk_crm_channel/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/rbac/user.py",
+      "schemas/integration/base.py"
+    ],
+    "clients/asterisk_crm_channel/README.md": [],
+    "clients/base.py": [
+      "schemas/integration/integration_base.py"
+    ],
+    "clients/billing_connector/main.py": [
+      "clients/base.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/integrations/connected_integration_setting.py"
+    ],
+    "clients/billing_connector/README.md": [],
+    "clients/bitrix24/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py"
+    ],
+    "clients/edo_didox/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/doc_contract.py",
+      "schemas/api/docs/doc_invoice.py",
+      "schemas/api/docs/invoice_operation.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/firm.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/partner.py"
+    ],
+    "clients/edo_didox/README.md": [],
+    "clients/edo_didox/TECHNICAL.md": [],
+    "clients/edo_fakturauz/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/doc_contract.py",
+      "schemas/api/docs/doc_invoice.py",
+      "schemas/api/docs/invoice_operation.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/firm.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/partner.py"
+    ],
+    "clients/edo_fakturauz/README.md": [],
+    "clients/edo_fakturauz/TECHNICAL.md": [],
+    "clients/email_sender/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/integration/base.py",
+      "schemas/integration/email_integration_base.py"
+    ],
+    "clients/eskiz_sms/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/integration/base.py",
+      "schemas/integration/sms_integration_base.py"
+    ],
+    "clients/external_chat_crm_channel/i18n/en.json": [],
+    "clients/external_chat_crm_channel/i18n/ru.json": [],
+    "clients/external_chat_crm_channel/i18n/uz.json": [],
+    "clients/external_chat_crm_channel/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/chat/chat.py",
+      "schemas/api/crm/channel.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/files/file.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/field.py",
+      "schemas/api/references/fields.py",
+      "schemas/integration/base.py"
+    ],
+    "clients/external_chat_crm_channel/README.md": [],
+    "clients/external_chat_crm_channel/ui_template.css": [],
+    "clients/external_chat_crm_channel/ui_template.html": [],
+    "clients/getsms/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/integration/base.py",
+      "schemas/integration/sms_integration_base.py"
+    ],
+    "clients/gpt_crm_chat_assistant/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/chat/chat.py",
+      "schemas/api/chat/quick_reply.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/deal.py",
+      "schemas/api/crm/lead.py",
+      "schemas/api/crm/project_task.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/files/file.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/field.py",
+      "schemas/integration/base.py"
+    ],
+    "clients/gpt_crm_chat_assistant/README.md": [],
+    "clients/instagram_crm_channel/i18n/en.json": [],
+    "clients/instagram_crm_channel/i18n/ru.json": [],
+    "clients/instagram_crm_channel/i18n/uz.json": [],
+    "clients/instagram_crm_channel/main.py": [
+      "clients/base.py",
+      "clients/instagram_crm_channel/storage.py",
+      "clients/instagram_crm_channel/ui.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/chat/chat.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/channel.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/integration/base.py"
+    ],
+    "clients/instagram_crm_channel/migrations/001_create_igc_business_map.md": [],
+    "clients/instagram_crm_channel/migrations/001_create_igc_business_map.sql": [],
+    "clients/instagram_crm_channel/README.md": [],
+    "clients/instagram_crm_channel/storage.py": [
+      "core/logger.py",
+      "core/mariadb.py"
+    ],
+    "clients/instagram_crm_channel/TECHNICAL.md": [],
+    "clients/instagram_crm_channel/ui_template.css": [],
+    "clients/instagram_crm_channel/ui_template.html": [],
+    "clients/instagram_crm_channel/ui.py": [
+      "core/logger.py"
+    ],
+    "clients/marketplace_toserver/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/scheduler.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/stock.py",
+      "schemas/scheduler.py"
+    ],
+    "clients/marketplace_uzum_tezkor/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/docs/order_delivery.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/item_group.py",
+      "schemas/api/references/item.py"
+    ],
+    "clients/marketplace_yandex_eats/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/docs/order_delivery.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/item_group.py",
+      "schemas/api/references/item.py"
+    ],
+    "clients/meta_leadgen_crm_channel/config.py": [
+      "config/settings.py"
+    ],
+    "clients/meta_leadgen_crm_channel/crm_sync.py": [
+      "clients/meta_leadgen_crm_channel/config.py",
+      "clients/meta_leadgen_crm_channel/meta_api.py",
+      "clients/meta_leadgen_crm_channel/models.py",
+      "clients/meta_leadgen_crm_channel/redis_state.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/lead.py",
+      "schemas/api/references/field.py",
+      "schemas/api/references/fields.py"
+    ],
+    "clients/meta_leadgen_crm_channel/i18n/en.json": [],
+    "clients/meta_leadgen_crm_channel/i18n/ru.json": [],
+    "clients/meta_leadgen_crm_channel/i18n/uz.json": [],
+    "clients/meta_leadgen_crm_channel/main.py": [
+      "clients/base.py",
+      "clients/meta_leadgen_crm_channel/config.py",
+      "clients/meta_leadgen_crm_channel/crm_sync.py",
+      "clients/meta_leadgen_crm_channel/meta_api.py",
+      "clients/meta_leadgen_crm_channel/models.py",
+      "clients/meta_leadgen_crm_channel/redis_state.py",
+      "clients/meta_leadgen_crm_channel/storage.py",
+      "clients/meta_leadgen_crm_channel/ui.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/integration/base.py"
+    ],
+    "clients/meta_leadgen_crm_channel/meta_api.py": [
+      "clients/meta_leadgen_crm_channel/config.py",
+      "clients/meta_leadgen_crm_channel/models.py",
+      "clients/meta_leadgen_crm_channel/redis_state.py",
+      "config/settings.py"
+    ],
+    "clients/meta_leadgen_crm_channel/migrations/001_create_mlg_page_map.md": [],
+    "clients/meta_leadgen_crm_channel/migrations/001_create_mlg_page_map.sql": [],
+    "clients/meta_leadgen_crm_channel/models.py": [
+      "clients/meta_leadgen_crm_channel/config.py"
+    ],
+    "clients/meta_leadgen_crm_channel/README.md": [],
+    "clients/meta_leadgen_crm_channel/redis_state.py": [
+      "clients/meta_leadgen_crm_channel/config.py",
+      "clients/meta_leadgen_crm_channel/models.py",
+      "config/settings.py",
+      "core/redis.py"
+    ],
+    "clients/meta_leadgen_crm_channel/storage.py": [
+      "core/logger.py",
+      "core/mariadb.py"
+    ],
+    "clients/meta_leadgen_crm_channel/ui_template.css": [],
+    "clients/meta_leadgen_crm_channel/ui_template.html": [],
+    "clients/meta_leadgen_crm_channel/ui.py": [
+      "core/logger.py"
+    ],
+    "clients/regos_pay_deals/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/deal.py",
+      "schemas/api/crm/pipeline.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/references/field.py"
+    ],
+    "clients/regos_pay_deals/README.md": [],
+    "clients/telegram_bot_crm_channel/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/telegram_api.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/chat/chat.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/channel.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/files/file.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/field.py",
+      "schemas/api/references/retail_customer.py",
+      "schemas/integration/base.py",
+      "schemas/integration/telegram_integration_base.py"
+    ],
+    "clients/telegram_bot_crm_channel/README.md": [],
+    "clients/telegram_bot_notification/main.py": [
+      "clients/base.py",
+      "clients/telegram_bot_notification/services/message_formatters.py",
+      "clients/telegram_bot_notification/services/send_messages.py",
+      "clients/telegram_bot_notification/utils.py",
+      "clients/telegram_polling.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/telegram_api.py",
+      "schemas/api/docs/cash_amount_details.py",
+      "schemas/api/docs/cheque_operation.py",
+      "schemas/api/docs/cheque_payment.py",
+      "schemas/api/docs/cheque.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/references/operating_cash.py",
+      "schemas/api/reports/retail_report/count.py",
+      "schemas/api/reports/retail_report/payment.py",
+      "schemas/integration/base.py",
+      "schemas/integration/telegram_integration_base.py"
+    ],
+    "clients/telegram_bot_notification/services/message_formatters.py": [
+      "clients/telegram_bot_notification/utils.py",
+      "schemas/api/docs/cash_amount_details.py",
+      "schemas/api/docs/cash_session.py",
+      "schemas/api/docs/cheque_operation.py",
+      "schemas/api/docs/cheque_payment.py",
+      "schemas/api/docs/cheque.py",
+      "schemas/api/reports/retail_report/count.py",
+      "schemas/api/reports/retail_report/payment.py"
+    ],
+    "clients/telegram_bot_notification/services/send_messages.py": [],
+    "clients/telegram_bot_notification/utils.py": [],
+    "clients/telegram_bot_orders/main.py": [
+      "clients/base.py",
+      "clients/telegram_bot_orders/texts.py",
+      "clients/telegram_polling.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/telegram_api.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/docs/order_delivery.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/references/delivery_type.py",
+      "schemas/api/references/fields.py",
+      "schemas/api/references/item_group.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/retail_card.py",
+      "schemas/api/references/retail_customer.py",
+      "schemas/integration/base.py",
+      "schemas/integration/telegram_integration_base.py"
+    ],
+    "clients/telegram_bot_orders/README.md": [],
+    "clients/telegram_bot_orders/texts.py": [],
+    "clients/telegram_bot_quantity/handlers/__init__.py": [],
+    "clients/telegram_bot_quantity/handlers/get_quantity.py": [
+      "core/api/regos_api.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/stock.py"
+    ],
+    "clients/telegram_bot_quantity/main.py": [
+      "clients/base.py",
+      "clients/telegram_bot_quantity/handlers/get_quantity.py",
+      "clients/telegram_bot_quantity/services/send_messages.py",
+      "clients/telegram_bot_quantity/utils.py",
+      "clients/telegram_polling.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/telegram_api.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/integration/base.py",
+      "schemas/integration/telegram_integration_base.py"
+    ],
+    "clients/telegram_bot_quantity/services/__init__.py": [],
+    "clients/telegram_bot_quantity/services/send_messages.py": [],
+    "clients/telegram_bot_quantity/utils.py": [],
+    "clients/telegram_business_crm_channel/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "core/telegram_api.py",
+      "schemas/api/chat/chat_message.py",
+      "schemas/api/chat/chat.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/channel.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/crm/ticket.py",
+      "schemas/api/files/file.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/api/references/field.py",
+      "schemas/api/references/retail_customer.py",
+      "schemas/integration/base.py",
+      "schemas/integration/telegram_integration_base.py"
+    ],
+    "clients/telegram_business_crm_channel/README.md": [],
+    "clients/telegram_polling.py": [
+      "core/logger.py"
+    ],
+    "clients/tsd/main.py": [
+      "clients/base.py",
+      "config/settings.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/integrations/connected_integration_setting.py"
+    ],
+    "clients/tsd/pwa/assets/i18n/en.json": [],
+    "clients/tsd/pwa/assets/i18n/ru.json": [],
+    "clients/tsd/pwa/assets/i18n/uz.json": [],
+    "clients/tsd/pwa/assets/manifest.json": [],
+    "clients/tsd/pwa/assets/sw.js": [],
+    "clients/tsd/pwa/esbuild.config.mjs": [],
+    "clients/tsd/pwa/i18next-scanner.config.cjs": [],
+    "clients/tsd/pwa/index.html": [],
+    "clients/tsd/pwa/package.json": [],
+    "clients/tsd/pwa/src/App.jsx": [
+      "clients/tsd/pwa/src/components/AppLayout.jsx",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/context/ToastContext.jsx",
+      "clients/tsd/pwa/src/pages/DocNewPage.jsx",
+      "clients/tsd/pwa/src/pages/DocPage.jsx",
+      "clients/tsd/pwa/src/pages/DocsPage.jsx",
+      "clients/tsd/pwa/src/pages/HomePage.jsx",
+      "clients/tsd/pwa/src/pages/ItemInfoPage.jsx",
+      "clients/tsd/pwa/src/pages/OpNewPage.jsx"
+    ],
+    "clients/tsd/pwa/src/components/AppLayout.jsx": [
+      "clients/tsd/pwa/src/components/Clock.jsx",
+      "clients/tsd/pwa/src/components/InstallButton.jsx",
+      "clients/tsd/pwa/src/components/LanguageSwitcher.jsx",
+      "clients/tsd/pwa/src/components/NavBackButton.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/components/CameraBarcodeScanner.jsx": [
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/components/Clock.jsx": [],
+    "clients/tsd/pwa/src/components/InstallButton.jsx": [
+      "clients/tsd/pwa/src/hooks/usePWAInstall.js",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/components/LanguageSwitcher.jsx": [
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/components/NavBackButton.jsx": [
+      "clients/tsd/pwa/src/lib/ui.js"
+    ],
+    "clients/tsd/pwa/src/config/docDefinitions.js": [],
+    "clients/tsd/pwa/src/context/AppContext.jsx": [
+      "clients/tsd/pwa/src/lib/api.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/context/I18nContext.jsx": [
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/context/ToastContext.jsx": [
+      "clients/tsd/pwa/src/lib/ui.js"
+    ],
+    "clients/tsd/pwa/src/hooks/useDebouncedValue.js": [],
+    "clients/tsd/pwa/src/hooks/usePWAInstall.js": [],
+    "clients/tsd/pwa/src/lib/api.js": [],
+    "clients/tsd/pwa/src/lib/ui.js": [
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/lib/utils.js": [],
+    "clients/tsd/pwa/src/main.jsx": [
+      "clients/tsd/pwa/src/App.jsx",
+      "clients/tsd/pwa/src/registerSW.js"
+    ],
+    "clients/tsd/pwa/src/pages/DocNewPage.jsx": [
+      "clients/tsd/pwa/src/config/docDefinitions.js",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/context/ToastContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/pages/DocPage.jsx": [
+      "clients/tsd/pwa/src/config/docDefinitions.js",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/context/ToastContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/pages/DocsPage.jsx": [
+      "clients/tsd/pwa/src/config/docDefinitions.js",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/hooks/useDebouncedValue.js",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/pages/HomePage.jsx": [
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js"
+    ],
+    "clients/tsd/pwa/src/pages/ItemInfoPage.jsx": [
+      "clients/tsd/pwa/src/components/CameraBarcodeScanner.jsx",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/context/ToastContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js"
+    ],
+    "clients/tsd/pwa/src/pages/OpNewPage.jsx": [
+      "clients/tsd/pwa/src/components/CameraBarcodeScanner.jsx",
+      "clients/tsd/pwa/src/config/docDefinitions.js",
+      "clients/tsd/pwa/src/context/AppContext.jsx",
+      "clients/tsd/pwa/src/context/I18nContext.jsx",
+      "clients/tsd/pwa/src/context/ToastContext.jsx",
+      "clients/tsd/pwa/src/lib/ui.js",
+      "clients/tsd/pwa/src/lib/utils.js"
+    ],
+    "clients/tsd/pwa/src/registerSW.js": [],
+    "clients/tsd/pwa/src/styles.css": [],
+    "clients/tsd/pwa/tailwind.config.js": [],
+    "clients/tsd/readme.md": [],
+    "config/settings.py": [],
+    "core/api/batch.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/batch.py"
+    ],
+    "core/api/chat/chat_message.py": [
+      "schemas/api/chat/chat_message.py"
+    ],
+    "core/api/chat/chat.py": [
+      "schemas/api/chat/chat.py"
+    ],
+    "core/api/chat/quick_reply.py": [
+      "schemas/api/chat/quick_reply.py"
+    ],
+    "core/api/client.py": [
+      "config/settings.py",
+      "core/api/rate_limiter.py",
+      "core/api/regos_oauth.py",
+      "core/logger.py",
+      "core/redis.py",
+      "schemas/api/base.py"
+    ],
+    "core/api/crm/channel.py": [
+      "schemas/api/crm/channel.py"
+    ],
+    "core/api/crm/client.py": [
+      "schemas/api/crm/client.py"
+    ],
+    "core/api/crm/deal.py": [
+      "schemas/api/crm/deal.py"
+    ],
+    "core/api/crm/lead.py": [
+      "schemas/api/crm/lead.py"
+    ],
+    "core/api/crm/pipeline.py": [
+      "schemas/api/crm/pipeline.py"
+    ],
+    "core/api/crm/project_task.py": [
+      "schemas/api/crm/project_task.py"
+    ],
+    "core/api/crm/ticket.py": [
+      "schemas/api/crm/ticket.py"
+    ],
+    "core/api/docs/cash_operation.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/cash_amount_details.py",
+      "schemas/api/docs/cash_operation.py"
+    ],
+    "core/api/docs/cash_session.py": [
+      "core/logger.py",
+      "schemas/api/docs/cash_session.py"
+    ],
+    "core/api/docs/cheque_operation.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/cheque_operation.py"
+    ],
+    "core/api/docs/cheque_payment.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/cheque_payment.py"
+    ],
+    "core/api/docs/cheque.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/cheque.py"
+    ],
+    "core/api/docs/doc_contract.py": [
+      "core/logger.py",
+      "schemas/api/docs/doc_contract.py"
+    ],
+    "core/api/docs/doc_invoice.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/doc_invoice.py"
+    ],
+    "core/api/docs/inventory_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/docs/inventory_operation.py"
+    ],
+    "core/api/docs/inventory.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/inventory.py"
+    ],
+    "core/api/docs/invoice_operation.py": [
+      "core/logger.py",
+      "schemas/api/docs/invoice_operation.py"
+    ],
+    "core/api/docs/movement_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/docs/movement_operation.py"
+    ],
+    "core/api/docs/movement.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/movement.py"
+    ],
+    "core/api/docs/order_delivery.py": [
+      "core/logger.py",
+      "schemas/api/docs/order_delivery.py"
+    ],
+    "core/api/docs/purchase_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/docs/purchase_operation.py"
+    ],
+    "core/api/docs/purchase.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/purchase.py"
+    ],
+    "core/api/docs/wholesale_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/docs/wholesale_operation.py"
+    ],
+    "core/api/docs/wholesale.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/docs/wholesale.py"
+    ],
+    "core/api/files/file.py": [
+      "schemas/api/files/file.py"
+    ],
+    "core/api/integrations/connected_integration_setting.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/integrations/connected_integration_setting.py"
+    ],
+    "core/api/integrations/connected_integration.py": [
+      "schemas/api/integrations/connected_integration.py"
+    ],
+    "core/api/rate_limiter.py": [],
+    "core/api/rbac/user.py": [
+      "core/logger.py",
+      "schemas/api/rbac/user.py"
+    ],
+    "core/api/readme.md": [],
+    "core/api/references/brand.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/brand.py"
+    ],
+    "core/api/references/currency.py": [
+      "core/logger.py",
+      "schemas/api/references/currency.py"
+    ],
+    "core/api/references/delivery_type.py": [
+      "schemas/api/references/delivery_type.py"
+    ],
+    "core/api/references/field.py": [
+      "schemas/api/references/field.py"
+    ],
+    "core/api/references/firm.py": [
+      "core/logger.py",
+      "schemas/api/references/firm.py"
+    ],
+    "core/api/references/item_group.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/item_group.py"
+    ],
+    "core/api/references/item_operation.py": [
+      "core/logger.py",
+      "schemas/api/references/item_operation.py"
+    ],
+    "core/api/references/item_price.py": [
+      "core/logger.py",
+      "schemas/api/references/item_price.py"
+    ],
+    "core/api/references/item.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/item.py"
+    ],
+    "core/api/references/operating_cash.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/operating_cash.py"
+    ],
+    "core/api/references/partner.py": [
+      "core/logger.py",
+      "schemas/api/references/partner.py"
+    ],
+    "core/api/references/price_type.py": [
+      "core/logger.py",
+      "schemas/api/references/price_type.py"
+    ],
+    "core/api/references/retail_card.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/retail_card.py"
+    ],
+    "core/api/references/retail_customer.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/retail_customer.py"
+    ],
+    "core/api/references/stock copy.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/stock.py"
+    ],
+    "core/api/references/stock.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/references/stock.py"
+    ],
+    "core/api/regos_api.py": [
+      "core/api/batch.py",
+      "core/api/client.py",
+      "core/logger.py"
+    ],
+    "core/api/regos_oauth.py": [
+      "config/settings.py",
+      "core/logger.py",
+      "core/redis.py"
+    ],
+    "core/api/reports/retail_report.py": [
+      "core/logger.py",
+      "schemas/api/base.py",
+      "schemas/api/reports/retail_report/count.py",
+      "schemas/api/reports/retail_report/payment.py"
+    ],
+    "core/exception_handlers.py": [
+      "core/logger.py",
+      "schemas/integration/base.py"
+    ],
+    "core/logger.py": [
+      "config/settings.py"
+    ],
+    "core/mariadb.py": [
+      "config/settings.py"
+    ],
+    "core/redis.py": [
+      "config/settings.py"
+    ],
+    "core/scheduler.py": [
+      "config/settings.py",
+      "schemas/scheduler.py"
+    ],
+    "core/telegram_api.py": [
+      "config/settings.py"
+    ],
+    "Dockerfile": [],
+    "README.md": [],
+    "requirements.txt": [],
+    "routes/clients.py": [
+      "clients/asterisk_crm_channel/main.py",
+      "clients/billing_connector/main.py",
+      "clients/edo_didox/main.py",
+      "clients/edo_fakturauz/main.py",
+      "clients/email_sender/main.py",
+      "clients/eskiz_sms/main.py",
+      "clients/external_chat_crm_channel/main.py",
+      "clients/getsms/main.py",
+      "clients/gpt_crm_chat_assistant/main.py",
+      "clients/instagram_crm_channel/main.py",
+      "clients/marketplace_toserver/main.py",
+      "clients/marketplace_uzum_tezkor/main.py",
+      "clients/marketplace_yandex_eats/main.py",
+      "clients/meta_leadgen_crm_channel/main.py",
+      "clients/regos_pay_deals/main.py",
+      "clients/telegram_bot_crm_channel/main.py",
+      "clients/telegram_bot_notification/main.py",
+      "clients/telegram_bot_orders/main.py",
+      "clients/telegram_bot_quantity/main.py",
+      "clients/telegram_business_crm_channel/main.py",
+      "clients/tsd/main.py",
+      "core/api/regos_api.py",
+      "core/logger.py",
+      "schemas/api/integrations/connected_integration.py",
+      "schemas/integration/base.py"
+    ],
+    "routes/healthcheck.py": [],
+    "schemas/api/base.py": [],
+    "schemas/api/batch.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/chat/chat_message.py": [
+      "schemas/api/base.py",
+      "schemas/api/chat/chat.py"
+    ],
+    "schemas/api/chat/chat.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/chat/quick_reply.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/common/filters.py": [],
+    "schemas/api/common/sort_orders.py": [],
+    "schemas/api/crm/channel.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/crm/client.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/references/fields.py"
+    ],
+    "schemas/api/crm/deal.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/fields.py"
+    ],
+    "schemas/api/crm/lead.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/references/fields.py"
+    ],
+    "schemas/api/crm/pipeline.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/crm/project_task.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/references/fields.py"
+    ],
+    "schemas/api/crm/ticket.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/crm/client.py",
+      "schemas/api/references/fields.py"
+    ],
+    "schemas/api/docs/cash_amount_details.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/docs/cash_operation_type.py": [],
+    "schemas/api/docs/cash_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/docs/cash_operation_type.py"
+    ],
+    "schemas/api/docs/cash_session.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py"
+    ],
+    "schemas/api/docs/cheque_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py"
+    ],
+    "schemas/api/docs/cheque_payment.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/payment_type.py"
+    ],
+    "schemas/api/docs/cheque.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/retail_card.py",
+      "schemas/api/references/retail_return_reason.py"
+    ],
+    "schemas/api/docs/doc_contract.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/firm.py",
+      "schemas/api/references/partner.py"
+    ],
+    "schemas/api/docs/doc_invoice.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/docs/doc_contract.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/firm.py",
+      "schemas/api/references/partner.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/inventory_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py"
+    ],
+    "schemas/api/docs/inventory.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/stock.py"
+    ],
+    "schemas/api/docs/invoice_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/movement_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/movement.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/partner.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/stock.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/order_delivery.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/references/delivery_courier.py",
+      "schemas/api/references/delivery_from.py",
+      "schemas/api/references/delivery_type.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/payment_type.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/retail_card.py",
+      "schemas/api/references/retail_customer.py",
+      "schemas/api/references/stock.py"
+    ],
+    "schemas/api/docs/purchase_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/purchase.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/partner.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/stock.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/wholesale_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/item.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/docs/wholesale.py": [
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/currency.py",
+      "schemas/api/references/partner.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/stock.py",
+      "schemas/api/references/tax.py"
+    ],
+    "schemas/api/files/file.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/integrations/connected_integration_setting.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/integrations/connected_integration.py": [
+      "schemas/api/base.py",
+      "schemas/api/integrations/connected_integration_setting.py",
+      "schemas/api/rbac/user.py"
+    ],
+    "schemas/api/rbac/user.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/readme.md": [],
+    "schemas/api/references/account.py": [
+      "schemas/api/references/currency.py"
+    ],
+    "schemas/api/references/brand.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/color.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/country.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/currency.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/delivery_courier.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/references/delivery_from.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/references/delivery_type.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/references/department.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/field.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/references/fields.py": [],
+    "schemas/api/references/firm_group.py": [],
+    "schemas/api/references/firm.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/references/firm_group.py"
+    ],
+    "schemas/api/references/item_group.py": [
+      "schemas/api/base.py"
+    ],
+    "schemas/api/references/item_operation.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/references/stock.py"
+    ],
+    "schemas/api/references/item_price.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/price_type.py"
+    ],
+    "schemas/api/references/item.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/brand.py",
+      "schemas/api/references/color.py",
+      "schemas/api/references/country.py",
+      "schemas/api/references/department.py",
+      "schemas/api/references/item_group.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/producer.py",
+      "schemas/api/references/size.py",
+      "schemas/api/references/stock.py",
+      "schemas/api/references/tax_vat.py",
+      "schemas/api/references/unit.py"
+    ],
+    "schemas/api/references/operating_cash.py": [
+      "schemas/api/base.py",
+      "schemas/api/rbac/user.py",
+      "schemas/api/references/price_type.py",
+      "schemas/api/references/stock.py"
+    ],
+    "schemas/api/references/partner_group.py": [],
+    "schemas/api/references/partner.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/references/fields.py",
+      "schemas/api/references/partner_group.py"
+    ],
+    "schemas/api/references/payment_type.py": [
+      "schemas/api/references/account.py"
+    ],
+    "schemas/api/references/price_type.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/currency.py"
+    ],
+    "schemas/api/references/producer.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/region.py": [],
+    "schemas/api/references/retail_card.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/retail_customer_group.py": [],
+    "schemas/api/references/retail_customer.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/filters.py",
+      "schemas/api/common/sort_orders.py",
+      "schemas/api/references/fields.py",
+      "schemas/api/references/region.py",
+      "schemas/api/references/retail_customer_group.py"
+    ],
+    "schemas/api/references/retail_return_reason.py": [],
+    "schemas/api/references/size.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/stock.py": [
+      "schemas/api/base.py",
+      "schemas/api/references/firm.py"
+    ],
+    "schemas/api/references/tax_vat.py": [
+      "schemas/api/base.py",
+      "schemas/api/common/sort_orders.py"
+    ],
+    "schemas/api/references/tax.py": [],
+    "schemas/api/references/unit.py": [],
+    "schemas/api/reports/retail_report/count.py": [],
+    "schemas/api/reports/retail_report/payment.py": [],
+    "schemas/integration/base.py": [],
+    "schemas/integration/email_integration_base.py": [
+      "schemas/integration/base.py",
+      "schemas/integration/integration_base.py"
+    ],
+    "schemas/integration/integration_base.py": [],
+    "schemas/integration/sms_integration_base.py": [
+      "schemas/integration/base.py",
+      "schemas/integration/integration_base.py"
+    ],
+    "schemas/integration/telegram_integration_base.py": [
+      "schemas/integration/integration_base.py"
+    ],
+    "schemas/scheduler.py": [
+      "schemas/api/base.py"
+    ],
+    "server.py": [
+      "clients/asterisk_crm_channel/main.py",
+      "clients/edo_didox/main.py",
+      "clients/edo_fakturauz/main.py",
+      "clients/external_chat_crm_channel/main.py",
+      "clients/gpt_crm_chat_assistant/main.py",
+      "clients/instagram_crm_channel/main.py",
+      "clients/marketplace_toserver/main.py",
+      "clients/meta_leadgen_crm_channel/main.py",
+      "clients/telegram_bot_crm_channel/main.py",
+      "clients/telegram_bot_notification/main.py",
+      "clients/telegram_bot_orders/main.py",
+      "clients/telegram_bot_quantity/main.py",
+      "clients/telegram_business_crm_channel/main.py",
+      "core/exception_handlers.py",
+      "core/logger.py",
+      "routes/clients.py",
+      "routes/healthcheck.py"
+    ]
+  }
+}

@@ -1,0 +1,3516 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 28,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "schemas/api/docs/wholesale.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 85,
+      "classes": [
+        {
+          "name": "DocWholeSale",
+          "startLine": 20,
+          "endLine": 43,
+          "methods": [],
+          "properties": [
+            "id",
+            "date",
+            "code",
+            "partner",
+            "stock",
+            "contract",
+            "seller",
+            "currency",
+            "description",
+            "amount",
+            "exchange_rate",
+            "additional_expenses_amount",
+            "vat_calculation_type",
+            "attached_user",
+            "price_type",
+            "blocked",
+            "current_user_blocked",
+            "performed",
+            "deleted_mark",
+            "last_update"
+          ]
+        },
+        {
+          "name": "DocPurchaseSortOrder",
+          "startLine": 46,
+          "endLine": 48,
+          "methods": [],
+          "properties": [
+            "column",
+            "direction"
+          ]
+        },
+        {
+          "name": "DocWholeSaleGetRequest",
+          "startLine": 51,
+          "endLine": 88,
+          "methods": [
+            "_check_dates"
+          ],
+          "properties": [
+            "start_date",
+            "end_date",
+            "ids",
+            "firm_ids",
+            "stock_ids",
+            "partner_ids",
+            "contract_ids",
+            "attached_user_ids",
+            "vat_calculation_type",
+            "performed",
+            "blocked",
+            "deleted_mark",
+            "search",
+            "sort_orders",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "DocWholeSaleAddRequest",
+          "startLine": 91,
+          "endLine": 106,
+          "methods": [],
+          "properties": [
+            "date",
+            "partner_id",
+            "stock_id",
+            "currency_id",
+            "contract_id",
+            "exchange_rate",
+            "description",
+            "vat_calculation_type",
+            "attached_user_id",
+            "price_type_id",
+            "seller_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DocWholeSale",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "DocPurchaseSortOrder",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "DocWholeSaleGetRequest",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "DocWholeSaleAddRequest",
+          "line": 91,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_check_dates",
+          "callee": "ValueError",
+          "lineNumber": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "schemas/api/docs/wholesale_operation.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 65,
+      "classes": [
+        {
+          "name": "WholeSaleOperation",
+          "startLine": 17,
+          "endLine": 35,
+          "methods": [],
+          "properties": [
+            "id",
+            "document_id",
+            "item",
+            "quantity",
+            "cost",
+            "vat_value",
+            "vat_calculation_type",
+            "price",
+            "price2",
+            "current_price",
+            "last_purchase_cost",
+            "description",
+            "additional_expenses_amount",
+            "last_update"
+          ]
+        },
+        {
+          "name": "WholeSaleOperationGetRequest",
+          "startLine": 41,
+          "endLine": 48,
+          "methods": [],
+          "properties": [
+            "ids",
+            "item_ids",
+            "document_ids"
+          ]
+        },
+        {
+          "name": "WholeSaleOperationAddRequest",
+          "startLine": 54,
+          "endLine": 66,
+          "methods": [],
+          "properties": [
+            "document_id",
+            "item_id",
+            "quantity",
+            "price",
+            "price2",
+            "vat_value",
+            "description"
+          ]
+        },
+        {
+          "name": "WholeSaleOperationEditItem",
+          "startLine": 72,
+          "endLine": 83,
+          "methods": [],
+          "properties": [
+            "id",
+            "quantity",
+            "cost",
+            "vat_value",
+            "price",
+            "additional_expenses_amount",
+            "description"
+          ]
+        },
+        {
+          "name": "WholeSaleOperationDeleteItem",
+          "startLine": 89,
+          "endLine": 94,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        },
+        {
+          "name": "WholeSaleOperationActionResponse",
+          "startLine": 97,
+          "endLine": 98,
+          "methods": [],
+          "properties": [
+            "result"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WholeSaleOperation",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "WholeSaleOperationGetRequest",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "WholeSaleOperationAddRequest",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "WholeSaleOperationEditItem",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "WholeSaleOperationDeleteItem",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "WholeSaleOperationActionResponse",
+          "line": 97,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/rbac/user.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 160,
+      "nonEmptyLines": 135,
+      "classes": [
+        {
+          "name": "UserGroup",
+          "startLine": 11,
+          "endLine": 29,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "parent_id",
+            "name",
+            "child_count",
+            "last_update"
+          ]
+        },
+        {
+          "name": "User",
+          "startLine": 32,
+          "endLine": 102,
+          "methods": [
+            "_strip_strings"
+          ],
+          "properties": [
+            "id",
+            "full_name",
+            "main_phone",
+            "internal_phone",
+            "user_group",
+            "enable_hints",
+            "system",
+            "seller_barcode",
+            "last_update",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "sex",
+            "date_of_birth",
+            "address",
+            "phones",
+            "email",
+            "description",
+            "login",
+            "can_authorize",
+            "active",
+            "language_code"
+          ]
+        },
+        {
+          "name": "UserGetRequest",
+          "startLine": 105,
+          "endLine": 146,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "group_ids",
+            "active",
+            "can_authorize",
+            "search",
+            "internal_phone",
+            "sort_orders",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "UserGetResponse",
+          "startLine": 149,
+          "endLine": 152,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UserGroup",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "User",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "UserGetRequest",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "UserGetResponse",
+          "line": 149,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 29
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "isinstance",
+          "lineNumber": 29
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "value.strip",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "isinstance",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 146
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "schemas/api/references/brand.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 68,
+      "classes": [
+        {
+          "name": "Brand",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "BrandGetRequest",
+          "startLine": 25,
+          "endLine": 53,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "BrandAddRequest",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "BrandEditRequest",
+          "startLine": 69,
+          "endLine": 80,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "BrandDeleteRequest",
+          "startLine": 83,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Brand",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "BrandGetRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "BrandAddRequest",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "BrandEditRequest",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "BrandDeleteRequest",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/color.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 68,
+      "classes": [
+        {
+          "name": "Color",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ColorGetRequest",
+          "startLine": 25,
+          "endLine": 53,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "ColorAddRequest",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "ColorEditRequest",
+          "startLine": 69,
+          "endLine": 80,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "ColorDeleteRequest",
+          "startLine": 83,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Color",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "ColorGetRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "ColorAddRequest",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "ColorEditRequest",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "ColorDeleteRequest",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/country.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 68,
+      "classes": [
+        {
+          "name": "Country",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "CountryGetRequest",
+          "startLine": 25,
+          "endLine": 53,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "CountryAddRequest",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "CountryEditRequest",
+          "startLine": 69,
+          "endLine": 80,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "CountryDeleteRequest",
+          "startLine": 83,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Country",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "CountryGetRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "CountryAddRequest",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "CountryEditRequest",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "CountryDeleteRequest",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/currency.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 104,
+      "nonEmptyLines": 85,
+      "classes": [
+        {
+          "name": "Currency",
+          "startLine": 12,
+          "endLine": 45,
+          "methods": [
+            "_normalize_code_chr",
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "code_num",
+            "code_chr",
+            "name",
+            "exchange_rate",
+            "is_base",
+            "deleted",
+            "last_update"
+          ]
+        },
+        {
+          "name": "CurrencyGetRequest",
+          "startLine": 48,
+          "endLine": 91,
+          "methods": [
+            "_normalize_code_list"
+          ],
+          "properties": [
+            "ids",
+            "code_chr_list",
+            "code_num_list",
+            "deleted",
+            "is_base",
+            "sort_orders",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "CurrencyGetResponse",
+          "startLine": 94,
+          "endLine": 97,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Currency",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "CurrencyGetRequest",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "CurrencyGetResponse",
+          "line": 94,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_normalize_code_chr",
+          "callee": "isinstance",
+          "lineNumber": 37
+        },
+        {
+          "caller": "_normalize_code_chr",
+          "callee": "value.strip().upper",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_normalize_code_chr",
+          "callee": "value.strip",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "isinstance",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_normalize_code_list",
+          "callee": "isinstance",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_normalize_code_list",
+          "callee": "item.strip",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_normalize_code_list",
+          "callee": "normalized.append",
+          "lineNumber": 90
+        },
+        {
+          "caller": "_normalize_code_list",
+          "callee": "item.strip().upper",
+          "lineNumber": 90
+        },
+        {
+          "caller": "_normalize_code_list",
+          "callee": "item.strip",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "schemas/api/references/delivery_courier.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 18,
+      "classes": [
+        {
+          "name": "DeliveryCourier",
+          "startLine": 10,
+          "endLine": 24,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "description",
+            "last_update"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DeliveryCourier",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "schemas/api/references/delivery_from.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 22,
+      "classes": [
+        {
+          "name": "DeliveryFrom",
+          "startLine": 10,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "deleted",
+            "last_update"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DeliveryFrom",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "schemas/api/references/delivery_type.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 33,
+      "classes": [
+        {
+          "name": "DeliveryType",
+          "startLine": 10,
+          "endLine": 25,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "DeliveryTypeGetRequest",
+          "startLine": 28,
+          "endLine": 36,
+          "methods": [],
+          "properties": [
+            "ids",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "DeliveryTypeGetResponse",
+          "startLine": 39,
+          "endLine": 42,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DeliveryType",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "DeliveryTypeGetRequest",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "DeliveryTypeGetResponse",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "schemas/api/references/department.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 68,
+      "classes": [
+        {
+          "name": "Department",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "DepartmentGetRequest",
+          "startLine": 25,
+          "endLine": 53,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "DepartmentAddRequest",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "DepartmentEditRequest",
+          "startLine": 69,
+          "endLine": 80,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "DepartmentDeleteRequest",
+          "startLine": 83,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Department",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "DepartmentGetRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "DepartmentAddRequest",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "DepartmentEditRequest",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "DepartmentDeleteRequest",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/firm.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 92,
+      "nonEmptyLines": 72,
+      "classes": [
+        {
+          "name": "Firm",
+          "startLine": 13,
+          "endLine": 60,
+          "methods": [
+            "fullname",
+            "_strip_strings"
+          ],
+          "properties": [
+            "id",
+            "group",
+            "name",
+            "full_name",
+            "boss_name",
+            "address",
+            "phones",
+            "description",
+            "inn",
+            "bank_name",
+            "mfo",
+            "rs",
+            "oked",
+            "vat_index",
+            "deleted_mark",
+            "last_update"
+          ]
+        },
+        {
+          "name": "FirmGetRequest",
+          "startLine": 63,
+          "endLine": 79,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "group_ids",
+            "sort_orders",
+            "search",
+            "deleted_mark",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "FirmGetResponse",
+          "startLine": 82,
+          "endLine": 85,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Firm",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "FirmGetRequest",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "FirmGetResponse",
+          "line": 82,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_strings",
+          "callee": "value.strip",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "isinstance",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 79
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "schemas/api/references/firm_group.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 12,
+      "classes": [
+        {
+          "name": "FirmGroup",
+          "startLine": 6,
+          "endLine": 15,
+          "methods": [],
+          "properties": [
+            "id",
+            "parent_id",
+            "name",
+            "child_count",
+            "last_update"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FirmGroup",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "schemas/api/references/item.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 676,
+      "nonEmptyLines": 550,
+      "classes": [
+        {
+          "name": "ItemType",
+          "startLine": 26,
+          "endLine": 30,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SortDirection",
+          "startLine": 33,
+          "endLine": 37,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemImportComparationValue",
+          "startLine": 40,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemMatchingType",
+          "startLine": 52,
+          "endLine": 61,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Item",
+          "startLine": 65,
+          "endLine": 152,
+          "methods": [
+            "_strip_strings",
+            "_normalize_type"
+          ],
+          "properties": [
+            "id",
+            "group",
+            "department",
+            "vat",
+            "barcode_list",
+            "base_barcode",
+            "unit",
+            "unit2",
+            "color",
+            "size",
+            "brand",
+            "producer",
+            "country",
+            "compound",
+            "deleted_mark",
+            "image_url",
+            "parent_id",
+            "has_child",
+            "last_update",
+            "type",
+            "code",
+            "name",
+            "fullname",
+            "description",
+            "articul",
+            "kdt",
+            "min_quantity",
+            "icps",
+            "assemblable",
+            "disassemblable",
+            "is_labeled",
+            "comission_tin",
+            "package_code",
+            "origin",
+            "partner_id"
+          ]
+        },
+        {
+          "name": "ItemSearchRequest",
+          "startLine": 156,
+          "endLine": 192,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "code",
+            "name",
+            "articul",
+            "barcode",
+            "deleted_mark",
+            "assemblable",
+            "disassemblable",
+            "compound",
+            "has_child",
+            "type"
+          ]
+        },
+        {
+          "name": "RedefinitionOption",
+          "startLine": 196,
+          "endLine": 204,
+          "methods": [],
+          "properties": [
+            "language",
+            "app_id"
+          ]
+        },
+        {
+          "name": "ItemGetRequest",
+          "startLine": 207,
+          "endLine": 236,
+          "methods": [],
+          "properties": [
+            "ids",
+            "group_ids",
+            "type",
+            "parent_ids",
+            "codes",
+            "redefinition_option",
+            "department_ids",
+            "deleted_mark",
+            "assemblable",
+            "disassemblable",
+            "compound",
+            "has_child",
+            "is_labeled",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "ItemGetExtSortColumn",
+          "startLine": 240,
+          "endLine": 253,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemGetExtSortOrder",
+          "startLine": 256,
+          "endLine": 272,
+          "methods": [
+            "_normalize_dir"
+          ],
+          "properties": [
+            "column",
+            "direction"
+          ]
+        },
+        {
+          "name": "ItemGetExtImageSize",
+          "startLine": 275,
+          "endLine": 280,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemGetExtRequest",
+          "startLine": 283,
+          "endLine": 330,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "stock_id",
+            "price_type_id",
+            "sort_orders",
+            "search",
+            "zero_quantity",
+            "zero_price",
+            "image_size",
+            "ids",
+            "group_ids",
+            "type",
+            "parent_ids",
+            "codes",
+            "redefinition_option",
+            "department_ids",
+            "deleted_mark",
+            "assemblable",
+            "disassemblable",
+            "compound",
+            "has_child",
+            "has_image",
+            "is_labeled",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "ItemQuantity",
+          "startLine": 334,
+          "endLine": 342,
+          "methods": [],
+          "properties": [
+            "stock",
+            "common",
+            "allowed",
+            "booked"
+          ]
+        },
+        {
+          "name": "ItemGetQuantityRequest",
+          "startLine": 346,
+          "endLine": 359,
+          "methods": [],
+          "properties": [
+            "item_id",
+            "stock_ids",
+            "date"
+          ]
+        },
+        {
+          "name": "ItemGetQuantityResponse",
+          "startLine": 362,
+          "endLine": 365,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemGetCurrentQuantityRequest",
+          "startLine": 368,
+          "endLine": 374,
+          "methods": [],
+          "properties": [
+            "item_ids",
+            "stock_ids"
+          ]
+        },
+        {
+          "name": "ItemCurrentQuantity",
+          "startLine": 377,
+          "endLine": 384,
+          "methods": [],
+          "properties": [
+            "item_id",
+            "stock_id",
+            "quantity"
+          ]
+        },
+        {
+          "name": "ItemGetCurrentQuantityResponse",
+          "startLine": 387,
+          "endLine": 390,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemShort",
+          "startLine": 393,
+          "endLine": 403,
+          "methods": [],
+          "properties": [
+            "id",
+            "group_id",
+            "code",
+            "name",
+            "deleted_mark",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ItemGetShortResponse",
+          "startLine": 406,
+          "endLine": 409,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemExt",
+          "startLine": 412,
+          "endLine": 431,
+          "methods": [
+            "_strip_img"
+          ],
+          "properties": [
+            "item",
+            "quantity",
+            "pricetype",
+            "price",
+            "last_purchase_cost",
+            "image_url"
+          ]
+        },
+        {
+          "name": "ItemImportData",
+          "startLine": 435,
+          "endLine": 502,
+          "methods": [
+            "_strip_import"
+          ],
+          "properties": [
+            "index",
+            "name",
+            "fullname",
+            "code",
+            "articul",
+            "group_path",
+            "barcodes",
+            "color_name",
+            "brand_name",
+            "producer_name",
+            "size_name",
+            "unit_name",
+            "department_name",
+            "description",
+            "vat_name",
+            "icps",
+            "icpsbarcode",
+            "labeled",
+            "package_code",
+            "parent_code"
+          ]
+        },
+        {
+          "name": "ItemImportRequest",
+          "startLine": 505,
+          "endLine": 553,
+          "methods": [
+            "_strip_req",
+            "_normalize_comparation"
+          ],
+          "properties": [
+            "comparation_value",
+            "group_separator",
+            "barcode_separator",
+            "group_id",
+            "unit_id",
+            "vat_value_id",
+            "data"
+          ]
+        },
+        {
+          "name": "ItemImportResult",
+          "startLine": 556,
+          "endLine": 570,
+          "methods": [
+            "_normalize_index"
+          ],
+          "properties": [
+            "success",
+            "index",
+            "item_id"
+          ]
+        },
+        {
+          "name": "ItemImportResponse",
+          "startLine": 573,
+          "endLine": 576,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemMatchingData",
+          "startLine": 579,
+          "endLine": 592,
+          "methods": [
+            "_normalize_match_data"
+          ],
+          "properties": [
+            "index",
+            "value"
+          ]
+        },
+        {
+          "name": "ItemMatchingRequest",
+          "startLine": 595,
+          "endLine": 613,
+          "methods": [
+            "_normalize_type"
+          ],
+          "properties": [
+            "type",
+            "data"
+          ]
+        },
+        {
+          "name": "ItemMatchingResult",
+          "startLine": 616,
+          "endLine": 630,
+          "methods": [
+            "_normalize_match_result"
+          ],
+          "properties": [
+            "index",
+            "item_id",
+            "value"
+          ]
+        },
+        {
+          "name": "ItemMatchingResponse",
+          "startLine": 633,
+          "endLine": 636,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ItemType",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "SortDirection",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "ItemImportComparationValue",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "ItemMatchingType",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "Item",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "ItemSearchRequest",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "RedefinitionOption",
+          "line": 196,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetRequest",
+          "line": 207,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetExtSortColumn",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetExtSortOrder",
+          "line": 256,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetExtImageSize",
+          "line": 275,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetExtRequest",
+          "line": 283,
+          "isDefault": false
+        },
+        {
+          "name": "ItemQuantity",
+          "line": 334,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetQuantityRequest",
+          "line": 346,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetQuantityResponse",
+          "line": 362,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetCurrentQuantityRequest",
+          "line": 368,
+          "isDefault": false
+        },
+        {
+          "name": "ItemCurrentQuantity",
+          "line": 377,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetCurrentQuantityResponse",
+          "line": 387,
+          "isDefault": false
+        },
+        {
+          "name": "ItemShort",
+          "line": 393,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGetShortResponse",
+          "line": 406,
+          "isDefault": false
+        },
+        {
+          "name": "ItemExt",
+          "line": 412,
+          "isDefault": false
+        },
+        {
+          "name": "ItemImportData",
+          "line": 435,
+          "isDefault": false
+        },
+        {
+          "name": "ItemImportRequest",
+          "line": 505,
+          "isDefault": false
+        },
+        {
+          "name": "ItemImportResult",
+          "line": 556,
+          "isDefault": false
+        },
+        {
+          "name": "ItemImportResponse",
+          "line": 573,
+          "isDefault": false
+        },
+        {
+          "name": "ItemMatchingData",
+          "line": 579,
+          "isDefault": false
+        },
+        {
+          "name": "ItemMatchingRequest",
+          "line": 595,
+          "isDefault": false
+        },
+        {
+          "name": "ItemMatchingResult",
+          "line": 616,
+          "isDefault": false
+        },
+        {
+          "name": "ItemMatchingResponse",
+          "line": 633,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_strings",
+          "callee": "v.strip",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "isinstance",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "isinstance",
+          "lineNumber": 150
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "v.strip",
+          "lineNumber": 192
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 192
+        },
+        {
+          "caller": "_normalize_dir",
+          "callee": "isinstance",
+          "lineNumber": 268
+        },
+        {
+          "caller": "_normalize_dir",
+          "callee": "v.strip().upper",
+          "lineNumber": 269
+        },
+        {
+          "caller": "_normalize_dir",
+          "callee": "v.strip",
+          "lineNumber": 269
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "v.strip",
+          "lineNumber": 330
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 330
+        },
+        {
+          "caller": "_strip_img",
+          "callee": "v.strip",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_strip_img",
+          "callee": "isinstance",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_strip_import",
+          "callee": "v.strip",
+          "lineNumber": 502
+        },
+        {
+          "caller": "_strip_import",
+          "callee": "isinstance",
+          "lineNumber": 502
+        },
+        {
+          "caller": "_strip_req",
+          "callee": "v.strip",
+          "lineNumber": 540
+        },
+        {
+          "caller": "_strip_req",
+          "callee": "isinstance",
+          "lineNumber": 540
+        },
+        {
+          "caller": "_normalize_comparation",
+          "callee": "isinstance",
+          "lineNumber": 545
+        },
+        {
+          "caller": "_normalize_comparation",
+          "callee": "isinstance",
+          "lineNumber": 547
+        },
+        {
+          "caller": "_normalize_comparation",
+          "callee": "v.strip",
+          "lineNumber": 548
+        },
+        {
+          "caller": "_normalize_comparation",
+          "callee": "item.value.lower",
+          "lineNumber": 550
+        },
+        {
+          "caller": "_normalize_comparation",
+          "callee": "normalized.lower",
+          "lineNumber": 550
+        },
+        {
+          "caller": "_normalize_index",
+          "callee": "str(value).strip",
+          "lineNumber": 570
+        },
+        {
+          "caller": "_normalize_index",
+          "callee": "str",
+          "lineNumber": 570
+        },
+        {
+          "caller": "_normalize_match_data",
+          "callee": "str(value).strip",
+          "lineNumber": 592
+        },
+        {
+          "caller": "_normalize_match_data",
+          "callee": "str",
+          "lineNumber": 592
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "isinstance",
+          "lineNumber": 606
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "isinstance",
+          "lineNumber": 608
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "v.strip",
+          "lineNumber": 609
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "item.value.lower",
+          "lineNumber": 611
+        },
+        {
+          "caller": "_normalize_type",
+          "callee": "normalized.lower",
+          "lineNumber": 611
+        },
+        {
+          "caller": "_normalize_match_result",
+          "callee": "str(value).strip",
+          "lineNumber": 630
+        },
+        {
+          "caller": "_normalize_match_result",
+          "callee": "str",
+          "lineNumber": 630
+        }
+      ],
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 29,
+        "functionCount": 0,
+        "classCount": 29
+      }
+    },
+    {
+      "path": "schemas/api/references/item_group.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 65,
+      "nonEmptyLines": 49,
+      "classes": [
+        {
+          "name": "ItemGroup",
+          "startLine": 12,
+          "endLine": 38,
+          "methods": [
+            "_strip_fields"
+          ],
+          "properties": [
+            "id",
+            "parent_id",
+            "path",
+            "name",
+            "child_count",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ItemGroupGetRequest",
+          "startLine": 41,
+          "endLine": 59,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "ids",
+            "parent_ids",
+            "name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ItemGroup",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "ItemGroupGetRequest",
+          "line": 41,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_fields",
+          "callee": "value.strip",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_strip_fields",
+          "callee": "isinstance",
+          "lineNumber": 38
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "isinstance",
+          "lineNumber": 59
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "schemas/api/references/item_operation.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 119,
+      "nonEmptyLines": 98,
+      "classes": [
+        {
+          "name": "ItemOperationDocumentType",
+          "startLine": 15,
+          "endLine": 24,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ItemOperation",
+          "startLine": 27,
+          "endLine": 77,
+          "methods": [],
+          "properties": [
+            "date",
+            "document_id",
+            "document_type",
+            "document_type_name",
+            "document_code",
+            "doc_type_name",
+            "doc_code",
+            "stock",
+            "quantity",
+            "cost",
+            "additional_expenses_amount",
+            "price",
+            "price2",
+            "exchange_rate",
+            "positive",
+            "vat_value",
+            "vat_calculation_type"
+          ]
+        },
+        {
+          "name": "ItemOperationGetRequest",
+          "startLine": 80,
+          "endLine": 105,
+          "methods": [],
+          "properties": [
+            "item_id",
+            "stock_ids",
+            "firm_ids",
+            "sort_orders",
+            "start_date",
+            "end_date",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "ItemOperationGetResponse",
+          "startLine": 108,
+          "endLine": 111,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ItemOperationDocumentType",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "ItemOperation",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "ItemOperationGetRequest",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "ItemOperationGetResponse",
+          "line": 108,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "schemas/api/references/item_price.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 69,
+      "classes": [
+        {
+          "name": "ItemPrice",
+          "startLine": 14,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "item_id",
+            "price_type",
+            "value",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ItemPriceGetRequest",
+          "startLine": 31,
+          "endLine": 41,
+          "methods": [],
+          "properties": [
+            "item_ids",
+            "price_type_ids"
+          ]
+        },
+        {
+          "name": "ItemPriceGetResponse",
+          "startLine": 44,
+          "endLine": 47,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ItemPreCost",
+          "startLine": 50,
+          "endLine": 61,
+          "methods": [],
+          "properties": [
+            "item_id",
+            "value",
+            "cost_date"
+          ]
+        },
+        {
+          "name": "ItemPriceGetPreCostRequest",
+          "startLine": 64,
+          "endLine": 81,
+          "methods": [],
+          "properties": [
+            "item_ids",
+            "cost_date",
+            "firm_id",
+            "price_type_ids"
+          ]
+        },
+        {
+          "name": "ItemPriceGetPreCostResponse",
+          "startLine": 84,
+          "endLine": 87,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ItemPrice",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "ItemPriceGetRequest",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "ItemPriceGetResponse",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "ItemPreCost",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "ItemPriceGetPreCostRequest",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "ItemPriceGetPreCostResponse",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/references/operating_cash.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 107,
+      "nonEmptyLines": 87,
+      "classes": [
+        {
+          "name": "OperatingCash",
+          "startLine": 14,
+          "endLine": 30,
+          "methods": [],
+          "properties": [
+            "id",
+            "stock",
+            "key",
+            "price_type",
+            "description",
+            "virtual",
+            "auto_close",
+            "max_cheque_quantity_in_session",
+            "last_update",
+            "user_accept"
+          ]
+        },
+        {
+          "name": "OperatingCashSortColumn",
+          "startLine": 33,
+          "endLine": 42,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SortDirection",
+          "startLine": 45,
+          "endLine": 47,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "OperatingCashSortOrder",
+          "startLine": 50,
+          "endLine": 58,
+          "methods": [],
+          "properties": [
+            "column",
+            "direction"
+          ]
+        },
+        {
+          "name": "OperatingCashGetRequest",
+          "startLine": 61,
+          "endLine": 98,
+          "methods": [],
+          "properties": [
+            "ids",
+            "firm_ids",
+            "stock_ids",
+            "price_type_ids",
+            "is_virtual",
+            "accepted_user_id",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OperatingCash",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "OperatingCashSortColumn",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "SortDirection",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "OperatingCashSortOrder",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "OperatingCashGetRequest",
+          "line": 61,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/partner.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 190,
+      "nonEmptyLines": 154,
+      "functions": [
+        {
+          "name": "_normalize_legal_status",
+          "startLine": 23,
+          "endLine": 33,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "LegalStatus",
+          "startLine": 16,
+          "endLine": 20,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Partner",
+          "startLine": 36,
+          "endLine": 83,
+          "methods": [
+            "_normalize_legal_status",
+            "_strip_strings"
+          ],
+          "properties": [
+            "id",
+            "group",
+            "legal_status",
+            "name",
+            "fullname",
+            "boss_name",
+            "address",
+            "phones",
+            "email",
+            "description",
+            "inn",
+            "bank_name",
+            "mfo",
+            "rs",
+            "oked",
+            "vat_index",
+            "deleted_mark",
+            "last_update"
+          ]
+        },
+        {
+          "name": "PartnerGetRequest",
+          "startLine": 86,
+          "endLine": 120,
+          "methods": [
+            "_strip_search",
+            "_normalize_legal_status",
+            "_normalize_legal_statuses"
+          ],
+          "properties": [
+            "ids",
+            "group_ids",
+            "legal_status",
+            "legal_statuses",
+            "sort_orders",
+            "filters",
+            "deleted_mark",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "PartnerGetResponse",
+          "startLine": 123,
+          "endLine": 126,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PartnerAddRequest",
+          "startLine": 129,
+          "endLine": 174,
+          "methods": [
+            "_normalize_legal_status",
+            "_strip_add_strings"
+          ],
+          "properties": [
+            "group_id",
+            "legal_status",
+            "name",
+            "fullname",
+            "boss_name",
+            "address",
+            "phones",
+            "email",
+            "description",
+            "inn",
+            "bank_name",
+            "mfo",
+            "rs",
+            "oked",
+            "vat_index",
+            "fields"
+          ]
+        },
+        {
+          "name": "PartnerAddResponse",
+          "startLine": 177,
+          "endLine": 180,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LegalStatus",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "_normalize_legal_status",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "Partner",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "PartnerGetRequest",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "PartnerGetResponse",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "PartnerAddRequest",
+          "line": 129,
+          "isDefault": false
+        },
+        {
+          "name": "PartnerAddResponse",
+          "line": 177,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "isinstance",
+          "lineNumber": 24
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "isinstance",
+          "lineNumber": 26
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "{1: LegalStatus.Legal, 2: LegalStatus.Natural}.get",
+          "lineNumber": 27
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "isinstance",
+          "lineNumber": 28
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "value.strip",
+          "lineNumber": 29
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "item.value.lower",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "normalized.lower",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "_normalize_legal_status",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "value.strip",
+          "lineNumber": 83
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "isinstance",
+          "lineNumber": 83
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 108
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 108
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "_normalize_legal_status",
+          "lineNumber": 113
+        },
+        {
+          "caller": "_normalize_legal_statuses",
+          "callee": "_normalize_legal_status",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_normalize_legal_status",
+          "callee": "_normalize_legal_status",
+          "lineNumber": 154
+        },
+        {
+          "caller": "_strip_add_strings",
+          "callee": "value.strip",
+          "lineNumber": 174
+        },
+        {
+          "caller": "_strip_add_strings",
+          "callee": "isinstance",
+          "lineNumber": 174
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 7,
+        "functionCount": 1,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/references/partner_group.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 11,
+      "classes": [
+        {
+          "name": "PartnerGroup",
+          "startLine": 6,
+          "endLine": 15,
+          "methods": [],
+          "properties": [
+            "id",
+            "parent_id",
+            "name",
+            "child_count",
+            "last_update"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PartnerGroup",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "schemas/api/references/price_type.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 130,
+      "nonEmptyLines": 101,
+      "classes": [
+        {
+          "name": "PriceType",
+          "startLine": 13,
+          "endLine": 42,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name",
+            "round_to",
+            "markup",
+            "max_discount",
+            "currency",
+            "currency_additional",
+            "last_update"
+          ]
+        },
+        {
+          "name": "PriceTypeSortColumn",
+          "startLine": 45,
+          "endLine": 53,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PriceTypeSortDirection",
+          "startLine": 56,
+          "endLine": 60,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PriceTypeSortOrder",
+          "startLine": 63,
+          "endLine": 80,
+          "methods": [
+            "_normalize_direction"
+          ],
+          "properties": [
+            "column",
+            "direction"
+          ]
+        },
+        {
+          "name": "PriceTypeGetRequest",
+          "startLine": 83,
+          "endLine": 114,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "currency_ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "PriceTypeGetResponse",
+          "startLine": 117,
+          "endLine": 120,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PriceType",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "PriceTypeSortColumn",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "PriceTypeSortDirection",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "PriceTypeSortOrder",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "PriceTypeGetRequest",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "PriceTypeGetResponse",
+          "line": 117,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 42
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "isinstance",
+          "lineNumber": 42
+        },
+        {
+          "caller": "_normalize_direction",
+          "callee": "isinstance",
+          "lineNumber": 76
+        },
+        {
+          "caller": "_normalize_direction",
+          "callee": "value.strip().upper",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_normalize_direction",
+          "callee": "value.strip",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 114
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/references/producer.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 72,
+      "classes": [
+        {
+          "name": "Producer",
+          "startLine": 13,
+          "endLine": 24,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "ProducerGetRequest",
+          "startLine": 27,
+          "endLine": 55,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "ProducerAddRequest",
+          "startLine": 58,
+          "endLine": 68,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "ProducerEditRequest",
+          "startLine": 71,
+          "endLine": 84,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "ProducerDeleteRequest",
+          "startLine": 87,
+          "endLine": 92,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Producer",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "ProducerGetRequest",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "ProducerAddRequest",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "ProducerEditRequest",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "ProducerDeleteRequest",
+          "line": 87,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 84
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/retail_card.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 127,
+      "nonEmptyLines": 98,
+      "classes": [
+        {
+          "name": "RetailCardGroup",
+          "startLine": 12,
+          "endLine": 20,
+          "methods": [],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "RetailCustomer",
+          "startLine": 23,
+          "endLine": 31,
+          "methods": [],
+          "properties": [
+            "id",
+            "full_name"
+          ]
+        },
+        {
+          "name": "BarcodeType",
+          "startLine": 34,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "PromoProgram",
+          "startLine": 45,
+          "endLine": 53,
+          "methods": [],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "RetailCard",
+          "startLine": 56,
+          "endLine": 89,
+          "methods": [],
+          "properties": [
+            "id",
+            "group",
+            "customer",
+            "barcode_value",
+            "barcode_type",
+            "promo",
+            "bonus_amount",
+            "date",
+            "unlimited",
+            "expiry_date",
+            "last_purchase",
+            "enabled",
+            "last_update"
+          ]
+        },
+        {
+          "name": "RetailCardGetRequest",
+          "startLine": 92,
+          "endLine": 117,
+          "methods": [],
+          "properties": [
+            "ids",
+            "group_ids",
+            "customer_ids",
+            "promo_ids",
+            "barcode_value",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RetailCardGroup",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "RetailCustomer",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "BarcodeType",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "PromoProgram",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "RetailCard",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "RetailCardGetRequest",
+          "line": 92,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/references/size.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 68,
+      "classes": [
+        {
+          "name": "SizeChart",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "last_update"
+          ]
+        },
+        {
+          "name": "SizeChartGetRequest",
+          "startLine": 25,
+          "endLine": 53,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "SizeChartAddRequest",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "SizeChartEditRequest",
+          "startLine": 69,
+          "endLine": 80,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "SizeChartDeleteRequest",
+          "startLine": 83,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SizeChart",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "SizeChartGetRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "SizeChartAddRequest",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "SizeChartEditRequest",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "SizeChartDeleteRequest",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/stock.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 116,
+      "nonEmptyLines": 87,
+      "classes": [
+        {
+          "name": "SortColumn",
+          "startLine": 15,
+          "endLine": 20,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SortDirection",
+          "startLine": 23,
+          "endLine": 27,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SortOrder",
+          "startLine": 30,
+          "endLine": 38,
+          "methods": [],
+          "properties": [
+            "column",
+            "direction"
+          ]
+        },
+        {
+          "name": "Stock",
+          "startLine": 41,
+          "endLine": 62,
+          "methods": [
+            "_strip_strings"
+          ],
+          "properties": [
+            "id",
+            "name",
+            "address",
+            "firm",
+            "area",
+            "description",
+            "deleted_mark",
+            "last_update"
+          ]
+        },
+        {
+          "name": "StockGetRequest",
+          "startLine": 65,
+          "endLine": 100,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "firm_ids",
+            "sort_orders",
+            "search",
+            "deleted_mark",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "StockGetResponse",
+          "startLine": 103,
+          "endLine": 106,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SortColumn",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "SortDirection",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "SortOrder",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "Stock",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "StockGetRequest",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "StockGetResponse",
+          "line": 103,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_strings",
+          "callee": "value.strip",
+          "lineNumber": 62
+        },
+        {
+          "caller": "_strip_strings",
+          "callee": "isinstance",
+          "lineNumber": 62
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 100
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 100
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 6,
+        "functionCount": 0,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "schemas/api/references/tax.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 7,
+      "classes": [
+        {
+          "name": "VatCalculationType",
+          "startLine": 6,
+          "endLine": 11,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "VatCalculationType",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "schemas/api/references/tax_vat.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 69,
+      "classes": [
+        {
+          "name": "TaxVat",
+          "startLine": 14,
+          "endLine": 25,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "value",
+            "enabled",
+            "last_update"
+          ]
+        },
+        {
+          "name": "TaxVatGetRequest",
+          "startLine": 28,
+          "endLine": 54,
+          "methods": [
+            "_strip_search"
+          ],
+          "properties": [
+            "ids",
+            "sort_orders",
+            "search",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "TaxVatAddRequest",
+          "startLine": 57,
+          "endLine": 67,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "name"
+          ]
+        },
+        {
+          "name": "TaxVatEditRequest",
+          "startLine": 70,
+          "endLine": 81,
+          "methods": [
+            "_strip_name"
+          ],
+          "properties": [
+            "id",
+            "name"
+          ]
+        },
+        {
+          "name": "TaxVatDeleteRequest",
+          "startLine": 84,
+          "endLine": 89,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TaxVat",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "TaxVatGetRequest",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "TaxVatAddRequest",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "TaxVatEditRequest",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "TaxVatDeleteRequest",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_strip_search",
+          "callee": "value.strip",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_strip_search",
+          "callee": "isinstance",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_strip_name",
+          "callee": "value.strip",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "schemas/api/references/unit.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 13,
+      "classes": [
+        {
+          "name": "Unit",
+          "startLine": 6,
+          "endLine": 16,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "type",
+            "description",
+            "kkm_code",
+            "last_update"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Unit",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    }
+  ]
+}

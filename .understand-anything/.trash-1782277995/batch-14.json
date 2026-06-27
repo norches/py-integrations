@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "document:clients/external_chat_crm_channel/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "clients/external_chat_crm_channel/README.md",
+      "summary": "Documentation for the unified online customer-chat CRM channel integration, covering the handled webhooks, automatic actions, integration settings, external UI API actions, the unread-message event for the parent window, and the setup procedure.",
+      "tags": ["documentation", "integration", "crm-channel", "chat", "configuration"],
+      "complexity": "moderate",
+      "languageNotes": "Written in Russian; describes a REGOS external_chat CRM channel and its embeddable chat UI."
+    },
+    {
+      "id": "file:clients/external_chat_crm_channel/ui_template.css",
+      "type": "file",
+      "name": "ui_template.css",
+      "filePath": "clients/external_chat_crm_channel/ui_template.css",
+      "summary": "Stylesheet for the embeddable external-chat widget UI, defining layout, message bubbles, and visual styling for the customer chat template.",
+      "tags": ["stylesheet", "ui-template", "chat", "frontend", "styling"],
+      "complexity": "complex",
+      "languageNotes": "729 lines of plain CSS with no preprocessor; styles the standalone chat widget served by the external_chat CRM channel."
+    },
+    {
+      "id": "file:clients/external_chat_crm_channel/ui_template.html",
+      "type": "file",
+      "name": "ui_template.html",
+      "filePath": "clients/external_chat_crm_channel/ui_template.html",
+      "summary": "Standalone HTML template for the embeddable external-chat customer widget, providing the chat UI markup and inline client-side logic that posts unread-message events to the parent window and calls external UI API actions.",
+      "tags": ["ui-template", "chat", "frontend", "html", "widget"],
+      "complexity": "complex",
+      "languageNotes": "2311-line self-contained HTML template with inline JavaScript driving the embedded chat experience."
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:clients/external_chat_crm_channel/README.md",
+      "target": "file:clients/external_chat_crm_channel/ui_template.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:clients/external_chat_crm_channel/ui_template.html",
+      "target": "file:clients/external_chat_crm_channel/ui_template.css",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

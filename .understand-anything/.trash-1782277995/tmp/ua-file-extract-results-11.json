@@ -1,0 +1,30 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "clients/instagram_crm_channel/migrations/001_create_igc_business_map.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 13,
+      "nonEmptyLines": 13,
+      "definitions": [
+        {
+          "name": "igc_business_map",
+          "kind": "table",
+          "fields": [],
+          "startLine": 3,
+          "endLine": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 1
+      }
+    }
+  ]
+}

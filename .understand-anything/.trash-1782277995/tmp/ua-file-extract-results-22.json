@@ -1,0 +1,483 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "core/api/crm/pipeline.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 36,
+      "classes": [
+        {
+          "name": "PipelineService",
+          "startLine": 19,
+          "endLine": 46,
+          "methods": [
+            "__init__",
+            "get",
+            "add",
+            "edit",
+            "delete",
+            "set_access",
+            "set_stages"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PipelineService",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get",
+          "callee": "self.api.call",
+          "lineNumber": 31
+        },
+        {
+          "caller": "add",
+          "callee": "self.api.call",
+          "lineNumber": 34
+        },
+        {
+          "caller": "edit",
+          "callee": "self.api.call",
+          "lineNumber": 37
+        },
+        {
+          "caller": "delete",
+          "callee": "self.api.call",
+          "lineNumber": 40
+        },
+        {
+          "caller": "set_access",
+          "callee": "self.api.call",
+          "lineNumber": 43
+        },
+        {
+          "caller": "set_stages",
+          "callee": "self.api.call",
+          "lineNumber": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "core/api/readme.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 217,
+      "nonEmptyLines": 165,
+      "sections": [
+        {
+          "heading": "Конвенции для сервисов (`services/*`)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1) Область ответственности сервиса",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "2) Структура проекта",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "3) Импорты, типы и аннотации",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "4) Именование",
+          "level": 2,
+          "line": 56
+        },
+        {
+          "heading": "5) Логирование",
+          "level": 2,
+          "line": 83
+        },
+        {
+          "heading": "6) Конструктор",
+          "level": 2,
+          "line": 92
+        },
+        {
+          "heading": "7) Сигнатуры методов",
+          "level": 2,
+          "line": 100
+        },
+        {
+          "heading": "8) Асинхронность",
+          "level": 2,
+          "line": 116
+        },
+        {
+          "heading": "9) Докстринги (кратко и по делу)",
+          "level": 2,
+          "line": 122
+        },
+        {
+          "heading": "10) Ошибки",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "11) Пагинация и фильтры",
+          "level": 2,
+          "line": 150
+        },
+        {
+          "heading": "12) Ретраи, таймауты, идемпотентность",
+          "level": 2,
+          "line": 156
+        },
+        {
+          "heading": "13) Шаблон сервиса (generic)",
+          "level": 2,
+          "line": 161
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    },
+    {
+      "path": "schemas/api/crm/pipeline.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 186,
+      "nonEmptyLines": 124,
+      "classes": [
+        {
+          "name": "CrmEntityTypeEnum",
+          "startLine": 13,
+          "endLine": 15,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineStage",
+          "startLine": 18,
+          "endLine": 32,
+          "methods": [],
+          "properties": [
+            "id",
+            "pipeline_id",
+            "name",
+            "code",
+            "sort_order",
+            "is_start",
+            "is_terminal",
+            "is_success",
+            "active",
+            "last_update"
+          ]
+        },
+        {
+          "name": "Pipeline",
+          "startLine": 35,
+          "endLine": 49,
+          "methods": [],
+          "properties": [
+            "id",
+            "entity_type",
+            "name",
+            "is_default",
+            "access_all",
+            "access_user_ids",
+            "access_group_ids",
+            "active",
+            "last_update",
+            "stages"
+          ]
+        },
+        {
+          "name": "PipelineGetRequest",
+          "startLine": 52,
+          "endLine": 61,
+          "methods": [],
+          "properties": [
+            "entity_type",
+            "ids",
+            "active",
+            "limit",
+            "offset"
+          ]
+        },
+        {
+          "name": "PipelineAddRequest",
+          "startLine": 64,
+          "endLine": 75,
+          "methods": [],
+          "properties": [
+            "entity_type",
+            "name",
+            "is_default",
+            "access_all",
+            "access_user_ids",
+            "access_group_ids",
+            "active"
+          ]
+        },
+        {
+          "name": "PipelineEditRequest",
+          "startLine": 78,
+          "endLine": 86,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "is_default",
+            "active"
+          ]
+        },
+        {
+          "name": "PipelineDeleteRequest",
+          "startLine": 89,
+          "endLine": 94,
+          "methods": [],
+          "properties": [
+            "id"
+          ]
+        },
+        {
+          "name": "PipelineSetAccessRequest",
+          "startLine": 97,
+          "endLine": 106,
+          "methods": [],
+          "properties": [
+            "id",
+            "access_all",
+            "access_user_ids",
+            "access_group_ids",
+            "replace_mode"
+          ]
+        },
+        {
+          "name": "PipelineSetStage",
+          "startLine": 109,
+          "endLine": 121,
+          "methods": [],
+          "properties": [
+            "id",
+            "name",
+            "code",
+            "sort_order",
+            "is_start",
+            "is_terminal",
+            "is_success",
+            "active"
+          ]
+        },
+        {
+          "name": "PipelineSetStagesRequest",
+          "startLine": 124,
+          "endLine": 130,
+          "methods": [],
+          "properties": [
+            "pipeline_id",
+            "stages"
+          ]
+        },
+        {
+          "name": "PipelineGetResponse",
+          "startLine": 133,
+          "endLine": 136,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineAddResponse",
+          "startLine": 139,
+          "endLine": 142,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineEditResponse",
+          "startLine": 145,
+          "endLine": 148,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineDeleteResponse",
+          "startLine": 151,
+          "endLine": 154,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineSetAccessResponse",
+          "startLine": 157,
+          "endLine": 160,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PipelineSetStagesResponse",
+          "startLine": 163,
+          "endLine": 166,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CrmEntityTypeEnum",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineStage",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "Pipeline",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineGetRequest",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineAddRequest",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineEditRequest",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineDeleteRequest",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineSetAccessRequest",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineSetStage",
+          "line": 109,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineSetStagesRequest",
+          "line": 124,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineGetResponse",
+          "line": 133,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineAddResponse",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineEditResponse",
+          "line": 145,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineDeleteResponse",
+          "line": 151,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineSetAccessResponse",
+          "line": 157,
+          "isDefault": false
+        },
+        {
+          "name": "PipelineSetStagesResponse",
+          "line": 163,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 16,
+        "functionCount": 0,
+        "classCount": 16
+      }
+    },
+    {
+      "path": "schemas/api/readme.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 209,
+      "nonEmptyLines": 151,
+      "sections": [
+        {
+          "heading": "README",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Структура проекта (фрагмент)",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Конвенции для схем",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Базовые правила",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "Шаблон файла сущности",
+          "level": 3,
+          "line": 79
+        },
+        {
+          "heading": "Форматирование кода",
+          "level": 2,
+          "line": 199
+        },
+        {
+          "heading": "Lint",
+          "level": 2,
+          "line": 205
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    }
+  ]
+}

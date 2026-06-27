@@ -1,0 +1,1225 @@
+{
+  "nodes": [
+    {
+      "id": "file:schemas/api/docs/wholesale.py",
+      "type": "file",
+      "name": "wholesale.py",
+      "filePath": "schemas/api/docs/wholesale.py",
+      "summary": "Pydantic schemas for the wholesale sales document (DocWholeSale), including get/add request models with date-range validation.",
+      "tags": [
+        "data-model",
+        "schema-definition",
+        "wholesale",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale.py:DocWholeSale",
+      "type": "class",
+      "name": "DocWholeSale",
+      "filePath": "schemas/api/docs/wholesale.py",
+      "lineRange": [
+        20,
+        43
+      ],
+      "summary": "Pydantic schema class DocWholeSale with 20 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale.py:DocPurchaseSortOrder",
+      "type": "class",
+      "name": "DocPurchaseSortOrder",
+      "filePath": "schemas/api/docs/wholesale.py",
+      "lineRange": [
+        46,
+        48
+      ],
+      "summary": "Pydantic schema class DocPurchaseSortOrder with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale.py:DocWholeSaleGetRequest",
+      "type": "class",
+      "name": "DocWholeSaleGetRequest",
+      "filePath": "schemas/api/docs/wholesale.py",
+      "lineRange": [
+        51,
+        88
+      ],
+      "summary": "Request schema DocWholeSaleGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale.py:DocWholeSaleAddRequest",
+      "type": "class",
+      "name": "DocWholeSaleAddRequest",
+      "filePath": "schemas/api/docs/wholesale.py",
+      "lineRange": [
+        91,
+        106
+      ],
+      "summary": "Request schema DocWholeSaleAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/docs/wholesale_operation.py",
+      "type": "file",
+      "name": "wholesale_operation.py",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "summary": "Pydantic schemas for line-item operations on wholesale documents (add, edit, delete item) and their action responses.",
+      "tags": [
+        "data-model",
+        "schema-definition",
+        "wholesale",
+        "line-item"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperation",
+      "type": "class",
+      "name": "WholeSaleOperation",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        17,
+        35
+      ],
+      "summary": "Pydantic schema class WholeSaleOperation with 14 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationGetRequest",
+      "type": "class",
+      "name": "WholeSaleOperationGetRequest",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        41,
+        48
+      ],
+      "summary": "Request schema WholeSaleOperationGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationAddRequest",
+      "type": "class",
+      "name": "WholeSaleOperationAddRequest",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        54,
+        66
+      ],
+      "summary": "Request schema WholeSaleOperationAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationEditItem",
+      "type": "class",
+      "name": "WholeSaleOperationEditItem",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        72,
+        83
+      ],
+      "summary": "Pydantic schema class WholeSaleOperationEditItem with 7 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationDeleteItem",
+      "type": "class",
+      "name": "WholeSaleOperationDeleteItem",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        89,
+        94
+      ],
+      "summary": "Pydantic schema class WholeSaleOperationDeleteItem with 1 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationActionResponse",
+      "type": "class",
+      "name": "WholeSaleOperationActionResponse",
+      "filePath": "schemas/api/docs/wholesale_operation.py",
+      "lineRange": [
+        97,
+        98
+      ],
+      "summary": "Response schema WholeSaleOperationActionResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/rbac/user.py",
+      "type": "file",
+      "name": "user.py",
+      "filePath": "schemas/api/rbac/user.py",
+      "summary": "Pydantic models for RBAC users and user groups, with get-request filters and string-normalizing validators.",
+      "tags": [
+        "data-model",
+        "rbac",
+        "user",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/rbac/user.py:UserGroup",
+      "type": "class",
+      "name": "UserGroup",
+      "filePath": "schemas/api/rbac/user.py",
+      "lineRange": [
+        11,
+        29
+      ],
+      "summary": "Pydantic schema class UserGroup with 5 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/rbac/user.py:User",
+      "type": "class",
+      "name": "User",
+      "filePath": "schemas/api/rbac/user.py",
+      "lineRange": [
+        32,
+        102
+      ],
+      "summary": "Pydantic schema class User with 22 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/rbac/user.py:UserGetRequest",
+      "type": "class",
+      "name": "UserGetRequest",
+      "filePath": "schemas/api/rbac/user.py",
+      "lineRange": [
+        105,
+        146
+      ],
+      "summary": "Request schema UserGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/rbac/user.py:UserGetResponse",
+      "type": "class",
+      "name": "UserGetResponse",
+      "filePath": "schemas/api/rbac/user.py",
+      "lineRange": [
+        149,
+        152
+      ],
+      "summary": "Response schema UserGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/brand.py",
+      "type": "file",
+      "name": "brand.py",
+      "filePath": "schemas/api/references/brand.py",
+      "summary": "CRUD request/response Pydantic schemas for the Brand reference dictionary.",
+      "tags": [
+        "data-model",
+        "reference",
+        "crud",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/brand.py:Brand",
+      "type": "class",
+      "name": "Brand",
+      "filePath": "schemas/api/references/brand.py",
+      "lineRange": [
+        13,
+        22
+      ],
+      "summary": "Pydantic schema class Brand with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/brand.py:BrandGetRequest",
+      "type": "class",
+      "name": "BrandGetRequest",
+      "filePath": "schemas/api/references/brand.py",
+      "lineRange": [
+        25,
+        53
+      ],
+      "summary": "Request schema BrandGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/brand.py:BrandAddRequest",
+      "type": "class",
+      "name": "BrandAddRequest",
+      "filePath": "schemas/api/references/brand.py",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Request schema BrandAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/brand.py:BrandEditRequest",
+      "type": "class",
+      "name": "BrandEditRequest",
+      "filePath": "schemas/api/references/brand.py",
+      "lineRange": [
+        69,
+        80
+      ],
+      "summary": "Request schema BrandEditRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/brand.py:BrandDeleteRequest",
+      "type": "class",
+      "name": "BrandDeleteRequest",
+      "filePath": "schemas/api/references/brand.py",
+      "lineRange": [
+        83,
+        88
+      ],
+      "summary": "Request schema BrandDeleteRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/color.py",
+      "type": "file",
+      "name": "color.py",
+      "filePath": "schemas/api/references/color.py",
+      "summary": "CRUD request/response Pydantic schemas for the Color reference dictionary.",
+      "tags": [
+        "data-model",
+        "reference",
+        "crud",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/color.py:Color",
+      "type": "class",
+      "name": "Color",
+      "filePath": "schemas/api/references/color.py",
+      "lineRange": [
+        13,
+        22
+      ],
+      "summary": "Pydantic schema class Color with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/color.py:ColorGetRequest",
+      "type": "class",
+      "name": "ColorGetRequest",
+      "filePath": "schemas/api/references/color.py",
+      "lineRange": [
+        25,
+        53
+      ],
+      "summary": "Request schema ColorGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/color.py:ColorAddRequest",
+      "type": "class",
+      "name": "ColorAddRequest",
+      "filePath": "schemas/api/references/color.py",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Request schema ColorAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/color.py:ColorEditRequest",
+      "type": "class",
+      "name": "ColorEditRequest",
+      "filePath": "schemas/api/references/color.py",
+      "lineRange": [
+        69,
+        80
+      ],
+      "summary": "Request schema ColorEditRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/color.py:ColorDeleteRequest",
+      "type": "class",
+      "name": "ColorDeleteRequest",
+      "filePath": "schemas/api/references/color.py",
+      "lineRange": [
+        83,
+        88
+      ],
+      "summary": "Request schema ColorDeleteRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/country.py",
+      "type": "file",
+      "name": "country.py",
+      "filePath": "schemas/api/references/country.py",
+      "summary": "CRUD request/response Pydantic schemas for the Country reference dictionary.",
+      "tags": [
+        "data-model",
+        "reference",
+        "crud",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/country.py:Country",
+      "type": "class",
+      "name": "Country",
+      "filePath": "schemas/api/references/country.py",
+      "lineRange": [
+        13,
+        22
+      ],
+      "summary": "Pydantic schema class Country with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/country.py:CountryGetRequest",
+      "type": "class",
+      "name": "CountryGetRequest",
+      "filePath": "schemas/api/references/country.py",
+      "lineRange": [
+        25,
+        53
+      ],
+      "summary": "Request schema CountryGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/country.py:CountryAddRequest",
+      "type": "class",
+      "name": "CountryAddRequest",
+      "filePath": "schemas/api/references/country.py",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Request schema CountryAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/country.py:CountryEditRequest",
+      "type": "class",
+      "name": "CountryEditRequest",
+      "filePath": "schemas/api/references/country.py",
+      "lineRange": [
+        69,
+        80
+      ],
+      "summary": "Request schema CountryEditRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/country.py:CountryDeleteRequest",
+      "type": "class",
+      "name": "CountryDeleteRequest",
+      "filePath": "schemas/api/references/country.py",
+      "lineRange": [
+        83,
+        88
+      ],
+      "summary": "Request schema CountryDeleteRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/currency.py",
+      "type": "file",
+      "name": "currency.py",
+      "filePath": "schemas/api/references/currency.py",
+      "summary": "Pydantic schemas for the Currency reference, normalizing alphabetic/numeric currency codes in get requests.",
+      "tags": [
+        "data-model",
+        "reference",
+        "currency",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/currency.py:Currency",
+      "type": "class",
+      "name": "Currency",
+      "filePath": "schemas/api/references/currency.py",
+      "lineRange": [
+        12,
+        45
+      ],
+      "summary": "Pydantic schema class Currency with 8 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/currency.py:CurrencyGetRequest",
+      "type": "class",
+      "name": "CurrencyGetRequest",
+      "filePath": "schemas/api/references/currency.py",
+      "lineRange": [
+        48,
+        91
+      ],
+      "summary": "Request schema CurrencyGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/currency.py:CurrencyGetResponse",
+      "type": "class",
+      "name": "CurrencyGetResponse",
+      "filePath": "schemas/api/references/currency.py",
+      "lineRange": [
+        94,
+        97
+      ],
+      "summary": "Response schema CurrencyGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSale",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocPurchaseSortOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocPurchaseSortOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSaleGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSaleGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSaleAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "class:schemas/api/docs/wholesale.py:DocWholeSaleAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationEditItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationEditItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationDeleteItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationDeleteItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationActionResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "class:schemas/api/docs/wholesale_operation.py:WholeSaleOperationActionResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:User",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:User",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "class:schemas/api/rbac/user.py:UserGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:Brand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:Brand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandDeleteRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "class:schemas/api/references/brand.py:BrandDeleteRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:Color",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:Color",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorDeleteRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "class:schemas/api/references/color.py:ColorDeleteRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:Country",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:Country",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryDeleteRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "class:schemas/api/references/country.py:CountryDeleteRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:Currency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:Currency",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:CurrencyGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:CurrencyGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:CurrencyGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "class:schemas/api/references/currency.py:CurrencyGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/rbac/user.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/references/currency.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/references/partner.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/references/price_type.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/references/stock.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale.py",
+      "target": "file:schemas/api/references/tax.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "file:schemas/api/references/item.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/docs/wholesale_operation.py",
+      "target": "file:schemas/api/references/tax.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/rbac/user.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/brand.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/color.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/country.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/currency.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

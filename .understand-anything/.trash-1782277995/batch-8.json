@@ -1,0 +1,463 @@
+{
+  "nodes": [
+    {
+      "id": "file:schemas/api/chat/chat.py",
+      "type": "file",
+      "name": "chat.py",
+      "filePath": "schemas/api/chat/chat.py",
+      "summary": "Pydantic schemas for the chat API: defines Chat, ChatParticipant, role/entity enums, and the full set of request/response DTOs for creating, editing, and managing chat participants and bots.",
+      "tags": ["data-model", "schema-definition", "api-schema", "chat", "validation"],
+      "complexity": "complex",
+      "languageNotes": "Pydantic model module — 22 DTO classes with enum-backed fields and a participant validator."
+    },
+    {
+      "id": "class:schemas/api/chat/chat.py:Chat",
+      "type": "class",
+      "name": "Chat",
+      "filePath": "schemas/api/chat/chat.py",
+      "lineRange": [51, 70],
+      "summary": "Core chat entity model carrying metadata, last-message info, closure state, and embedded participants.",
+      "tags": ["data-model", "chat", "schema-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/chat/chat.py:ChatParticipantAddEdit",
+      "type": "class",
+      "name": "ChatParticipantAddEdit",
+      "filePath": "schemas/api/chat/chat.py",
+      "lineRange": [73, 88],
+      "summary": "Request DTO for adding or editing a chat participant; validates entity type and role against allowed values.",
+      "tags": ["data-model", "validation", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/chat/chat_message.py",
+      "type": "file",
+      "name": "chat_message.py",
+      "filePath": "schemas/api/chat/chat_message.py",
+      "summary": "Pydantic schemas for chat messages: defines the ChatMessage entity plus request/response DTOs for sending, editing, searching, file attachments, read/sent marking, typing indicators, and reply suggestions.",
+      "tags": ["data-model", "schema-definition", "api-schema", "chat", "validation"],
+      "complexity": "complex",
+      "languageNotes": "24 DTO classes including validators that normalize message payloads and suggestion lists."
+    },
+    {
+      "id": "class:schemas/api/chat/chat_message.py:ChatMessage",
+      "type": "class",
+      "name": "ChatMessage",
+      "filePath": "schemas/api/chat/chat_message.py",
+      "lineRange": [20, 47],
+      "summary": "Core chat message entity with author metadata, content, attachments, action payloads, and read/edit/delete state.",
+      "tags": ["data-model", "chat", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/chat/chat_message.py:ChatMessageAddRequest",
+      "type": "class",
+      "name": "ChatMessageAddRequest",
+      "filePath": "schemas/api/chat/chat_message.py",
+      "lineRange": [67, 99],
+      "summary": "Request DTO for posting a chat message; validates that text or file payload is present and well-formed.",
+      "tags": ["data-model", "validation", "chat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/chat/chat_message.py:ChatMessageSuggestRequest",
+      "type": "class",
+      "name": "ChatMessageSuggestRequest",
+      "filePath": "schemas/api/chat/chat_message.py",
+      "lineRange": [162, 195],
+      "summary": "Request DTO for reply suggestions; normalizes and deduplicates suggestion text and validates the author.",
+      "tags": ["data-model", "validation", "chat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/chat/quick_reply.py",
+      "type": "file",
+      "name": "quick_reply.py",
+      "filePath": "schemas/api/chat/quick_reply.py",
+      "summary": "Pydantic schemas for canned quick-reply templates with get/add/delete request and response DTOs and text normalization validators.",
+      "tags": ["data-model", "schema-definition", "chat", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/common/filters.py",
+      "type": "file",
+      "name": "filters.py",
+      "filePath": "schemas/api/common/filters.py",
+      "summary": "Shared filtering primitives: the FilterOperator enum and a Filter model used across CRM and reference list endpoints to express field-level query conditions.",
+      "tags": ["data-model", "utility", "validation", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/common/filters.py:Filter",
+      "type": "class",
+      "name": "Filter",
+      "filePath": "schemas/api/common/filters.py",
+      "lineRange": [28, 58],
+      "summary": "Generic query filter holding a field, operator, and value; validates that a value is present for operators that require one.",
+      "tags": ["data-model", "validation", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/crm/channel.py",
+      "type": "file",
+      "name": "channel.py",
+      "filePath": "schemas/api/crm/channel.py",
+      "summary": "Pydantic schemas for CRM communication channels: defines Channel configuration (queueing, routing, SLA timings, ratings), operators, schedule intervals, and their CRUD request/response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/crm/channel.py:Channel",
+      "type": "class",
+      "name": "Channel",
+      "filePath": "schemas/api/crm/channel.py",
+      "lineRange": [50, 74],
+      "summary": "CRM channel configuration model covering queue mode, routing strategy, SLA response timers, rating settings, and embedded operators and schedule intervals.",
+      "tags": ["data-model", "crm", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/crm/client.py",
+      "type": "file",
+      "name": "client.py",
+      "filePath": "schemas/api/crm/client.py",
+      "summary": "Pydantic schemas for CRM clients including messenger identifiers (Telegram, WhatsApp, Instagram, etc.) and CRUD, responsible-assignment, and merge request/response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/crm/client.py:Client",
+      "type": "class",
+      "name": "Client",
+      "filePath": "schemas/api/crm/client.py",
+      "lineRange": [14, 37],
+      "summary": "CRM client entity with contact details, responsible user, custom fields, and per-messenger external identifiers.",
+      "tags": ["data-model", "crm", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/crm/client.py:ClientAddRequest",
+      "type": "class",
+      "name": "ClientAddRequest",
+      "filePath": "schemas/api/crm/client.py",
+      "lineRange": [66, 104],
+      "summary": "Request DTO for creating a client; validates that at least one identifying field (phone, email, or messenger id) is supplied.",
+      "tags": ["data-model", "validation", "crm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/crm/deal.py",
+      "type": "file",
+      "name": "deal.py",
+      "filePath": "schemas/api/crm/deal.py",
+      "summary": "Pydantic schemas for CRM deals: defines the Deal entity (pipeline, stage, amount, participants) and CRUD plus stage/responsible/participant/close request and response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "sales"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/crm/deal.py:Deal",
+      "type": "class",
+      "name": "Deal",
+      "filePath": "schemas/api/crm/deal.py",
+      "lineRange": [17, 46],
+      "summary": "CRM deal entity linking client, pipeline, stage, amount, participants, and originating lead/ticket/chat references.",
+      "tags": ["data-model", "crm", "sales", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/crm/lead.py",
+      "type": "file",
+      "name": "lead.py",
+      "filePath": "schemas/api/crm/lead.py",
+      "summary": "Pydantic schemas for CRM leads covering status, channel, SLA, rating, and conversion to deals, plus the full set of CRUD and state-transition request/response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "sales"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/crm/lead.py:Lead",
+      "type": "class",
+      "name": "Lead",
+      "filePath": "schemas/api/crm/lead.py",
+      "lineRange": [31, 66],
+      "summary": "CRM lead entity with client, pipeline/stage, channel, SLA status, rating, and conversion linkage to deals.",
+      "tags": ["data-model", "crm", "sales", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/crm/lead.py:LeadConvertRequest",
+      "type": "class",
+      "name": "LeadConvertRequest",
+      "filePath": "schemas/api/crm/lead.py",
+      "lineRange": [196, 211],
+      "summary": "Request DTO describing how to convert a lead into a deal, including deal type, pipeline, stage, amount, and participants.",
+      "tags": ["data-model", "crm", "sales"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/crm/project_task.py",
+      "type": "file",
+      "name": "project_task.py",
+      "filePath": "schemas/api/crm/project_task.py",
+      "summary": "Pydantic schemas for CRM project tasks with the ProjectTask entity and get/edit request and response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "tasks"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/crm/ticket.py",
+      "type": "file",
+      "name": "ticket.py",
+      "filePath": "schemas/api/crm/ticket.py",
+      "summary": "Pydantic schemas for CRM support tickets: defines the Ticket entity with direction, status, SLA, and rating fields plus CRUD and state-transition request/response DTOs.",
+      "tags": ["data-model", "schema-definition", "crm", "support"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/crm/ticket.py:Ticket",
+      "type": "class",
+      "name": "Ticket",
+      "filePath": "schemas/api/crm/ticket.py",
+      "lineRange": [28, 56],
+      "summary": "CRM ticket entity with client, channel, direction, status, SLA timing, resolution, and rating fields.",
+      "tags": ["data-model", "crm", "support", "schema-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/files/file.py",
+      "type": "file",
+      "name": "file.py",
+      "filePath": "schemas/api/files/file.py",
+      "summary": "Pydantic schemas for file storage: defines File and Folder entities with access levels plus the file listing request/response DTOs.",
+      "tags": ["data-model", "schema-definition", "files", "storage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/references/field.py",
+      "type": "file",
+      "name": "field.py",
+      "filePath": "schemas/api/references/field.py",
+      "summary": "Pydantic schemas for custom field reference definitions with the Field entity and get/add request and response DTOs.",
+      "tags": ["data-model", "schema-definition", "reference", "custom-fields"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/fields.py",
+      "type": "file",
+      "name": "fields.py",
+      "filePath": "schemas/api/references/fields.py",
+      "summary": "Shared custom-field primitives reused across CRM schemas: EntityType and FieldDataType enums, the Field definition, and FieldValue/FieldValueAdd/FieldValueEdit models with enum and datetime normalization validators.",
+      "tags": ["data-model", "schema-definition", "custom-fields", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/references/fields.py:FieldValue",
+      "type": "class",
+      "name": "FieldValue",
+      "filePath": "schemas/api/references/fields.py",
+      "lineRange": [64, 82],
+      "summary": "Holds a custom field's key, name, data type, and value, normalizing datetime values on validation.",
+      "tags": ["data-model", "custom-fields", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/region.py",
+      "type": "file",
+      "name": "region.py",
+      "filePath": "schemas/api/references/region.py",
+      "summary": "Minimal Pydantic schema for the Region reference entity with hierarchical parent linkage.",
+      "tags": ["data-model", "schema-definition", "reference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/retail_customer.py",
+      "type": "file",
+      "name": "retail_customer.py",
+      "filePath": "schemas/api/references/retail_customer.py",
+      "summary": "Pydantic schemas for retail customers with personal data, contacts, group/region references, and CRUD request/response DTOs including string-stripping and sex-normalization validators.",
+      "tags": ["data-model", "schema-definition", "reference", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:schemas/api/references/retail_customer.py:RetailCustomer",
+      "type": "class",
+      "name": "RetailCustomer",
+      "filePath": "schemas/api/references/retail_customer.py",
+      "lineRange": [38, 117],
+      "summary": "Retail customer entity with names, contacts, group/region, debt and purchase history; strips strings and normalizes the sex enum on validation.",
+      "tags": ["data-model", "reference", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/references/retail_customer.py:RetailCustomerAddRequest",
+      "type": "class",
+      "name": "RetailCustomerAddRequest",
+      "filePath": "schemas/api/references/retail_customer.py",
+      "lineRange": [159, 220],
+      "summary": "Request DTO for creating a retail customer; strips string inputs and normalizes the sex value to the Sex enum.",
+      "tags": ["data-model", "validation", "reference"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/references/retail_customer.py:RetailCustomerEditRequest",
+      "type": "class",
+      "name": "RetailCustomerEditRequest",
+      "filePath": "schemas/api/references/retail_customer.py",
+      "lineRange": [226, 286],
+      "summary": "Request DTO for editing a retail customer; applies the same string-stripping and sex-normalization validators as the add request.",
+      "tags": ["data-model", "validation", "reference"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/api/references/retail_customer_group.py",
+      "type": "file",
+      "name": "retail_customer_group.py",
+      "filePath": "schemas/api/references/retail_customer_group.py",
+      "summary": "Minimal Pydantic schema for the RetailCustomerGroup reference entity with hierarchical parent and child-count fields.",
+      "tags": ["data-model", "schema-definition", "reference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/integration/telegram_integration_base.py",
+      "type": "file",
+      "name": "telegram_integration_base.py",
+      "filePath": "schemas/integration/telegram_integration_base.py",
+      "summary": "Abstract base contract for Telegram integrations, extending the generic integration base with a send_messages capability.",
+      "tags": ["type-definition", "integration", "telegram", "abstract-base"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/integration/telegram_integration_base.py:IntegrationTelegramBase",
+      "type": "class",
+      "name": "IntegrationTelegramBase",
+      "filePath": "schemas/integration/telegram_integration_base.py",
+      "lineRange": [6, 20],
+      "summary": "Abstract Telegram integration base declaring the send_messages interface for concrete Telegram clients.",
+      "tags": ["abstract-base", "integration", "telegram"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server.py",
+      "type": "file",
+      "name": "server.py",
+      "filePath": "server.py",
+      "summary": "Application entry point: the create_app factory builds the FastAPI app, wires startup/shutdown handlers that restore and shut down active integrations, adds middleware, includes routers, and registers exception handlers.",
+      "tags": ["entry-point", "service", "middleware", "fastapi"],
+      "complexity": "moderate",
+      "languageNotes": "FastAPI app factory aggregating all client integration mains and route modules via 17 internal imports."
+    },
+    {
+      "id": "function:server.py:create_app",
+      "type": "function",
+      "name": "create_app",
+      "filePath": "server.py",
+      "lineRange": [58, 87],
+      "summary": "Constructs and configures the FastAPI application: registers startup/shutdown integration lifecycle hooks, CORS/middleware, routers, and exception handlers.",
+      "tags": ["entry-point", "factory", "fastapi", "service"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:schemas/api/chat/chat.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/chat/chat.py", "target": "file:schemas/api/common/sort_orders.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/chat/chat.py", "target": "class:schemas/api/chat/chat.py:Chat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/chat/chat.py", "target": "class:schemas/api/chat/chat.py:Chat", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/chat/chat.py", "target": "class:schemas/api/chat/chat.py:ChatParticipantAddEdit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/chat/chat.py", "target": "class:schemas/api/chat/chat.py:ChatParticipantAddEdit", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "file:schemas/api/chat/chat.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessageAddRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessageAddRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessageSuggestRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/chat/chat_message.py", "target": "class:schemas/api/chat/chat_message.py:ChatMessageSuggestRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/chat/quick_reply.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:schemas/api/crm/channel.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/channel.py", "target": "class:schemas/api/crm/channel.py:Channel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/channel.py", "target": "class:schemas/api/crm/channel.py:Channel", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/crm/client.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/client.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/client.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/client.py", "target": "class:schemas/api/crm/client.py:Client", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/client.py", "target": "class:schemas/api/crm/client.py:Client", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/crm/client.py", "target": "class:schemas/api/crm/client.py:ClientAddRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/client.py", "target": "class:schemas/api/crm/client.py:ClientAddRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/crm/deal.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/deal.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/deal.py", "target": "file:schemas/api/crm/client.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/deal.py", "target": "file:schemas/api/references/currency.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/deal.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/deal.py", "target": "class:schemas/api/crm/deal.py:Deal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/deal.py", "target": "class:schemas/api/crm/deal.py:Deal", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/crm/lead.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/lead.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/lead.py", "target": "file:schemas/api/crm/client.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/lead.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/lead.py", "target": "class:schemas/api/crm/lead.py:Lead", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/lead.py", "target": "class:schemas/api/crm/lead.py:Lead", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/crm/lead.py", "target": "class:schemas/api/crm/lead.py:LeadConvertRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/lead.py", "target": "class:schemas/api/crm/lead.py:LeadConvertRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/crm/project_task.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/project_task.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/project_task.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:schemas/api/crm/ticket.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/ticket.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/ticket.py", "target": "file:schemas/api/crm/client.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/ticket.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/crm/ticket.py", "target": "class:schemas/api/crm/ticket.py:Ticket", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/crm/ticket.py", "target": "class:schemas/api/crm/ticket.py:Ticket", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/files/file.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/files/file.py", "target": "file:schemas/api/common/sort_orders.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:schemas/api/references/field.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/common/filters.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/common/sort_orders.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/references/fields.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/references/region.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "file:schemas/api/references/retail_customer_group.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomer", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomerAddRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomerAddRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomerEditRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/references/retail_customer.py", "target": "class:schemas/api/references/retail_customer.py:RetailCustomerEditRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/api/references/fields.py", "target": "class:schemas/api/references/fields.py:FieldValue", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/api/references/fields.py", "target": "class:schemas/api/references/fields.py:FieldValue", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:schemas/integration/telegram_integration_base.py", "target": "file:schemas/integration/integration_base.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:schemas/integration/telegram_integration_base.py", "target": "class:schemas/integration/telegram_integration_base.py:IntegrationTelegramBase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:schemas/integration/telegram_integration_base.py", "target": "class:schemas/integration/telegram_integration_base.py:IntegrationTelegramBase", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:server.py", "target": "file:clients/asterisk_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/edo_didox/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/edo_fakturauz/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/external_chat_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/gpt_crm_chat_assistant/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/instagram_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/marketplace_toserver/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/meta_leadgen_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/telegram_bot_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/telegram_bot_notification/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/telegram_bot_orders/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/telegram_bot_quantity/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:clients/telegram_business_crm_channel/main.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:core/exception_handlers.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:core/logger.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:routes/clients.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "file:routes/healthcheck.py", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:server.py", "target": "function:server.py:create_app", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:server.py", "target": "function:server.py:create_app", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

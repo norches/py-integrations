@@ -1,0 +1,925 @@
+{
+  "nodes": [
+    {
+      "id": "file:clients/edo_didox/main.py",
+      "type": "file",
+      "name": "main.py",
+      "filePath": "clients/edo_didox/main.py",
+      "summary": "Didox EDO (electronic document) integration providing a Didox API client and document/invoice/contract syncing into REGOS.",
+      "tags": [
+        "integration",
+        "edo",
+        "e-invoicing",
+        "service",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_now_ts",
+      "type": "function",
+      "name": "_now_ts",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        74,
+        75
+      ],
+      "summary": "Helper function `_now_ts` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_json_dumps",
+      "type": "function",
+      "name": "_json_dumps",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        78,
+        79
+      ],
+      "summary": "Helper function `_json_dumps` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_json_loads",
+      "type": "function",
+      "name": "_json_loads",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        82,
+        88
+      ],
+      "summary": "Helper function `_json_loads` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_json_response",
+      "type": "function",
+      "name": "_json_response",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        91,
+        95
+      ],
+      "summary": "Helper function `_json_response` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_ci_lookup",
+      "type": "function",
+      "name": "_ci_lookup",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        98,
+        113
+      ],
+      "summary": "Helper function `_ci_lookup` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_text",
+      "type": "function",
+      "name": "_text",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        116,
+        120
+      ],
+      "summary": "Helper function `_text` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_digits",
+      "type": "function",
+      "name": "_digits",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        123,
+        124
+      ],
+      "summary": "Helper function `_digits` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_to_int",
+      "type": "function",
+      "name": "_to_int",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        127,
+        136
+      ],
+      "summary": "Helper function `_to_int` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_to_optional_int",
+      "type": "function",
+      "name": "_to_optional_int",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        139,
+        141
+      ],
+      "summary": "Helper function `_to_optional_int` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_to_decimal",
+      "type": "function",
+      "name": "_to_decimal",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        144,
+        152
+      ],
+      "summary": "Helper function `_to_decimal` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_money",
+      "type": "function",
+      "name": "_money",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        155,
+        156
+      ],
+      "summary": "Helper function `_money` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_decimal_json",
+      "type": "function",
+      "name": "_decimal_json",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        159,
+        160
+      ],
+      "summary": "Helper function `_decimal_json` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_parse_date_to_unix",
+      "type": "function",
+      "name": "_parse_date_to_unix",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        163,
+        192
+      ],
+      "summary": "Helper function `_parse_date_to_unix` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_format_date",
+      "type": "function",
+      "name": "_format_date",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        195,
+        197
+      ],
+      "summary": "Helper function `_format_date` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_display_date",
+      "type": "function",
+      "name": "_display_date",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        200,
+        204
+      ],
+      "summary": "Helper function `_display_date` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_iso_from_date",
+      "type": "function",
+      "name": "_iso_from_date",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        207,
+        213
+      ],
+      "summary": "Helper function `_iso_from_date` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_list_payload",
+      "type": "function",
+      "name": "_list_payload",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        216,
+        226
+      ],
+      "summary": "Helper function `_list_payload` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_model_enum_value",
+      "type": "function",
+      "name": "_model_enum_value",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        229,
+        232
+      ],
+      "summary": "Helper function `_model_enum_value` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_firm_field",
+      "type": "function",
+      "name": "_firm_field",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        235,
+        240
+      ],
+      "summary": "Helper function `_firm_field` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_result_new_id",
+      "type": "function",
+      "name": "_result_new_id",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        243,
+        251
+      ],
+      "summary": "Helper function `_result_new_id` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_ensure_api_ok",
+      "type": "function",
+      "name": "_ensure_api_ok",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        254,
+        257
+      ],
+      "summary": "Helper function `_ensure_api_ok` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/edo_didox/main.py:_first_nested",
+      "type": "function",
+      "name": "_first_nested",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        260,
+        272
+      ],
+      "summary": "Helper function `_first_nested` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/edo_didox/main.py:EdoDidoxError",
+      "type": "class",
+      "name": "EdoDidoxError",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        275,
+        280
+      ],
+      "summary": "Class `EdoDidoxError` defined in main.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/edo_didox/main.py:EdoDidoxNonRetryableError",
+      "type": "class",
+      "name": "EdoDidoxNonRetryableError",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        283,
+        284
+      ],
+      "summary": "Class `EdoDidoxNonRetryableError` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/edo_didox/main.py:DidoxClient",
+      "type": "class",
+      "name": "DidoxClient",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        287,
+        867
+      ],
+      "summary": "Class `DidoxClient` defined in main.py with 19 methods.",
+      "tags": [
+        "class",
+        "python",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:clients/edo_didox/main.py:EdoDidoxIntegration",
+      "type": "class",
+      "name": "EdoDidoxIntegration",
+      "filePath": "clients/edo_didox/main.py",
+      "lineRange": [
+        870,
+        1828
+      ],
+      "summary": "Class `EdoDidoxIntegration` defined in main.py with 52 methods.",
+      "tags": [
+        "class",
+        "python",
+        "service"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_now_ts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_now_ts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_dumps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_dumps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_loads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_loads",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_json_response",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_ci_lookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_ci_lookup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_digits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_digits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_int",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_int",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_optional_int",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_optional_int",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_decimal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_to_decimal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_money",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_money",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_decimal_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_decimal_json",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_parse_date_to_unix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_parse_date_to_unix",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_format_date",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_format_date",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_display_date",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_display_date",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_iso_from_date",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_iso_from_date",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_list_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_list_payload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_model_enum_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_model_enum_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_firm_field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_firm_field",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_result_new_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_result_new_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_ensure_api_ok",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_ensure_api_ok",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_first_nested",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "function:clients/edo_didox/main.py:_first_nested",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxNonRetryableError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxNonRetryableError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:DidoxClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:DidoxClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "class:clients/edo_didox/main.py:EdoDidoxIntegration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:clients/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:config/settings.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:core/api/regos_api.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:core/logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:core/redis.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/docs/doc_contract.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/docs/doc_invoice.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/docs/invoice_operation.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/integrations/connected_integration_setting.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/integrations/connected_integration.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/references/firm.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/references/item.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/edo_didox/main.py",
+      "target": "file:schemas/api/references/partner.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

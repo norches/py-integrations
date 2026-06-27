@@ -1,0 +1,704 @@
+{
+ "nodes": [
+  {
+   "id": "file:core/api/references/firm.py",
+   "type": "file",
+   "name": "firm.py",
+   "filePath": "core/api/references/firm.py",
+   "summary": "Service wrapper for REGOS firm reference data with get and get-by-id convenience methods.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/item.py",
+   "type": "file",
+   "name": "item.py",
+   "filePath": "core/api/references/item.py",
+   "summary": "Service wrapper for REGOS item reference data covering search, quantity, pricing, short forms, import, and matching operations.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:core/api/references/item.py:ItemService",
+   "type": "class",
+   "name": "ItemService",
+   "filePath": "core/api/references/item.py",
+   "lineRange": [
+    29,
+    78
+   ],
+   "summary": "Service exposing the full set of REGOS item reference endpoints including search, quantity, price, import, and match.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/api/references/item_group.py",
+   "type": "file",
+   "name": "item_group.py",
+   "filePath": "core/api/references/item_group.py",
+   "summary": "Service wrapper exposing REGOS item-group reference retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/item_operation.py",
+   "type": "file",
+   "name": "item_operation.py",
+   "filePath": "core/api/references/item_operation.py",
+   "summary": "Service wrapper exposing REGOS item-operation reference retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/item_price.py",
+   "type": "file",
+   "name": "item_price.py",
+   "filePath": "core/api/references/item_price.py",
+   "summary": "Service wrapper for REGOS item-price reference data with get and pre-cost lookup operations.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/partner.py",
+   "type": "file",
+   "name": "partner.py",
+   "filePath": "core/api/references/partner.py",
+   "summary": "Service wrapper for REGOS partner reference data with get and add operations.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/price_type.py",
+   "type": "file",
+   "name": "price_type.py",
+   "filePath": "core/api/references/price_type.py",
+   "summary": "Service wrapper exposing REGOS price-type reference retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/references/retail_card.py",
+   "type": "file",
+   "name": "retail_card.py",
+   "filePath": "core/api/references/retail_card.py",
+   "summary": "Service wrapper exposing REGOS retail-card reference retrieval through the API client.",
+   "tags": [
+    "service",
+    "api-handler",
+    "references",
+    "regos"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:core/api/regos_oauth.py",
+   "type": "file",
+   "name": "regos_oauth.py",
+   "filePath": "core/api/regos_oauth.py",
+   "summary": "OAuth client-credentials provider for REGOS that fetches and caches access tokens in memory and Redis with distributed locking to avoid duplicate token requests.",
+   "tags": [
+    "service",
+    "authentication",
+    "oauth",
+    "caching",
+    "regos"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Two-tier token cache (in-memory + Redis) with a process lock and Redis distributed lock to serialize token refresh."
+  },
+  {
+   "id": "class:core/api/regos_oauth.py:RegosOAuthProvider",
+   "type": "class",
+   "name": "RegosOAuthProvider",
+   "filePath": "core/api/regos_oauth.py",
+   "lineRange": [
+    19,
+    182
+   ],
+   "summary": "Provides REGOS OAuth access tokens with layered memory/Redis caching and locked single-flight token fetching.",
+   "tags": [
+    "authentication",
+    "oauth",
+    "caching",
+    "service"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:core/exception_handlers.py",
+   "type": "file",
+   "name": "exception_handlers.py",
+   "filePath": "core/exception_handlers.py",
+   "summary": "Registers FastAPI exception handlers that translate unhandled errors, validation failures, and HTTP exceptions into standardized integration error responses.",
+   "tags": [
+    "middleware",
+    "error-handling",
+    "fastapi",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:core/exception_handlers.py:add_exception_handlers",
+   "type": "function",
+   "name": "add_exception_handlers",
+   "filePath": "core/exception_handlers.py",
+   "lineRange": [
+    13,
+    50
+   ],
+   "summary": "Attaches global, validation, and HTTP exception handlers to a FastAPI app returning standardized error payloads.",
+   "tags": [
+    "error-handling",
+    "fastapi",
+    "middleware"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/logger.py",
+   "type": "file",
+   "name": "logger.py",
+   "filePath": "core/logger.py",
+   "summary": "Centralized logging setup that configures the root handler and returns per-module loggers honoring the configured log level.",
+   "tags": [
+    "utility",
+    "logging",
+    "configuration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:core/logger.py:_ensure_root_handler",
+   "type": "function",
+   "name": "_ensure_root_handler",
+   "filePath": "core/logger.py",
+   "lineRange": [
+    13,
+    36
+   ],
+   "summary": "Idempotently installs and configures the root logging handler and aligns uvicorn loggers to the chosen level.",
+   "tags": [
+    "logging",
+    "configuration",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:core/logger.py:setup_logger",
+   "type": "function",
+   "name": "setup_logger",
+   "filePath": "core/logger.py",
+   "lineRange": [
+    38,
+    72
+   ],
+   "summary": "Creates and returns a named logger with its own stream handler at the configured log level.",
+   "tags": [
+    "logging",
+    "factory",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:core/mariadb.py",
+   "type": "file",
+   "name": "mariadb.py",
+   "filePath": "core/mariadb.py",
+   "summary": "Async MariaDB access layer providing connection pooling, transactions, parameterized queries, dict-row helpers, and a unified MariaDBOps facade.",
+   "tags": [
+    "database",
+    "data-pipeline",
+    "connection-pool",
+    "utility"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Uses asyncmy connection pooling with async context managers for connections and transactions; MariaDBOps facade re-exposes module functions as methods."
+  },
+  {
+   "id": "class:core/mariadb.py:MariaDBOps",
+   "type": "class",
+   "name": "MariaDBOps",
+   "filePath": "core/mariadb.py",
+   "lineRange": [
+    192,
+    233
+   ],
+   "summary": "Facade object exposing all MariaDB operations as methods so callers can use a single mariadb_ops handle.",
+   "tags": [
+    "facade",
+    "database",
+    "singleton"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:core/mariadb.py:init_mariadb_pool",
+   "type": "function",
+   "name": "init_mariadb_pool",
+   "filePath": "core/mariadb.py",
+   "lineRange": [
+    55,
+    79
+   ],
+   "summary": "Initializes the global asyncmy MariaDB connection pool from settings.",
+   "tags": [
+    "database",
+    "connection-pool",
+    "initialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:core/mariadb.py:mariadb_transaction",
+   "type": "function",
+   "name": "mariadb_transaction",
+   "filePath": "core/mariadb.py",
+   "lineRange": [
+    106,
+    119
+   ],
+   "summary": "Async context manager yielding a connection with commit/rollback semantics around a transaction.",
+   "tags": [
+    "database",
+    "transaction",
+    "context-manager"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:core/mariadb.py:mariadb_fetchall_dict",
+   "type": "function",
+   "name": "mariadb_fetchall_dict",
+   "filePath": "core/mariadb.py",
+   "lineRange": [
+    172,
+    178
+   ],
+   "summary": "Executes a query and returns all rows as a list of column-keyed dictionaries.",
+   "tags": [
+    "database",
+    "query",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:schemas/api/batch.py",
+   "type": "file",
+   "name": "batch.py",
+   "filePath": "schemas/api/batch.py",
+   "summary": "Pydantic request/response schemas for the REGOS batch API, including per-step validation and a placeholder helper for chaining step outputs.",
+   "tags": [
+    "type-definition",
+    "data-model",
+    "validation",
+    "schema-definition"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:schemas/api/batch.py:BatchStep",
+   "type": "class",
+   "name": "BatchStep",
+   "filePath": "schemas/api/batch.py",
+   "lineRange": [
+    12,
+    35
+   ],
+   "summary": "Pydantic model for a single batch step with key and path validators.",
+   "tags": [
+    "data-model",
+    "validation",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:core/api/references/firm.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/firm.py",
+   "target": "schemas/api/references/firm.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/firm.py",
+   "target": "class:core/api/references/firm.py:FirmService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/item.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item.py",
+   "target": "schemas/api/references/item.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item.py",
+   "target": "class:core/api/references/item.py:ItemService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/item.py",
+   "target": "class:core/api/references/item.py:ItemService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/api/references/item_group.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_group.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_group.py",
+   "target": "schemas/api/references/item_group.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_group.py",
+   "target": "class:core/api/references/item_group.py:ItemGroupService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/item_operation.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_operation.py",
+   "target": "schemas/api/references/item_operation.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_operation.py",
+   "target": "class:core/api/references/item_operation.py:ItemOperationService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/item_price.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_price.py",
+   "target": "schemas/api/references/item_price.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/item_price.py",
+   "target": "class:core/api/references/item_price.py:ItemPriceService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/partner.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/partner.py",
+   "target": "schemas/api/references/partner.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/partner.py",
+   "target": "class:core/api/references/partner.py:PartnerService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/price_type.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/price_type.py",
+   "target": "schemas/api/references/price_type.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/price_type.py",
+   "target": "class:core/api/references/price_type.py:PriceTypeService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/references/retail_card.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/retail_card.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/retail_card.py",
+   "target": "schemas/api/references/retail_card.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/references/retail_card.py",
+   "target": "class:core/api/references/retail_card.py:RetailCardService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/regos_oauth.py",
+   "target": "config/settings.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/regos_oauth.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/regos_oauth.py",
+   "target": "core/redis.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/api/regos_oauth.py",
+   "target": "class:core/api/regos_oauth.py:RegosOAuthProvider",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/api/regos_oauth.py",
+   "target": "class:core/api/regos_oauth.py:RegosOAuthProvider",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/exception_handlers.py",
+   "target": "core/logger.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/exception_handlers.py",
+   "target": "schemas/integration/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/exception_handlers.py",
+   "target": "function:core/exception_handlers.py:add_exception_handlers",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/exception_handlers.py",
+   "target": "function:core/exception_handlers.py:add_exception_handlers",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/logger.py",
+   "target": "config/settings.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/logger.py",
+   "target": "function:core/logger.py:_ensure_root_handler",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/logger.py",
+   "target": "function:core/logger.py:setup_logger",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/logger.py",
+   "target": "function:core/logger.py:setup_logger",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "config/settings.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "class:core/mariadb.py:MariaDBOps",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "class:core/mariadb.py:MariaDBOps",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "function:core/mariadb.py:init_mariadb_pool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "function:core/mariadb.py:mariadb_transaction",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:core/mariadb.py",
+   "target": "function:core/mariadb.py:mariadb_fetchall_dict",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:schemas/api/batch.py",
+   "target": "schemas/api/base.py",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:schemas/api/batch.py",
+   "target": "class:schemas/api/batch.py:BatchStep",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  }
+ ]
+}

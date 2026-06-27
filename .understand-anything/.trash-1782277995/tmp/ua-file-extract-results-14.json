@@ -1,0 +1,94 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "clients/external_chat_crm_channel/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 97,
+      "nonEmptyLines": 73,
+      "sections": [
+        {
+          "heading": "Единый онлайн-чат для клиентов",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Наименование интеграции",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Краткое описание",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Полное описание",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Список обрабатываемых вебхуков",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Какие действия выполняются автоматически",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "Настройки интеграции",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "Внешние API-действия для UI",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "Событие непрочитанных сообщений для parent window",
+          "level": 2,
+          "line": 68
+        },
+        {
+          "heading": "Порядок настройки",
+          "level": 2,
+          "line": 84
+        },
+        {
+          "heading": "UI Localization",
+          "level": 2,
+          "line": 93
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "clients/external_chat_crm_channel/ui_template.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 729,
+      "nonEmptyLines": 729,
+      "metrics": {}
+    },
+    {
+      "path": "clients/external_chat_crm_channel/ui_template.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 2311,
+      "nonEmptyLines": 2262,
+      "metrics": {}
+    }
+  ]
+}

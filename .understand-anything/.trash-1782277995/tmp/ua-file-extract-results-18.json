@@ -1,0 +1,79 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "clients/meta_leadgen_crm_channel/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 72,
+      "nonEmptyLines": 57,
+      "sections": [
+        {
+          "heading": "Meta Lead Ads для CRM",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Наименование интеграции",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Краткое описание",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Полное описание",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Список обрабатываемых вебхуков",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Какие действия выполняются автоматически",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Настройки интеграции",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "Порядок настройки",
+          "level": 2,
+          "line": 65
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "clients/meta_leadgen_crm_channel/ui_template.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 258,
+      "nonEmptyLines": 219,
+      "metrics": {}
+    },
+    {
+      "path": "clients/meta_leadgen_crm_channel/ui_template.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 44,
+      "nonEmptyLines": 39,
+      "metrics": {}
+    }
+  ]
+}

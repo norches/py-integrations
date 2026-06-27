@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m py_compile clients/asterisk_crm_channel/main.py)",
+      "Bash(python -c \"import clients.asterisk_crm_channel.main as m; import dataclasses; print\\('post_status_messages' in {f.name for f in dataclasses.fields\\(m.RuntimeConfig\\)}\\); print\\('import OK'\\)\")",
+      "Bash(python -c \"import clients.asterisk_crm_channel.main; print\\('import OK'\\)\")",
+      "Bash(git --no-pager diff clients/asterisk_crm_channel/main.py)",
+      "Bash(git --no-pager diff --stat clients/asterisk_crm_channel/main.py clients/asterisk_crm_channel/README.md)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\uvays\\.claude\\projects\\C--Users-uvays-Projects-py-integrations\\memory"
+    ]
+  }
+}

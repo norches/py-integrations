@@ -1,0 +1,57 @@
+{
+  "nodes": [
+    {
+      "id": "document:clients/instagram_crm_channel/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "clients/instagram_crm_channel/README.md",
+      "summary": "User-facing documentation (in Russian) for the Instagram customer-support CRM channel integration, covering its purpose, handled webhooks, automated actions, configuration settings, and setup procedure.",
+      "tags": ["documentation", "entry-point", "crm-channel", "instagram", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:clients/instagram_crm_channel/TECHNICAL.md",
+      "type": "document",
+      "name": "TECHNICAL.md",
+      "filePath": "clients/instagram_crm_channel/TECHNICAL.md",
+      "summary": "Technical notes for the Instagram CRM channel detailing storage responsibilities (MariaDB business-map table vs Redis streams), Graph API token handling, SQL migrations, the single-stream worker model, and the dialog rating flow.",
+      "tags": ["documentation", "architecture", "crm-channel", "instagram", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:clients/instagram_crm_channel/ui_template.css",
+      "type": "file",
+      "name": "ui_template.css",
+      "filePath": "clients/instagram_crm_channel/ui_template.css",
+      "summary": "Stylesheet for the server-rendered Instagram OAuth/connection status page, defining the responsive panel layout, status badges, action buttons, and light/dark tone theming.",
+      "tags": ["stylesheet", "ui-template", "instagram", "oauth", "styling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:clients/instagram_crm_channel/ui_template.html",
+      "type": "file",
+      "name": "ui_template.html",
+      "filePath": "clients/instagram_crm_channel/ui_template.html",
+      "summary": "HTML template with Python format placeholders for the server-rendered Instagram connection status page, rendering account info, status badge, localized language switcher, notices, and action steps.",
+      "tags": ["html-template", "ui-template", "instagram", "oauth", "server-rendered"],
+      "complexity": "simple",
+      "languageNotes": "Uses Python str.format-style placeholders (e.g. {safe_heading}, {style_block}) interpolated at render time."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:clients/instagram_crm_channel/ui_template.html",
+      "target": "file:clients/instagram_crm_channel/ui_template.css",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:clients/instagram_crm_channel/TECHNICAL.md",
+      "target": "document:clients/instagram_crm_channel/README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

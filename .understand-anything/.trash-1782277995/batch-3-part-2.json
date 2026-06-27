@@ -1,0 +1,1557 @@
+{
+  "nodes": [
+    {
+      "id": "file:schemas/api/references/delivery_courier.py",
+      "type": "file",
+      "name": "delivery_courier.py",
+      "filePath": "schemas/api/references/delivery_courier.py",
+      "summary": "Pydantic model describing a delivery courier reference entry.",
+      "tags": [
+        "data-model",
+        "reference",
+        "delivery"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/delivery_courier.py:DeliveryCourier",
+      "type": "class",
+      "name": "DeliveryCourier",
+      "filePath": "schemas/api/references/delivery_courier.py",
+      "lineRange": [
+        10,
+        24
+      ],
+      "summary": "Pydantic schema class DeliveryCourier with 4 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/delivery_from.py",
+      "type": "file",
+      "name": "delivery_from.py",
+      "filePath": "schemas/api/references/delivery_from.py",
+      "summary": "Pydantic model describing a delivery origin (delivery-from) reference entry.",
+      "tags": [
+        "data-model",
+        "reference",
+        "delivery"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/delivery_from.py:DeliveryFrom",
+      "type": "class",
+      "name": "DeliveryFrom",
+      "filePath": "schemas/api/references/delivery_from.py",
+      "lineRange": [
+        10,
+        28
+      ],
+      "summary": "Pydantic schema class DeliveryFrom with 4 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/delivery_type.py",
+      "type": "file",
+      "name": "delivery_type.py",
+      "filePath": "schemas/api/references/delivery_type.py",
+      "summary": "Pydantic schemas for the delivery-type reference with a get request and response.",
+      "tags": [
+        "data-model",
+        "reference",
+        "delivery"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/delivery_type.py:DeliveryType",
+      "type": "class",
+      "name": "DeliveryType",
+      "filePath": "schemas/api/references/delivery_type.py",
+      "lineRange": [
+        10,
+        25
+      ],
+      "summary": "Pydantic schema class DeliveryType with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetRequest",
+      "type": "class",
+      "name": "DeliveryTypeGetRequest",
+      "filePath": "schemas/api/references/delivery_type.py",
+      "lineRange": [
+        28,
+        36
+      ],
+      "summary": "Request schema DeliveryTypeGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetResponse",
+      "type": "class",
+      "name": "DeliveryTypeGetResponse",
+      "filePath": "schemas/api/references/delivery_type.py",
+      "lineRange": [
+        39,
+        42
+      ],
+      "summary": "Response schema DeliveryTypeGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/department.py",
+      "type": "file",
+      "name": "department.py",
+      "filePath": "schemas/api/references/department.py",
+      "summary": "CRUD request/response Pydantic schemas for the Department reference dictionary.",
+      "tags": [
+        "data-model",
+        "reference",
+        "crud",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/department.py:Department",
+      "type": "class",
+      "name": "Department",
+      "filePath": "schemas/api/references/department.py",
+      "lineRange": [
+        13,
+        22
+      ],
+      "summary": "Pydantic schema class Department with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/department.py:DepartmentGetRequest",
+      "type": "class",
+      "name": "DepartmentGetRequest",
+      "filePath": "schemas/api/references/department.py",
+      "lineRange": [
+        25,
+        53
+      ],
+      "summary": "Request schema DepartmentGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/department.py:DepartmentAddRequest",
+      "type": "class",
+      "name": "DepartmentAddRequest",
+      "filePath": "schemas/api/references/department.py",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Request schema DepartmentAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/department.py:DepartmentEditRequest",
+      "type": "class",
+      "name": "DepartmentEditRequest",
+      "filePath": "schemas/api/references/department.py",
+      "lineRange": [
+        69,
+        80
+      ],
+      "summary": "Request schema DepartmentEditRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/department.py:DepartmentDeleteRequest",
+      "type": "class",
+      "name": "DepartmentDeleteRequest",
+      "filePath": "schemas/api/references/department.py",
+      "lineRange": [
+        83,
+        88
+      ],
+      "summary": "Request schema DepartmentDeleteRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/firm.py",
+      "type": "file",
+      "name": "firm.py",
+      "filePath": "schemas/api/references/firm.py",
+      "summary": "Pydantic schemas for the Firm (legal entity) reference, including banking details and get filters.",
+      "tags": [
+        "data-model",
+        "reference",
+        "firm",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/firm.py:Firm",
+      "type": "class",
+      "name": "Firm",
+      "filePath": "schemas/api/references/firm.py",
+      "lineRange": [
+        13,
+        60
+      ],
+      "summary": "Pydantic schema class Firm with 16 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/firm.py:FirmGetRequest",
+      "type": "class",
+      "name": "FirmGetRequest",
+      "filePath": "schemas/api/references/firm.py",
+      "lineRange": [
+        63,
+        79
+      ],
+      "summary": "Request schema FirmGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/firm.py:FirmGetResponse",
+      "type": "class",
+      "name": "FirmGetResponse",
+      "filePath": "schemas/api/references/firm.py",
+      "lineRange": [
+        82,
+        85
+      ],
+      "summary": "Response schema FirmGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/firm_group.py",
+      "type": "file",
+      "name": "firm_group.py",
+      "filePath": "schemas/api/references/firm_group.py",
+      "summary": "Simple Pydantic model representing a hierarchical firm group node.",
+      "tags": [
+        "data-model",
+        "reference",
+        "firm"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/firm_group.py:FirmGroup",
+      "type": "class",
+      "name": "FirmGroup",
+      "filePath": "schemas/api/references/firm_group.py",
+      "lineRange": [
+        6,
+        15
+      ],
+      "summary": "Pydantic schema class FirmGroup with 5 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/item.py",
+      "type": "file",
+      "name": "item.py",
+      "filePath": "schemas/api/references/item.py",
+      "summary": "Comprehensive Pydantic schemas for catalog items: core model, search/get/extended requests, quantity, pricing, import and matching flows.",
+      "tags": [
+        "data-model",
+        "reference",
+        "catalog",
+        "import",
+        "schema-definition"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemType",
+      "type": "class",
+      "name": "ItemType",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        26,
+        30
+      ],
+      "summary": "Pydantic schema class ItemType with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:SortDirection",
+      "type": "class",
+      "name": "SortDirection",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        33,
+        37
+      ],
+      "summary": "Pydantic schema class SortDirection with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemImportComparationValue",
+      "type": "class",
+      "name": "ItemImportComparationValue",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        40,
+        49
+      ],
+      "summary": "Pydantic schema class ItemImportComparationValue with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemMatchingType",
+      "type": "class",
+      "name": "ItemMatchingType",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        52,
+        61
+      ],
+      "summary": "Pydantic schema class ItemMatchingType with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:Item",
+      "type": "class",
+      "name": "Item",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        65,
+        152
+      ],
+      "summary": "Pydantic schema class Item with 35 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemSearchRequest",
+      "type": "class",
+      "name": "ItemSearchRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        156,
+        192
+      ],
+      "summary": "Request schema ItemSearchRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:RedefinitionOption",
+      "type": "class",
+      "name": "RedefinitionOption",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        196,
+        204
+      ],
+      "summary": "Pydantic schema class RedefinitionOption with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetRequest",
+      "type": "class",
+      "name": "ItemGetRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        207,
+        236
+      ],
+      "summary": "Request schema ItemGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetExtSortColumn",
+      "type": "class",
+      "name": "ItemGetExtSortColumn",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        240,
+        253
+      ],
+      "summary": "Pydantic schema class ItemGetExtSortColumn with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetExtSortOrder",
+      "type": "class",
+      "name": "ItemGetExtSortOrder",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        256,
+        272
+      ],
+      "summary": "Pydantic schema class ItemGetExtSortOrder with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetExtImageSize",
+      "type": "class",
+      "name": "ItemGetExtImageSize",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        275,
+        280
+      ],
+      "summary": "Pydantic schema class ItemGetExtImageSize with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetExtRequest",
+      "type": "class",
+      "name": "ItemGetExtRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        283,
+        330
+      ],
+      "summary": "Pydantic schema class ItemGetExtRequest with 23 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemQuantity",
+      "type": "class",
+      "name": "ItemQuantity",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        334,
+        342
+      ],
+      "summary": "Pydantic schema class ItemQuantity with 4 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetQuantityRequest",
+      "type": "class",
+      "name": "ItemGetQuantityRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        346,
+        359
+      ],
+      "summary": "Request schema ItemGetQuantityRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetQuantityResponse",
+      "type": "class",
+      "name": "ItemGetQuantityResponse",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        362,
+        365
+      ],
+      "summary": "Response schema ItemGetQuantityResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetCurrentQuantityRequest",
+      "type": "class",
+      "name": "ItemGetCurrentQuantityRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        368,
+        374
+      ],
+      "summary": "Request schema ItemGetCurrentQuantityRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemCurrentQuantity",
+      "type": "class",
+      "name": "ItemCurrentQuantity",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        377,
+        384
+      ],
+      "summary": "Pydantic schema class ItemCurrentQuantity with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetCurrentQuantityResponse",
+      "type": "class",
+      "name": "ItemGetCurrentQuantityResponse",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        387,
+        390
+      ],
+      "summary": "Response schema ItemGetCurrentQuantityResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemShort",
+      "type": "class",
+      "name": "ItemShort",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        393,
+        403
+      ],
+      "summary": "Pydantic schema class ItemShort with 6 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemGetShortResponse",
+      "type": "class",
+      "name": "ItemGetShortResponse",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        406,
+        409
+      ],
+      "summary": "Response schema ItemGetShortResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemExt",
+      "type": "class",
+      "name": "ItemExt",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        412,
+        431
+      ],
+      "summary": "Pydantic schema class ItemExt with 6 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemImportData",
+      "type": "class",
+      "name": "ItemImportData",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        435,
+        502
+      ],
+      "summary": "Pydantic schema class ItemImportData with 20 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemImportRequest",
+      "type": "class",
+      "name": "ItemImportRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        505,
+        553
+      ],
+      "summary": "Request schema ItemImportRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemImportResult",
+      "type": "class",
+      "name": "ItemImportResult",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        556,
+        570
+      ],
+      "summary": "Pydantic schema class ItemImportResult with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemImportResponse",
+      "type": "class",
+      "name": "ItemImportResponse",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        573,
+        576
+      ],
+      "summary": "Response schema ItemImportResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemMatchingData",
+      "type": "class",
+      "name": "ItemMatchingData",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        579,
+        592
+      ],
+      "summary": "Pydantic schema class ItemMatchingData with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemMatchingRequest",
+      "type": "class",
+      "name": "ItemMatchingRequest",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        595,
+        613
+      ],
+      "summary": "Request schema ItemMatchingRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemMatchingResult",
+      "type": "class",
+      "name": "ItemMatchingResult",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        616,
+        630
+      ],
+      "summary": "Pydantic schema class ItemMatchingResult with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item.py:ItemMatchingResponse",
+      "type": "class",
+      "name": "ItemMatchingResponse",
+      "filePath": "schemas/api/references/item.py",
+      "lineRange": [
+        633,
+        636
+      ],
+      "summary": "Response schema ItemMatchingResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:schemas/api/references/delivery_courier.py",
+      "target": "class:schemas/api/references/delivery_courier.py:DeliveryCourier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/delivery_courier.py",
+      "target": "class:schemas/api/references/delivery_courier.py:DeliveryCourier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/delivery_from.py",
+      "target": "class:schemas/api/references/delivery_from.py:DeliveryFrom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/delivery_from.py",
+      "target": "class:schemas/api/references/delivery_from.py:DeliveryFrom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "class:schemas/api/references/delivery_type.py:DeliveryTypeGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:Department",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:Department",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentEditRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentEditRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentDeleteRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "class:schemas/api/references/department.py:DepartmentDeleteRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:Firm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:Firm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:FirmGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:FirmGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:FirmGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "class:schemas/api/references/firm.py:FirmGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/firm_group.py",
+      "target": "class:schemas/api/references/firm_group.py:FirmGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/firm_group.py",
+      "target": "class:schemas/api/references/firm_group.py:FirmGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:SortDirection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:SortDirection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportComparationValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportComparationValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:Item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:Item",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemSearchRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemSearchRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:RedefinitionOption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:RedefinitionOption",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtSortColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtSortColumn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtSortOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtSortOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtImageSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtImageSize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetExtRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemQuantity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemQuantity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetQuantityRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetQuantityRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetQuantityResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetQuantityResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetCurrentQuantityRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetCurrentQuantityRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemCurrentQuantity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemCurrentQuantity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetCurrentQuantityResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetCurrentQuantityResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemShort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemShort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetShortResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemGetShortResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemExt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemExt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemImportResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "class:schemas/api/references/item.py:ItemMatchingResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/delivery_courier.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/delivery_from.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/delivery_type.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/department.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/firm.py",
+      "target": "file:schemas/api/references/firm_group.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/brand.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/color.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/country.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/department.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/item_group.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/price_type.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/producer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/size.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/stock.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/tax_vat.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item.py",
+      "target": "file:schemas/api/references/unit.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

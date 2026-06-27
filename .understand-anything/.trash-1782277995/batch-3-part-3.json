@@ -1,0 +1,1174 @@
+{
+  "nodes": [
+    {
+      "id": "file:schemas/api/references/item_group.py",
+      "type": "file",
+      "name": "item_group.py",
+      "filePath": "schemas/api/references/item_group.py",
+      "summary": "Pydantic schemas for hierarchical item groups with a get request.",
+      "tags": [
+        "data-model",
+        "reference",
+        "catalog",
+        "hierarchy"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/item_group.py:ItemGroup",
+      "type": "class",
+      "name": "ItemGroup",
+      "filePath": "schemas/api/references/item_group.py",
+      "lineRange": [
+        12,
+        38
+      ],
+      "summary": "Pydantic schema class ItemGroup with 6 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_group.py:ItemGroupGetRequest",
+      "type": "class",
+      "name": "ItemGroupGetRequest",
+      "filePath": "schemas/api/references/item_group.py",
+      "lineRange": [
+        41,
+        59
+      ],
+      "summary": "Request schema ItemGroupGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/item_operation.py",
+      "type": "file",
+      "name": "item_operation.py",
+      "filePath": "schemas/api/references/item_operation.py",
+      "summary": "Pydantic schemas describing stock/document operations affecting an item over time, with get request and response.",
+      "tags": [
+        "data-model",
+        "reference",
+        "catalog",
+        "operations"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/item_operation.py:ItemOperationDocumentType",
+      "type": "class",
+      "name": "ItemOperationDocumentType",
+      "filePath": "schemas/api/references/item_operation.py",
+      "lineRange": [
+        15,
+        24
+      ],
+      "summary": "Pydantic schema class ItemOperationDocumentType with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_operation.py:ItemOperation",
+      "type": "class",
+      "name": "ItemOperation",
+      "filePath": "schemas/api/references/item_operation.py",
+      "lineRange": [
+        27,
+        77
+      ],
+      "summary": "Pydantic schema class ItemOperation with 17 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_operation.py:ItemOperationGetRequest",
+      "type": "class",
+      "name": "ItemOperationGetRequest",
+      "filePath": "schemas/api/references/item_operation.py",
+      "lineRange": [
+        80,
+        105
+      ],
+      "summary": "Request schema ItemOperationGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_operation.py:ItemOperationGetResponse",
+      "type": "class",
+      "name": "ItemOperationGetResponse",
+      "filePath": "schemas/api/references/item_operation.py",
+      "lineRange": [
+        108,
+        111
+      ],
+      "summary": "Response schema ItemOperationGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/item_price.py",
+      "type": "file",
+      "name": "item_price.py",
+      "filePath": "schemas/api/references/item_price.py",
+      "summary": "Pydantic schemas for item prices and pre-cost lookups, with their get requests and responses.",
+      "tags": [
+        "data-model",
+        "reference",
+        "pricing",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPrice",
+      "type": "class",
+      "name": "ItemPrice",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        14,
+        28
+      ],
+      "summary": "Pydantic schema class ItemPrice with 4 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPriceGetRequest",
+      "type": "class",
+      "name": "ItemPriceGetRequest",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        31,
+        41
+      ],
+      "summary": "Request schema ItemPriceGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPriceGetResponse",
+      "type": "class",
+      "name": "ItemPriceGetResponse",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        44,
+        47
+      ],
+      "summary": "Response schema ItemPriceGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPreCost",
+      "type": "class",
+      "name": "ItemPreCost",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        50,
+        61
+      ],
+      "summary": "Pydantic schema class ItemPreCost with 3 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostRequest",
+      "type": "class",
+      "name": "ItemPriceGetPreCostRequest",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        64,
+        81
+      ],
+      "summary": "Request schema ItemPriceGetPreCostRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostResponse",
+      "type": "class",
+      "name": "ItemPriceGetPreCostResponse",
+      "filePath": "schemas/api/references/item_price.py",
+      "lineRange": [
+        84,
+        87
+      ],
+      "summary": "Response schema ItemPriceGetPreCostResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/operating_cash.py",
+      "type": "file",
+      "name": "operating_cash.py",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "summary": "Pydantic schemas for operating cash registers including sort options and a filtered get request.",
+      "tags": [
+        "data-model",
+        "reference",
+        "cash-register",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/operating_cash.py:OperatingCash",
+      "type": "class",
+      "name": "OperatingCash",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "lineRange": [
+        14,
+        30
+      ],
+      "summary": "Pydantic schema class OperatingCash with 10 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/operating_cash.py:OperatingCashSortColumn",
+      "type": "class",
+      "name": "OperatingCashSortColumn",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "lineRange": [
+        33,
+        42
+      ],
+      "summary": "Pydantic schema class OperatingCashSortColumn with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/operating_cash.py:SortDirection",
+      "type": "class",
+      "name": "SortDirection",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "lineRange": [
+        45,
+        47
+      ],
+      "summary": "Pydantic schema class SortDirection with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/operating_cash.py:OperatingCashSortOrder",
+      "type": "class",
+      "name": "OperatingCashSortOrder",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "lineRange": [
+        50,
+        58
+      ],
+      "summary": "Pydantic schema class OperatingCashSortOrder with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/operating_cash.py:OperatingCashGetRequest",
+      "type": "class",
+      "name": "OperatingCashGetRequest",
+      "filePath": "schemas/api/references/operating_cash.py",
+      "lineRange": [
+        61,
+        98
+      ],
+      "summary": "Request schema OperatingCashGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/partner.py",
+      "type": "file",
+      "name": "partner.py",
+      "filePath": "schemas/api/references/partner.py",
+      "summary": "Pydantic schemas for partners (counterparties) with legal-status normalization and add/get request models.",
+      "tags": [
+        "data-model",
+        "reference",
+        "partner",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:LegalStatus",
+      "type": "class",
+      "name": "LegalStatus",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        16,
+        20
+      ],
+      "summary": "Pydantic schema class LegalStatus with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:Partner",
+      "type": "class",
+      "name": "Partner",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        36,
+        83
+      ],
+      "summary": "Pydantic schema class Partner with 18 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:PartnerGetRequest",
+      "type": "class",
+      "name": "PartnerGetRequest",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        86,
+        120
+      ],
+      "summary": "Request schema PartnerGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:PartnerGetResponse",
+      "type": "class",
+      "name": "PartnerGetResponse",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        123,
+        126
+      ],
+      "summary": "Response schema PartnerGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:PartnerAddRequest",
+      "type": "class",
+      "name": "PartnerAddRequest",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        129,
+        174
+      ],
+      "summary": "Request schema PartnerAddRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/partner.py:PartnerAddResponse",
+      "type": "class",
+      "name": "PartnerAddResponse",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        177,
+        180
+      ],
+      "summary": "Response schema PartnerAddResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:schemas/api/references/partner.py:_normalize_legal_status",
+      "type": "function",
+      "name": "_normalize_legal_status",
+      "filePath": "schemas/api/references/partner.py",
+      "lineRange": [
+        23,
+        33
+      ],
+      "summary": "Helper that normalizes the legal-status value into the LegalStatus enum across partner schemas.",
+      "tags": [
+        "utility",
+        "validation",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/partner_group.py",
+      "type": "file",
+      "name": "partner_group.py",
+      "filePath": "schemas/api/references/partner_group.py",
+      "summary": "Simple Pydantic model representing a hierarchical partner group node.",
+      "tags": [
+        "data-model",
+        "reference",
+        "partner"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/partner_group.py:PartnerGroup",
+      "type": "class",
+      "name": "PartnerGroup",
+      "filePath": "schemas/api/references/partner_group.py",
+      "lineRange": [
+        6,
+        15
+      ],
+      "summary": "Pydantic schema class PartnerGroup with 5 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:schemas/api/references/price_type.py",
+      "type": "file",
+      "name": "price_type.py",
+      "filePath": "schemas/api/references/price_type.py",
+      "summary": "Pydantic schemas for price types with currency links, sort options and a filtered get request.",
+      "tags": [
+        "data-model",
+        "reference",
+        "pricing",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pydantic BaseModel definitions; some classes use field validators for normalization."
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceType",
+      "type": "class",
+      "name": "PriceType",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        13,
+        42
+      ],
+      "summary": "Pydantic schema class PriceType with 8 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceTypeSortColumn",
+      "type": "class",
+      "name": "PriceTypeSortColumn",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        45,
+        53
+      ],
+      "summary": "Pydantic schema class PriceTypeSortColumn with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceTypeSortDirection",
+      "type": "class",
+      "name": "PriceTypeSortDirection",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        56,
+        60
+      ],
+      "summary": "Pydantic schema class PriceTypeSortDirection with 0 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceTypeSortOrder",
+      "type": "class",
+      "name": "PriceTypeSortOrder",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        63,
+        80
+      ],
+      "summary": "Pydantic schema class PriceTypeSortOrder with 2 fields.",
+      "tags": [
+        "data-model",
+        "schema-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceTypeGetRequest",
+      "type": "class",
+      "name": "PriceTypeGetRequest",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        83,
+        114
+      ],
+      "summary": "Request schema PriceTypeGetRequest defining input fields/filters for the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "request",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:schemas/api/references/price_type.py:PriceTypeGetResponse",
+      "type": "class",
+      "name": "PriceTypeGetResponse",
+      "filePath": "schemas/api/references/price_type.py",
+      "lineRange": [
+        117,
+        120
+      ],
+      "summary": "Response schema PriceTypeGetResponse wrapping the result payload of the corresponding API operation.",
+      "tags": [
+        "data-model",
+        "response",
+        "serialization"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:schemas/api/references/item_group.py",
+      "target": "class:schemas/api/references/item_group.py:ItemGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_group.py",
+      "target": "class:schemas/api/references/item_group.py:ItemGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_group.py",
+      "target": "class:schemas/api/references/item_group.py:ItemGroupGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_group.py",
+      "target": "class:schemas/api/references/item_group.py:ItemGroupGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationDocumentType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationDocumentType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "class:schemas/api/references/item_operation.py:ItemOperationGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPrice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPrice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPreCost",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPreCost",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "class:schemas/api/references/item_price.py:ItemPriceGetPreCostResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashSortColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashSortColumn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:SortDirection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:SortDirection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashSortOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashSortOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "class:schemas/api/references/operating_cash.py:OperatingCashGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:LegalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:LegalStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:Partner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:Partner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerAddRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerAddRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerAddResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "class:schemas/api/references/partner.py:PartnerAddResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "function:schemas/api/references/partner.py:_normalize_legal_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "function:schemas/api/references/partner.py:_normalize_legal_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/partner_group.py",
+      "target": "class:schemas/api/references/partner_group.py:PartnerGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/partner_group.py",
+      "target": "class:schemas/api/references/partner_group.py:PartnerGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortColumn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortDirection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortDirection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeSortOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeGetRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeGetRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeGetResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "class:schemas/api/references/price_type.py:PriceTypeGetResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:schemas/api/references/item_group.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item_operation.py",
+      "target": "file:schemas/api/references/stock.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/item_price.py",
+      "target": "file:schemas/api/references/price_type.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "file:schemas/api/rbac/user.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "file:schemas/api/references/price_type.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/operating_cash.py",
+      "target": "file:schemas/api/references/stock.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "file:schemas/api/common/filters.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "file:schemas/api/common/sort_orders.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "file:schemas/api/references/fields.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/partner.py",
+      "target": "file:schemas/api/references/partner_group.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "file:schemas/api/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:schemas/api/references/price_type.py",
+      "target": "file:schemas/api/references/currency.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,1187 @@
+{
+  "nodes": [
+    {
+      "id": "file:clients/asterisk_crm_channel/main.py",
+      "type": "file",
+      "name": "main.py",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "summary": "Asterisk PBX CRM channel integration that ingests AMI call events, normalizes phone numbers and call direction, resolves leads, and writes call records into REGOS CRM tickets.",
+      "tags": [
+        "crm-channel",
+        "telephony",
+        "integration",
+        "service",
+        "data-pipeline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_now_ts",
+      "type": "function",
+      "name": "_now_ts",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        220,
+        221
+      ],
+      "summary": "Helper function `_now_ts` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_json_dumps",
+      "type": "function",
+      "name": "_json_dumps",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        224,
+        225
+      ],
+      "summary": "Helper function `_json_dumps` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_json_loads",
+      "type": "function",
+      "name": "_json_loads",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        228,
+        229
+      ],
+      "summary": "Helper function `_json_loads` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_redis_enabled",
+      "type": "function",
+      "name": "_redis_enabled",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        232,
+        233
+      ],
+      "summary": "Helper function `_redis_enabled` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_require_redis",
+      "type": "function",
+      "name": "_require_redis",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        236,
+        238
+      ],
+      "summary": "Helper function `_require_redis` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_to_int",
+      "type": "function",
+      "name": "_to_int",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        241,
+        250
+      ],
+      "summary": "Helper function `_to_int` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_to_bool",
+      "type": "function",
+      "name": "_to_bool",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        253,
+        265
+      ],
+      "summary": "Helper function `_to_bool` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_normalize_unix_ts_seconds",
+      "type": "function",
+      "name": "_normalize_unix_ts_seconds",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        268,
+        278
+      ],
+      "summary": "Helper function `_normalize_unix_ts_seconds` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_normalize_phone",
+      "type": "function",
+      "name": "_normalize_phone",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        281,
+        295
+      ],
+      "summary": "Helper function `_normalize_phone` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_normalize_country_code",
+      "type": "function",
+      "name": "_normalize_country_code",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        298,
+        300
+      ],
+      "summary": "Helper function `_normalize_country_code` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_normalize_message_language",
+      "type": "function",
+      "name": "_normalize_message_language",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        303,
+        327
+      ],
+      "summary": "Helper function `_normalize_message_language` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_is_internal_extension",
+      "type": "function",
+      "name": "_is_internal_extension",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        330,
+        332
+      ],
+      "summary": "Helper function `_is_internal_extension` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_to_international_phone",
+      "type": "function",
+      "name": "_to_international_phone",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        335,
+        353
+      ],
+      "summary": "Helper function `_to_international_phone` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_extract_internal_extension_candidate",
+      "type": "function",
+      "name": "_extract_internal_extension_candidate",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        356,
+        372
+      ],
+      "summary": "Helper function `_extract_internal_extension_candidate` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_hash_scope_key",
+      "type": "function",
+      "name": "_hash_scope_key",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        375,
+        376
+      ],
+      "summary": "Helper function `_hash_scope_key` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_external_id",
+      "type": "function",
+      "name": "_external_id",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        379,
+        380
+      ],
+      "summary": "Helper function `_external_id` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_phone_filter_candidates",
+      "type": "function",
+      "name": "_phone_filter_candidates",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        383,
+        410
+      ],
+      "summary": "Helper function `_phone_filter_candidates` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_translate_direction",
+      "type": "function",
+      "name": "_translate_direction",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        413,
+        436
+      ],
+      "summary": "Helper function `_translate_direction` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_safe_subject",
+      "type": "function",
+      "name": "_safe_subject",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        439,
+        453
+      ],
+      "summary": "Helper function `_safe_subject` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_parse_event_ts",
+      "type": "function",
+      "name": "_parse_event_ts",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        456,
+        476
+      ],
+      "summary": "Helper function `_parse_event_ts` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_format_duration_hms",
+      "type": "function",
+      "name": "_format_duration_hms",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        479,
+        484
+      ],
+      "summary": "Helper function `_format_duration_hms` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_recording_name_from_url",
+      "type": "function",
+      "name": "_recording_name_from_url",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        487,
+        496
+      ],
+      "summary": "Helper function `_recording_name_from_url` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_resolve_recording_url",
+      "type": "function",
+      "name": "_resolve_recording_url",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        499,
+        508
+      ],
+      "summary": "Helper function `_resolve_recording_url` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:clients/asterisk_crm_channel/main.py:_parse_ami_host_port",
+      "type": "function",
+      "name": "_parse_ami_host_port",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        511,
+        522
+      ],
+      "summary": "Helper function `_parse_ami_host_port` in main.py.",
+      "tags": [
+        "utility",
+        "function",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelConfig",
+      "type": "class",
+      "name": "AsteriskCrmChannelConfig",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        60,
+        117
+      ],
+      "summary": "Class `AsteriskCrmChannelConfig` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:RuntimeConfig",
+      "type": "class",
+      "name": "RuntimeConfig",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        121,
+        137
+      ],
+      "summary": "Class `RuntimeConfig` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:CallEvent",
+      "type": "class",
+      "name": "CallEvent",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        141,
+        154
+      ],
+      "summary": "Class `CallEvent` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:LeadContext",
+      "type": "class",
+      "name": "LeadContext",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        158,
+        166
+      ],
+      "summary": "Class `LeadContext` defined in main.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:ChatMessageAddClosedEntityError",
+      "type": "class",
+      "name": "ChatMessageAddClosedEntityError",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        169,
+        175
+      ],
+      "summary": "Class `ChatMessageAddClosedEntityError` defined in main.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:ConnectedIntegrationInactiveError",
+      "type": "class",
+      "name": "ConnectedIntegrationInactiveError",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        178,
+        179
+      ],
+      "summary": "Class `ConnectedIntegrationInactiveError` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:DeferredCallEvent",
+      "type": "class",
+      "name": "DeferredCallEvent",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        182,
+        186
+      ],
+      "summary": "Class `DeferredCallEvent` defined in main.py with 1 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:NonRetryableCallEventError",
+      "type": "class",
+      "name": "NonRetryableCallEventError",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        189,
+        190
+      ],
+      "summary": "Class `NonRetryableCallEventError` defined in main.py.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelIntegration",
+      "type": "class",
+      "name": "AsteriskCrmChannelIntegration",
+      "filePath": "clients/asterisk_crm_channel/main.py",
+      "lineRange": [
+        525,
+        5348
+      ],
+      "summary": "Class `AsteriskCrmChannelIntegration` defined in main.py with 153 methods.",
+      "tags": [
+        "class",
+        "python",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:clients/base.py",
+      "type": "file",
+      "name": "base.py",
+      "filePath": "clients/base.py",
+      "summary": "Abstract base class for all integration clients defining the common lifecycle and request-handling contract.",
+      "tags": [
+        "integration",
+        "base-class",
+        "abstract",
+        "contract"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:clients/base.py:ClientBase",
+      "type": "class",
+      "name": "ClientBase",
+      "filePath": "clients/base.py",
+      "lineRange": [
+        5,
+        34
+      ],
+      "summary": "Class `ClientBase` defined in base.py with 5 methods.",
+      "tags": [
+        "class",
+        "python",
+        "data-model"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_now_ts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_now_ts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_json_dumps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_json_dumps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_json_loads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_json_loads",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_redis_enabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_redis_enabled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_require_redis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_require_redis",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_int",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_int",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_bool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_bool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_unix_ts_seconds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_unix_ts_seconds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_phone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_phone",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_country_code",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_country_code",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_message_language",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_normalize_message_language",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_is_internal_extension",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_is_internal_extension",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_international_phone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_to_international_phone",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_extract_internal_extension_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_extract_internal_extension_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_hash_scope_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_hash_scope_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_external_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_external_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_phone_filter_candidates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_phone_filter_candidates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_translate_direction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_translate_direction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_safe_subject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_safe_subject",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_parse_event_ts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_parse_event_ts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_format_duration_hms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_format_duration_hms",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_recording_name_from_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_recording_name_from_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_resolve_recording_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_resolve_recording_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_parse_ami_host_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "function:clients/asterisk_crm_channel/main.py:_parse_ami_host_port",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:RuntimeConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:RuntimeConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:CallEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:CallEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:LeadContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:LeadContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:ChatMessageAddClosedEntityError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:ChatMessageAddClosedEntityError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:ConnectedIntegrationInactiveError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:ConnectedIntegrationInactiveError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:DeferredCallEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:DeferredCallEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:NonRetryableCallEventError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:NonRetryableCallEventError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "class:clients/asterisk_crm_channel/main.py:AsteriskCrmChannelIntegration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/base.py",
+      "target": "class:clients/base.py:ClientBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:clients/base.py",
+      "target": "class:clients/base.py:ClientBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:clients/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:config/settings.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:core/api/regos_api.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:core/logger.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:core/redis.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/chat/chat_message.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/common/filters.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/crm/client.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/crm/ticket.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/integrations/connected_integration_setting.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/integrations/connected_integration.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/api/rbac/user.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/asterisk_crm_channel/main.py",
+      "target": "file:schemas/integration/base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:clients/base.py",
+      "target": "file:schemas/integration/integration_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

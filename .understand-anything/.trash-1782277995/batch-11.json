@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {
+      "id": "table:clients/instagram_crm_channel/migrations/001_create_igc_business_map.sql:igc_business_map",
+      "type": "table",
+      "name": "igc_business_map",
+      "filePath": "clients/instagram_crm_channel/migrations/001_create_igc_business_map.sql",
+      "summary": "MySQL/InnoDB migration creating the igc_business_map table that persistently maps Instagram Business Account IDs to their connected REGOS integration, with active-status flag and audit timestamps. Transient queues, retries, dedupe, and route caches are kept in Redis rather than this table.",
+      "tags": ["database", "migration", "schema-definition", "instagram", "crm"],
+      "complexity": "simple",
+      "languageNotes": "InnoDB table with utf8mb4_unicode_ci collation; business_id is the primary key with secondary indexes on connected_integration_id and is_active, and updated_at uses ON UPDATE CURRENT_TIMESTAMP."
+    }
+  ],
+  "edges": []
+}

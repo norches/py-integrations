@@ -42,16 +42,19 @@ from schemas.api.crm.ticket import (
     TicketAddRequest,
     TicketCloseRequest,
     TicketDirectionEnum,
+    TicketEditRequest,
     TicketGetRequest,
     TicketSetResponsibleRequest,
     TicketSetStatusRequest,
     TicketStatusEnum,
 )
+from schemas.api.references.fields import FieldValueEdit
 from schemas.api.integrations.connected_integration_setting import (
     ConnectedIntegrationSettingRequest,
 )
 from schemas.api.integrations.connected_integration import ConnectedIntegrationGetRequest
 from schemas.api.rbac.user import UserGetRequest
+from schemas.api.rbac.work_attendance import WorkAttendanceStatusRequest
 from schemas.integration.base import IntegrationErrorModel, IntegrationErrorResponse
 
 logger = setup_logger("asterisk_crm_channel")
@@ -75,7 +78,9 @@ class AsteriskCrmChannelConfig:
     DEFAULT_STATE_TTL_SEC = 6 * 60 * 60
     STREAM_TTL_SEC = 24 * 60 * 60
     ACTIVE_CI_IDS_TTL_SEC = 30 * 24 * 60 * 60
-    OPERATOR_NOT_FOUND_CACHE_TTL_SEC = 10 * 60
+    # Short on purpose: only collapses repeated User/Get within one call's events. A longer
+    # negative cache would keep a freshly-configured operator unresolved (and unassigned).
+    OPERATOR_NOT_FOUND_CACHE_TTL_SEC = 60
     STORE_DECISION_TRACE = bool(getattr(app_settings, "debug", False))
 
     STREAM_GROUP = "accw"
@@ -87,11 +92,13 @@ class AsteriskCrmChannelConfig:
     STREAM_CLAIM_INTERVAL_SEC = 30
     STREAM_MAX_RETRIES = max(int(app_settings.asterisk_crm_channel_stream_retry_limit or 0), 1)
     EVENT_CONCURRENCY = max(int(app_settings.asterisk_crm_channel_event_concurrency or 0), 1)
-    STREAM_EVENT_REORDER_WINDOW_SEC = 3
-    STREAM_MAX_FUTURE_SKEW_SEC = 30
 
     LOCK_TTL_SEC = 30
     PROCESSING_LOCK_TTL_SEC = 120
+    # Wait for the in-flight same-call event to finish before processing the next stage.
+    # Must comfortably exceed one create/assign/close CRM round-trip held under the lock;
+    # on timeout the event is soft-retried (re-enqueued) without counting toward the DLQ.
+    CALL_LOCK_WAIT_SEC = 6.0
     HEARTBEAT_TTL_SEC = 30
     AMI_CONNECT_TIMEOUT_SEC = 30
     AMI_PING_INTERVAL_SEC = 20
@@ -100,7 +107,6 @@ class AsteriskCrmChannelConfig:
     AMI_OWNER_LOCK_TTL_SEC = 30
     AMI_OWNER_LOCK_REFRESH_SEC = 10
     AMI_OWNER_WAIT_SEC = 2
-    INBOUND_FINALIZE_DELAY_SEC = 7
 
     CHAT_MESSAGE_ADD_CLOSED_ENTITY_ERROR = 1220
 
@@ -135,6 +141,11 @@ class RuntimeConfig:
     assign_responsible_by_operator_ext: bool
     message_language: str
     close_ticket_on_call_end: bool
+    min_external_digits: int
+    recording_link_field_key: str
+    create_ticket_on_call_start: bool
+    assign_responsible_requires_attendance: bool
+    post_status_messages: bool
 
 
 @dataclass
@@ -179,14 +190,13 @@ class ConnectedIntegrationInactiveError(RuntimeError):
     pass
 
 
-class DeferredCallEvent(RuntimeError):
-    def __init__(self, reason: str, delay_sec: int = 1) -> None:
-        self.reason = str(reason or "").strip() or "deferred"
-        self.delay_sec = max(int(delay_sec), 1)
-        super().__init__(f"Deferred call event: {self.reason} (delay={self.delay_sec}s)")
-
-
 class NonRetryableCallEventError(RuntimeError):
+    pass
+
+
+class CallLockBusyError(RuntimeError):
+    """Per-call lock is held by another in-flight event. Soft-retried (no DLQ count)."""
+
     pass
 
 
@@ -830,6 +840,19 @@ class AsteriskCrmChannelIntegration(ClientBase):
         )
 
     @staticmethod
+    def _recording_file_key(
+        connected_integration_id: str,
+        asterisk_hash: str,
+        external_call_id: str,
+    ) -> str:
+        return AsteriskCrmChannelIntegration._redis_key(
+            "recording_file",
+            connected_integration_id,
+            asterisk_hash,
+            external_call_id,
+        )
+
+    @staticmethod
     def _operator_user_cache_key(
         connected_integration_id: str,
         asterisk_hash: str,
@@ -876,6 +899,21 @@ class AsteriskCrmChannelIntegration(ClientBase):
     ) -> str:
         return AsteriskCrmChannelIntegration._redis_key(
             "call_responsible_name",
+            connected_integration_id,
+            asterisk_hash,
+            external_call_id,
+        )
+
+    @staticmethod
+    def _call_close_pending_key(
+        connected_integration_id: str,
+        asterisk_hash: str,
+        external_call_id: str,
+    ) -> str:
+        # Set when a call's terminal event arrives before a responsible was bound, so the
+        # assign path can perform the parked close once it answers (order-independent).
+        return AsteriskCrmChannelIntegration._redis_key(
+            "call_close_pending",
             connected_integration_id,
             asterisk_hash,
             external_call_id,
@@ -1415,6 +1453,26 @@ return 0
             ),
             close_ticket_on_call_end=_to_bool(
                 settings_map.get("asterisk_close_ticket_on_call_end"),
+                True,
+            ),
+            min_external_digits=max(
+                _to_int(settings_map.get("asterisk_min_external_digits"), 4) or 4,
+                2,
+            ),
+            recording_link_field_key=(
+                str(settings_map.get("asterisk_recording_link_field_key") or "").strip()
+                or "field_recording_link"
+            ),
+            create_ticket_on_call_start=_to_bool(
+                settings_map.get("asterisk_create_ticket_on_call_start"),
+                True,
+            ),
+            assign_responsible_requires_attendance=_to_bool(
+                settings_map.get("asterisk_assign_responsible_requires_attendance"),
+                False,
+            ),
+            post_status_messages=_to_bool(
+                settings_map.get("asterisk_post_status_messages"),
                 False,
             ),
         )
@@ -1637,6 +1695,45 @@ return 0
         return _is_internal_extension(client_candidate)
 
     @classmethod
+    def _context_values(cls, payload: Dict[str, Any]) -> List[str]:
+        values: List[str] = []
+        for value in (
+            cls._payload_pick(payload, "context", "channelcontext", "chancontext"),
+            cls._payload_pick(payload, "destinationcontext", "destination_context"),
+            cls._payload_pick(payload, "dialcontext", "dcontext", "dstcontext"),
+        ):
+            text = str(value or "").strip().lower()
+            if text:
+                values.append(text)
+        return values
+
+    @classmethod
+    def _is_scanner_context(cls, payload: Dict[str, Any]) -> bool:
+        # Scanner/fraud SIP probes land in the "from-sip-external" context. The whole
+        # linked call must be ignored, so any leg showing this context flags the call.
+        return any(
+            value.startswith("from-sip-external") for value in cls._context_values(payload)
+        )
+
+    @staticmethod
+    def _is_root_channel(payload: Dict[str, Any]) -> bool:
+        # Root channel of a call has Uniqueid == Linkedid. When Linkedid is absent
+        # (older Asterisk), the single channel is its own root.
+        uniqueid = str(
+            AsteriskCrmChannelIntegration._payload_pick(payload, "uniqueid", "channel.uniqueid")
+            or ""
+        ).strip()
+        linkedid = str(
+            AsteriskCrmChannelIntegration._payload_pick(payload, "linkedid", "linked_id", "channel.linkedid")
+            or ""
+        ).strip()
+        if not linkedid:
+            return True
+        if not uniqueid:
+            return True
+        return uniqueid == linkedid
+
+    @classmethod
     def _cdr_disposition(cls, payload: Dict[str, Any]) -> str:
         raw = str(cls._payload_pick(payload or {}, "disposition") or "").strip().lower()
         return re.sub(r"[\s_-]+", "", raw)
@@ -1834,6 +1931,7 @@ return 0
             "event",
             "event_name",
             "type",
+            "scanner",
             "linkedid",
             "linked_id",
             "external_call_id",
@@ -1942,7 +2040,11 @@ return 0
         if not event_type:
             return None
 
-        if event_type in {"newchannel", "newcallerid", "newexten"}:
+        if event_type == "newchannel":
+            # Root channel (Uniqueid == Linkedid) seeds the per-call metadata at call
+            # start; non-root legs are dropped in _normalize_ami_payload_to_external.
+            return "started"
+        if event_type in {"newcallerid", "newexten"}:
             # Too noisy for CRM chat; keep only meaningful call stages.
             return None
         if event_type in {"dialbegin", "dialstate"}:
@@ -1995,25 +2097,14 @@ return 0
             }:
                 return "failed"
             return None
-        if event_type in {"hangup", "hanguprequest", "softhanguprequest", "unlink", "bridgeleave"}:
-            cause_text = str(
-                cls._payload_pick(payload, "cause_txt", "cause-txt", "causetxt") or ""
-            ).strip().lower()
-            cause = _to_int(cls._payload_pick(payload, "cause"), None)
-            # Same reason as DialEnd: per-leg noanswer hangups are not final call result.
-            if cause_text in {"noanswer", "no_answer", "no answer"} or cause in {19}:
-                return None
-            if cause_text in {"busy", "congestion", "cancelled", "canceled", "failed"} or cause in {
-                17,
-                34,
-                38,
-                41,
-                42,
-                44,
-                47,
-                58,
-            }:
-                return "failed"
+        if event_type in {"hangup", "hanguprequest", "softhanguprequest"}:
+            # A channel hangup ends the call. The master-record gate keeps only the root
+            # channel (Uniqueid == Linkedid), so this is the call finishing. Map it to a
+            # terminal "completed"; whether the ticket closes is decided by the presence of
+            # a responsible (answered -> close) vs none (missed -> left open).
+            return "completed"
+        if event_type in {"unlink", "bridgeleave"}:
+            # Per-leg bridge events are not the call end.
             return None
         if event_type == "cdr":
             disposition = cls._cdr_disposition(payload)
@@ -2028,6 +2119,52 @@ return 0
         return cls._normalize_status(event_type)
 
     @classmethod
+    def _direction_from_context(
+        cls,
+        runtime: RuntimeConfig,
+        payload: Dict[str, Any],
+    ) -> Optional[str]:
+        """Classify direction from the dialplan Context (spec-preferred signal).
+
+        from-trunk/from-pstn/from-did -> inbound; from-internal with an
+        external-length dialed number -> outbound. Returns None when the context
+        is unknown or an internal/feature dial, so phone heuristics can decide.
+        """
+        for context in cls._context_values(payload):
+            if context.startswith("from-sip-external"):
+                # Scanner traffic; ignored elsewhere, never a real direction here.
+                continue
+            if (
+                context.startswith("from-trunk")
+                or context.startswith("from-pstn")
+                or context.startswith("from-did")
+                or context.startswith("from-external")
+                or context.startswith("from-pubpeer")
+                or "incoming" in context
+            ):
+                return "inbound"
+            if context.startswith("from-internal") or context.startswith("from-office"):
+                dialed_digits = _normalize_phone(
+                    cls._payload_pick(
+                        payload,
+                        "exten",
+                        "dnid",
+                        "destination",
+                        "dst",
+                        "connectedlinenum",
+                    )
+                )
+                if (
+                    dialed_digits
+                    and not _is_internal_extension(dialed_digits)
+                    and len(dialed_digits) >= runtime.min_external_digits
+                ):
+                    return "outbound"
+                # Short/feature codes or ext-to-ext: let phone heuristics decide.
+                return None
+        return None
+
+    @classmethod
     def _derive_direction_from_ami(
         cls,
         runtime: RuntimeConfig,
@@ -2036,6 +2173,10 @@ return 0
         explicit = cls._payload_pick(payload, "direction", "call_direction")
         if explicit is not None:
             return cls._normalize_direction(explicit, payload)
+
+        context_direction = cls._direction_from_context(runtime, payload)
+        if context_direction:
+            return context_direction
 
         caller = _to_international_phone(
             cls._payload_pick(
@@ -2097,9 +2238,9 @@ return 0
             return "inbound"
 
         if caller and connected:
-            if caller_is_ext and len(connected) >= 7:
+            if caller_is_ext and len(connected) >= runtime.min_external_digits:
                 return "outbound"
-            if connected_is_ext and len(caller) >= 7:
+            if connected_is_ext and len(caller) >= runtime.min_external_digits:
                 return "inbound"
         return "inbound"
 
@@ -2117,8 +2258,28 @@ return 0
         if not status:
             return None
 
+        event_type = cls._raw_event_type(source)
+        is_root = cls._is_root_channel(source)
+
+        # Only the root channel (Uniqueid == Linkedid) seeds the call at start; queue
+        # and member-leg Newchannel events are dropped so one call is seeded once.
+        if status == "started" and not is_root:
+            return None
+
+        # Forward only the master hangup/CDR record (UniqueID == Linkedid). Queue and
+        # ring-group fan-out emit many per-leg records; non-root terminals are leg noise.
+        if (
+            not is_root
+            and status in {"completed", "missed", "failed"}
+            and event_type in {"cdr", "hangup", "hanguprequest", "softhanguprequest"}
+        ):
+            return None
+
         normalized = dict(source)
         normalized["status"] = status
+        if cls._is_scanner_context(source):
+            # Mark the whole linked call ignored; enforced once in the worker.
+            normalized["scanner"] = "1"
         direction = cls._derive_direction_from_ami(runtime, source)
         normalized["direction"] = direction
         normalized.setdefault(
@@ -2321,6 +2482,49 @@ return 0
         if not external_payload:
             return None
         return cls._normalize_external_event(runtime, external_payload)
+
+    @classmethod
+    async def _maybe_capture_recording_filename(
+        cls,
+        runtime: RuntimeConfig,
+        packet: Dict[str, Any],
+    ) -> None:
+        """Stash the MixMonitor recording filename from a VarSet event, keyed by linkedid.
+
+        Asterisk reports the recording path on a VarSet (Variable=MIXMONITOR_FILENAME
+        or CDR(recordingfile)) during the call; the later stop/CDR packet may not carry
+        it. Caching it lets recording_ready build the URL from the recording base URL.
+        """
+        if cls._raw_event_type(packet) != "varset":
+            return
+        variable = str(cls._payload_pick(packet, "variable", "var") or "").strip().lower()
+        if variable not in {"mixmonitor_filename", "cdr(recordingfile)"}:
+            return
+        value = str(cls._payload_pick(packet, "value", "val") or "").strip()
+        if not value:
+            return
+        call_id = cls._normalize_call_id(
+            cls._payload_pick(packet, "linkedid", "linked_id", "uniqueid")
+        )
+        if not call_id:
+            return
+        try:
+            await cls._redis_set_with_ttl(
+                cls._recording_file_key(
+                    runtime.connected_integration_id,
+                    runtime.asterisk_hash,
+                    call_id,
+                ),
+                value,
+                runtime.state_ttl_sec,
+                min_ttl_sec=300,
+            )
+        except Exception:
+            logger.debug(
+                "Failed to cache recording filename: ci=%s call_id=%s",
+                runtime.connected_integration_id,
+                call_id,
+            )
 
     @classmethod
     def _collect_call_id_candidates_from_event(cls, event: CallEvent) -> List[str]:
@@ -2890,6 +3094,9 @@ return 0
                             if not normalized_packet.get("event"):
                                 continue
 
+                            await cls._maybe_capture_recording_filename(
+                                runtime, normalized_packet
+                            )
                             event = cls._normalize_ami_event(runtime, normalized_packet)
                             if not event:
                                 continue
@@ -2969,15 +3176,12 @@ return 0
                             pending_entries.extend(claimed_entries)
 
                     try:
-                        block_ms = AsteriskCrmChannelConfig.STREAM_READ_BLOCK_MS
-                        if pending_entries:
-                            block_ms = min(block_ms, 500)
                         records = await redis_ops.xreadgroup(
                             groupname=AsteriskCrmChannelConfig.STREAM_GROUP,
                             consumername=consumer,
                             streams={stream_key: ">"},
                             count=AsteriskCrmChannelConfig.STREAM_BATCH_SIZE,
-                            block=block_ms,
+                            block=AsteriskCrmChannelConfig.STREAM_READ_BLOCK_MS,
                         )
                     except Exception as error:
                         if redis_error_contains(error, "NOGROUP"):
@@ -3087,44 +3291,16 @@ return 0
             return None
         return _normalize_unix_ts_seconds(int(payload_ts))
 
-    @staticmethod
-    def _stream_entry_defer_until_ts(fields: Dict[str, str]) -> Optional[int]:
-        return _to_int(fields.get("defer_until_ts"), None)
-
     @classmethod
     def _select_ready_stream_entries(
         cls,
         entries: List[Tuple[str, Dict[str, str]]],
     ) -> Tuple[List[Tuple[str, Dict[str, str]]], List[Tuple[str, Dict[str, str]]]]:
-        now_ts = _now_ts()
-        reorder_window_sec = max(AsteriskCrmChannelConfig.STREAM_EVENT_REORDER_WINDOW_SEC, 0)
-        max_future_skew_sec = max(AsteriskCrmChannelConfig.STREAM_MAX_FUTURE_SKEW_SEC, 0)
-        safe_event_ts = now_ts - reorder_window_sec
-        sorted_entries = cls._sort_stream_entries_by_event_ts(entries)
-        ready_entries: List[Tuple[str, Dict[str, str]]] = []
-        pending_entries: List[Tuple[str, Dict[str, str]]] = []
-        for message_id, fields in sorted_entries:
-            defer_until_ts = cls._stream_entry_defer_until_ts(fields)
-            if defer_until_ts is not None and defer_until_ts > now_ts:
-                pending_entries.append((message_id, fields))
-                continue
-            event_ts = cls._stream_entry_event_ts(fields)
-            if event_ts is not None and reorder_window_sec > 0 and event_ts > safe_event_ts:
-                if max_future_skew_sec > 0 and event_ts > now_ts + max_future_skew_sec:
-                    # Guard against clock skew / wrong timestamp units.
-                    ready_entries.append((message_id, fields))
-                    continue
-                pending_entries.append((message_id, fields))
-                continue
-            ready_entries.append((message_id, fields))
-
-        if (
-            not ready_entries
-            and pending_entries
-            and len(pending_entries) >= AsteriskCrmChannelConfig.STREAM_BATCH_SIZE * 3
-        ):
-            ready_entries.append(pending_entries.pop(0))
-        return ready_entries, pending_entries
+        # No reorder/defer hold: AMI is a single ordered socket, so the enqueue order is
+        # already the call order. Events process as they arrive; the per-call lock plus
+        # idempotent create/assign/close cover any residual cross-worker reordering. Sort
+        # by event_ts only to keep within-batch ordering stable.
+        return cls._sort_stream_entries_by_event_ts(entries), []
 
     @classmethod
     async def _clear_enqueue_dedupe_for_fields(
@@ -3178,17 +3354,11 @@ return 0
 
             await cls._process_queued_event(connected_integration_id, event_payload)
             await redis_stream_ack_delete(stream_key, AsteriskCrmChannelConfig.STREAM_GROUP, message_id)
-        except DeferredCallEvent as deferred:
-            defer_payload = dict(fields)
-            defer_payload["defer_until_ts"] = str(_now_ts() + deferred.delay_sec)
-            defer_payload["defer_reason"] = deferred.reason
-            defer_payload.pop("error", None)
-            defer_payload.pop("last_error", None)
-            await cls._enqueue(
-                stream_key,
-                defer_payload,
-                stream_ttl_sec=state_ttl_sec,
-            )
+        except CallLockBusyError:
+            # Transient per-call contention: re-enqueue the same entry WITHOUT incrementing
+            # the attempt counter so it never reaches the DLQ. The lock-holder finishes its
+            # CRM round-trip and this stage runs on the next read.
+            await cls._enqueue(stream_key, dict(fields), stream_ttl_sec=state_ttl_sec)
             await redis_stream_ack_delete(stream_key, AsteriskCrmChannelConfig.STREAM_GROUP, message_id)
             return
         except ConnectedIntegrationInactiveError as error:
@@ -3294,12 +3464,18 @@ return 0
                     runtime.asterisk_hash,
                     event.external_call_id,
                 )
-                call_lock_token = await cls._acquire_lock(
+                # Serialize same-call events by briefly waiting for the in-flight event to
+                # finish — no re-enqueue churn. Events arrive ordered, so a short wait keeps
+                # create -> assign -> close in order.
+                call_lock_token = await cls._acquire_lock_wait(
                     call_lock_key,
                     AsteriskCrmChannelConfig.PROCESSING_LOCK_TTL_SEC,
+                    wait_seconds=AsteriskCrmChannelConfig.CALL_LOCK_WAIT_SEC,
                 )
                 if not call_lock_token:
-                    raise DeferredCallEvent("call_lock_busy", delay_sec=1)
+                    # Another stage of the same call is still in flight. Soft-retry without
+                    # counting toward the DLQ (transient contention is not a failure).
+                    raise CallLockBusyError("call-process lock contended")
 
             event = await cls._dedupe_and_stabilize_call_event(runtime, event)
             if not event:
@@ -3485,19 +3661,6 @@ return 0
             }:
                 return True
 
-        # Early per-leg hangup events may emit "completed" before CDR with billsec.
-        # Suppress these interim zero-talk completions and wait for final call result.
-        if status == "completed" and talk_duration <= 0:
-            raw_event_type = cls._raw_event_type(event.raw_payload or {})
-            if raw_event_type in {
-                "hangup",
-                "hanguprequest",
-                "softhanguprequest",
-                "unlink",
-                "bridgeleave",
-            }:
-                return True
-
         return False
 
     @classmethod
@@ -3515,19 +3678,30 @@ return 0
             event.external_call_id,
         )
         cached = cls._parse_cached_json(await cls._redis_get(progress_key)) or {}
+
+        # Scanner/fraud calls (from-sip-external) are ignored for the whole linked call:
+        # the first leg flags the linkedid, every later leg short-circuits here.
+        if cached.get("ignored"):
+            return None
+        if _to_bool((event.raw_payload or {}).get("scanner"), False):
+            await cls._redis_set_json_with_ttl(
+                progress_key,
+                {**cached, "ignored": True, "updated_at": _now_ts()},
+                runtime.state_ttl_sec,
+                min_ttl_sec=300,
+            )
+            return None
+
         decision_reasons: List[str] = []
-        finalize_defer_sec = 0
-        converted_to_missed_by_timeout = False
-        pending_inbound_completed_at = _to_int(cached.get("pending_inbound_completed_at"), None)
-        pending_clientless_answered_at = _to_int(
-            cached.get("pending_clientless_answered_at"),
-            None,
-        )
-        suppress_clientless_answered = False
         suppress_untrusted_answered = False
 
         stable_direction = str(cached.get("direction") or "").strip().lower()
-        if stable_direction in {"inbound", "outbound"}:
+        direction_locked = bool(cached.get("direction_locked"))
+        # Apply the cached direction only once a meaningful stage has locked it. The
+        # root Newchannel seed is low-information (endpoints may not be populated yet),
+        # so it must not pin the direction — a later stage (ringing/answered/CDR) with
+        # real endpoints can still correct a weak initial guess.
+        if stable_direction in {"inbound", "outbound"} and direction_locked:
             event.direction = stable_direction
 
         stable_client_phone = _normalize_phone(cached.get("client_phone"))
@@ -3553,50 +3727,32 @@ return 0
         operator_phone = locked_operator_ext or raw_operator_phone
         if locked_operator_ext:
             event.operator_ext = locked_operator_ext
-        if event.status == "answered" and not _normalize_phone(event.client_phone):
-            now_ts = _now_ts()
-            if pending_clientless_answered_at is None:
-                pending_clientless_answered_at = now_ts
-            elapsed = max(now_ts - pending_clientless_answered_at, 0)
-            wait_sec = max(AsteriskCrmChannelConfig.INBOUND_FINALIZE_DELAY_SEC, 1)
-            if elapsed < wait_sec:
-                finalize_defer_sec = min(2, max(wait_sec - elapsed, 1))
-                decision_reasons.append("await_answered_client_context")
-            else:
-                suppress_clientless_answered = True
-                decision_reasons.append("suppressed_answered_without_client")
-        elif event.status == "answered":
-            pending_clientless_answered_at = None
+        # Inbound "answered" is the bridge leg whose channel name parses to a real local
+        # extension (the human pickup). Trust it on the extension alone — mapping that ext
+        # to a CRM user happens (and is logged) in the assign step, so a not-yet-mapped
+        # operator no longer silently swallows the answer. Trunk/Local legs (no internal
+        # ext) are the only ones suppressed.
         inbound_answered_operator_trusted = False
-        if (
-            event.status == "answered"
-            and event.direction == "inbound"
-            and finalize_defer_sec <= 0
-            and not suppress_clientless_answered
-        ):
+        if event.status == "answered" and event.direction == "inbound":
             if operator_phone and _is_internal_extension(operator_phone):
-                if raw_event_type == "agentconnect":
-                    inbound_answered_operator_trusted = True
-                    decision_reasons.append("agentconnect_answered")
-                else:
-                    resolved_operator_user_id = await cls._resolve_user_id_by_operator_ext_best_effort(
-                        runtime,
-                        operator_phone,
-                    )
-                    if resolved_operator_user_id:
-                        inbound_answered_operator_trusted = True
-                        decision_reasons.append("operator_resolved_for_answered")
-                    else:
-                        suppress_untrusted_answered = True
-                        decision_reasons.append("operator_unresolved_for_answered")
+                inbound_answered_operator_trusted = True
+                decision_reasons.append("operator_ext_for_answered")
             else:
                 suppress_untrusted_answered = True
                 decision_reasons.append("operator_missing_for_answered")
+                logger.info(
+                    "Asterisk inbound answered with no operator extension (suppressed leg): "
+                    "ci=%s call_id=%s raw_event=%s operator=%s from=%s to=%s",
+                    runtime.connected_integration_id,
+                    event.external_call_id,
+                    raw_event_type or None,
+                    operator_phone or None,
+                    event.from_phone or None,
+                    event.to_phone or None,
+                )
         trusted_answered_event = (
             event.status == "answered"
-            and not suppress_clientless_answered
             and not suppress_untrusted_answered
-            and finalize_defer_sec <= 0
             and (
                 event.direction == "outbound"
                 or inbound_answered_operator_trusted
@@ -3614,7 +3770,6 @@ return 0
                 decision_reasons.append("operator_locked_on_answered")
             if answered_at is None or event_ts < answered_at:
                 answered_at = event_ts
-            pending_inbound_completed_at = None
         if event.status == "completed" and answered_at is not None and event_ts >= answered_at:
             duration_from_answer = max(event_ts - answered_at, 0)
             reported_duration = _to_int(event.talk_duration_sec, None)
@@ -3624,8 +3779,11 @@ return 0
                 # Keep only the segment after operator answer (exclude IVR/queue time).
                 event.talk_duration_sec = min(reported_duration, duration_from_answer)
         if event.status == "completed" and event.direction == "inbound" and answered_at is None:
+            # No operator pickup recorded. If the endpoint maps to a real operator we can
+            # still infer the answer (out-of-order BridgeEnter); otherwise the call was
+            # never answered by an agent — it stays "completed" but the ticket has no
+            # responsible, so the close step leaves it OPEN (the missed-call case).
             talk_duration = _to_int(event.talk_duration_sec, 0) or 0
-            can_infer_answered_from_completed = False
             if (
                 talk_duration > 0
                 and operator_phone
@@ -3637,42 +3795,10 @@ return 0
                     operator_phone,
                 )
                 if resolved_operator_user_id:
-                    can_infer_answered_from_completed = True
-                    decision_reasons.append("operator_resolved_for_completed")
+                    answered_at = max(event_ts - talk_duration, 0)
+                    decision_reasons.append("inferred_answered_from_completed")
                 else:
                     decision_reasons.append("operator_unresolved_for_completed")
-
-            if can_infer_answered_from_completed:
-                # Infer answered only when we can map endpoint to a real operator.
-                # This prevents IVR-only calls from being treated as operator-answered.
-                answered_at = max(event_ts - talk_duration, 0)
-                pending_inbound_completed_at = None
-                decision_reasons.append("trusted_answered")
-                decision_reasons.append("inferred_answered_from_completed")
-            else:
-                # Wait a short grace window for out-of-order AMI events before
-                # converting inbound completed-without-operator into missed.
-                now_ts = _now_ts()
-                if pending_inbound_completed_at is None:
-                    pending_inbound_completed_at = now_ts
-                elapsed = max(now_ts - pending_inbound_completed_at, 0)
-                wait_sec = max(AsteriskCrmChannelConfig.INBOUND_FINALIZE_DELAY_SEC, 1)
-                if elapsed < wait_sec:
-                    finalize_defer_sec = min(2, max(wait_sec - elapsed, 1))
-                    decision_reasons.append("await_inbound_final_state")
-                else:
-                    # IVR/queue can answer the call before any operator picks it up.
-                    # Treat such calls as missed from CRM perspective.
-                    event.status = "missed"
-                    event.talk_duration_sec = None
-                    pending_inbound_completed_at = None
-                    converted_to_missed_by_timeout = True
-                    decision_reasons.append("converted_to_missed")
-
-        if event.status in {"answered", "missed", "failed", "recording_ready"}:
-            pending_inbound_completed_at = None
-        if event.status in {"completed", "missed", "failed", "recording_ready"}:
-            pending_clientless_answered_at = None
 
         posted_statuses = {
             str(item).strip().lower()
@@ -3684,17 +3810,20 @@ return 0
         current_rank = cls._status_rank(stage_code)
         status = stage_code
 
-        suppressed_as_noise = (
-            False if converted_to_missed_by_timeout else cls._should_suppress_noise_event(event)
-        )
+        suppressed_as_noise = cls._should_suppress_noise_event(event)
         if suppressed_as_noise:
             decision_reasons.append("suppressed_as_leg_noise")
-        should_emit = (
-            not suppressed_as_noise
-            and finalize_defer_sec <= 0
-            and not suppress_clientless_answered
-            and not suppress_untrusted_answered
-        )
+        should_emit = not suppressed_as_noise and not suppress_untrusted_answered
+        # The root Newchannel always seeds call metadata (direction/client) below, but
+        # only emits a call_initiated ticket/message when explicitly enabled. By default
+        # the ticket is created on the first meaningful stage (ringing/answered/hangup).
+        if (
+            should_emit
+            and status in {"inbound_started", "outbound_started"}
+            and not runtime.create_ticket_on_call_start
+        ):
+            should_emit = False
+            decision_reasons.append("seed_only_call_start")
         completed_with_talk = (
             status in {"inbound_completed", "outbound_completed"}
             and (_to_int(event.talk_duration_sec, 0) or 0) > 0
@@ -3724,6 +3853,13 @@ return 0
         stable_direction = (
             event.direction if event.direction in {"inbound", "outbound"} else stable_direction
         )
+        # Lock the direction once any non-seed packet has classified the call. Only the
+        # root Newchannel seed (whose endpoints may be unpopulated) stays unlocked, so a
+        # later packet with real endpoints (DialBegin/BridgeEnter/CDR) can still correct it.
+        direction_locked = direction_locked or (
+            event.direction in {"inbound", "outbound"}
+            and raw_event_type != "newchannel"
+        )
         stable_client_phone = _normalize_phone(event.client_phone) or stable_client_phone
         stable_operator_ext = (
             locked_operator_ext
@@ -3732,7 +3868,7 @@ return 0
         )
         stable_from_phone = _normalize_phone(event.from_phone) or stable_from_phone
         stable_to_phone = _normalize_phone(event.to_phone) or stable_to_phone
-        effective_rank = current_rank if finalize_defer_sec <= 0 else 0
+        effective_rank = current_rank
         next_last_rank = max(last_rank, effective_rank)
         if should_emit and status and status != "recording_ready":
             posted_statuses.add(status)
@@ -3753,7 +3889,6 @@ return 0
             "status": str(event.status or "").strip().lower(),
             "stage": status,
             "emit": bool(should_emit),
-            "deferred": bool(finalize_defer_sec > 0),
             "reasons": decision_reasons,
             "raw_event_type": raw_event_type or None,
         }
@@ -3763,6 +3898,7 @@ return 0
 
         progress_payload: Dict[str, Any] = {
             "direction": stable_direction or "",
+            "direction_locked": bool(direction_locked),
             "client_phone": stable_client_phone or "",
             "operator_ext": stable_operator_ext or "",
             "locked_operator_ext": locked_operator_ext or "",
@@ -3772,16 +3908,6 @@ return 0
             "last_rank": int(next_last_rank),
             "recording_posted": recording_posted,
             "answered_at": int(answered_at) if answered_at is not None else None,
-            "pending_inbound_completed_at": (
-                int(pending_inbound_completed_at)
-                if pending_inbound_completed_at is not None
-                else None
-            ),
-            "pending_clientless_answered_at": (
-                int(pending_clientless_answered_at)
-                if pending_clientless_answered_at is not None
-                else None
-            ),
             "last_decision": trace_entry,
             "updated_at": _now_ts(),
         }
@@ -3795,8 +3921,6 @@ return 0
             min_ttl_sec=300,
         )
 
-        if finalize_defer_sec > 0:
-            raise DeferredCallEvent("await_inbound_final_state", delay_sec=finalize_defer_sec)
         if not should_emit:
             return None
         return event
@@ -4307,6 +4431,12 @@ return 0
             return
         operator_ext = cls._operator_phone_from_event_for_runtime(runtime, event)
         if not operator_ext:
+            logger.debug(
+                "Asterisk assign skipped (no operator extension on event): ci=%s call_id=%s status=%s",
+                runtime.connected_integration_id,
+                event.external_call_id,
+                event.status,
+            )
             return
 
         call_key = cls._call_responsible_key(
@@ -4323,6 +4453,26 @@ return 0
             operator_ext,
         )
         if not target_user_id:
+            # The operator answered but their extension is not mapped to a CRM user — most
+            # often the agent's User.internal_phone is empty or differs from the dialplan
+            # extension. Surface it so the operator can be configured.
+            logger.warning(
+                "Asterisk responsible NOT assigned: operator extension %s is not mapped to "
+                "any CRM user (set User.internal_phone = %s). ci=%s call_id=%s ticket_id=%s",
+                operator_ext,
+                operator_ext,
+                runtime.connected_integration_id,
+                event.external_call_id,
+                lead_ctx.ticket_id,
+            )
+            return
+
+        # Single-source the attendance policy: when on-shift is required and the
+        # operator is off-shift, do NOT bind them here either — otherwise this path
+        # would silently overwrite the gated responsible chosen at ticket creation.
+        if runtime.assign_responsible_requires_attendance and not await cls._user_is_available_best_effort(
+            runtime, target_user_id
+        ):
             return
 
         try:
@@ -4351,6 +4501,14 @@ return 0
                 runtime.state_ttl_sec,
                 min_ttl_sec=300,
             )
+            logger.info(
+                "Asterisk responsible assigned: ci=%s call_id=%s ticket_id=%s operator_ext=%s user_id=%s",
+                runtime.connected_integration_id,
+                event.external_call_id,
+                lead_ctx.ticket_id,
+                operator_ext,
+                target_user_id,
+            )
             resolved_user_name = str(
                 await cls._redis_get(
                     cls._operator_name_cache_key(
@@ -4372,6 +4530,24 @@ return 0
                     runtime.state_ttl_sec,
                     min_ttl_sec=300,
                 )
+            # If the call already finished (terminal won the lock before this answered
+            # event), the close was parked because no responsible existed yet. Perform it
+            # now that one is bound, so an answered call is never left permanently OPEN.
+            if runtime.close_ticket_on_call_end and event.external_call_id:
+                close_pending_key = cls._call_close_pending_key(
+                    runtime.connected_integration_id,
+                    runtime.asterisk_hash,
+                    event.external_call_id,
+                )
+                close_pending = await cls._redis_get(close_pending_key)
+                if close_pending is not None:
+                    closed = await cls._close_ticket_best_effort(
+                        runtime,
+                        int(lead_ctx.ticket_id),
+                        _to_int(close_pending, None),
+                    )
+                    if closed:
+                        await cls._redis_delete(close_pending_key)
         except Exception as error:
             logger.warning(
                 "Failed to bind responsible by operator extension: ci=%s ticket_id=%s operator_ext=%s user_id=%s error=%s",
@@ -4553,6 +4729,81 @@ return 0
         )
 
     @classmethod
+    async def _resolve_create_responsible_user_id(
+        cls,
+        runtime: RuntimeConfig,
+        event: CallEvent,
+    ) -> Optional[int]:
+        """Pick the responsible user for a freshly created ticket.
+
+        Inbound tickets start with NO responsible — they are assigned only when an
+        agent actually answers (call_answered), which keeps "no responsible at hangup
+        == missed" meaningful. Outbound is originated by an agent, so the responsible
+        is resolved from the originating extension (optionally gated on work shift).
+        """
+        if event.direction != "outbound":
+            return None
+
+        operator_phone = cls._operator_phone_from_event_for_runtime(runtime, event)
+        if not (
+            runtime.assign_responsible_by_operator_ext
+            and operator_phone
+            and _is_internal_extension(operator_phone)
+        ):
+            return runtime.default_responsible_user_id
+
+        user_id = await cls._resolve_user_id_by_operator_ext_best_effort(
+            runtime, operator_phone
+        )
+        if not user_id:
+            return runtime.default_responsible_user_id
+
+        if runtime.assign_responsible_requires_attendance and not await cls._user_is_available_best_effort(
+            runtime, user_id
+        ):
+            # Off-shift agent: fall back to the default responsible (spec behaviour).
+            return runtime.default_responsible_user_id
+        return int(user_id)
+
+    @classmethod
+    async def _user_is_available_best_effort(
+        cls,
+        runtime: RuntimeConfig,
+        user_id: int,
+    ) -> bool:
+        """Return True when the user is checked in, within shift and not on a break.
+
+        Best-effort: an attendance-lookup failure or an empty result does NOT block
+        assignment (returns True), so a missing/disabled WorkAttendance module never
+        silently strips responsibles.
+        """
+        try:
+            async with RegosAPI(
+                connected_integration_id=runtime.connected_integration_id
+            ) as api:
+                response = await api.rbac.work_attendance.status(
+                    WorkAttendanceStatusRequest(user_id=int(user_id))
+                )
+        except Exception as error:
+            logger.warning(
+                "WorkAttendance/Status failed, treating user as available: ci=%s user=%s error=%s",
+                runtime.connected_integration_id,
+                user_id,
+                error,
+            )
+            return True
+
+        availability = response.result if response and response.ok else None
+        if availability is None:
+            return True
+        checked_in = availability.is_checked_in
+        in_shift = availability.is_in_shift
+        on_break = availability.is_on_break
+        if checked_in is None and in_shift is None and on_break is None:
+            return True
+        return bool(checked_in) and bool(in_shift) and not bool(on_break)
+
+    @classmethod
     async def _create_ticket(cls, runtime: RuntimeConfig, event: CallEvent) -> LeadContext:
         normalized_call_id = cls._normalize_call_id(event.external_call_id)
         if not normalized_call_id:
@@ -4569,6 +4820,8 @@ return 0
 
         client_id = await cls._resolve_or_create_client_by_phone(runtime, event.client_phone)
 
+        responsible_user_id = await cls._resolve_create_responsible_user_id(runtime, event)
+
         payload = TicketAddRequest(
             client_id=client_id,
             channel_id=runtime.channel_id,
@@ -4578,7 +4831,7 @@ return 0
                 else TicketDirectionEnum.Inbound
             ),
             external_dialog_id=external_dialog_id,
-            responsible_user_id=runtime.default_responsible_user_id,
+            responsible_user_id=responsible_user_id,
             subject=_safe_subject(
                 runtime.subject_template,
                 event,
@@ -4864,19 +5117,24 @@ return 0
         lead_ctx: LeadContext,
     ) -> None:
         language = runtime.message_language
+        # Fall back to the recording filename captured from VarSet (MIXMONITOR_FILENAME)
+        # when the stop/CDR event itself does not carry the path.
+        recording_url = event.recording_url or await cls._resolve_captured_recording_url_best_effort(
+            runtime, event
+        )
         file_ids: List[int] = []
         text_lines = [
             cls._text(language, "recording_ready_title"),
             cls._text(language, "call_id_label", external_call_id=event.external_call_id),
         ]
 
-        if event.recording_url:
+        if recording_url:
             file_name, extension = _recording_name_from_url(
-                event.recording_url,
+                recording_url,
                 event.external_call_id,
             )
             try:
-                file_bytes = await cls._download_recording_bytes(event.recording_url)
+                file_bytes = await cls._download_recording_bytes(recording_url)
                 file_id = await cls._chat_message_add_file(
                     runtime=runtime,
                     chat_id=lead_ctx.chat_id,
@@ -4895,7 +5153,7 @@ return 0
                     error,
                 )
                 text_lines.append(
-                    cls._text(language, "recording_link", recording_url=event.recording_url)
+                    cls._text(language, "recording_link", recording_url=recording_url)
                 )
         else:
             text_lines.append(cls._text(language, "recording_url_missing"))
@@ -4907,6 +5165,63 @@ return 0
             text="\n".join(text_lines),
             file_ids=file_ids,
         )
+
+        # Mirror the recording link into a ticket custom field (idempotent write).
+        if recording_url:
+            await cls._set_recording_link_field_best_effort(runtime, lead_ctx, recording_url)
+
+    @classmethod
+    async def _resolve_captured_recording_url_best_effort(
+        cls,
+        runtime: RuntimeConfig,
+        event: CallEvent,
+    ) -> Optional[str]:
+        if not event.external_call_id:
+            return None
+        try:
+            filename = await cls._redis_get(
+                cls._recording_file_key(
+                    runtime.connected_integration_id,
+                    runtime.asterisk_hash,
+                    event.external_call_id,
+                )
+            )
+        except Exception:
+            return None
+        return _resolve_recording_url(runtime.recording_base_url, filename)
+
+    @classmethod
+    async def _set_recording_link_field_best_effort(
+        cls,
+        runtime: RuntimeConfig,
+        lead_ctx: LeadContext,
+        recording_url: str,
+    ) -> None:
+        """Write the recording URL into the ticket's custom field (spec contract).
+
+        Best-effort: the chat message already carries the link, so a CRM field write
+        failure must not fail the call event.
+        """
+        field_key = str(runtime.recording_link_field_key or "").strip()
+        if not field_key or not recording_url or not lead_ctx or not lead_ctx.ticket_id:
+            return
+        try:
+            async with RegosAPI(
+                connected_integration_id=runtime.connected_integration_id
+            ) as api:
+                await api.crm.ticket.edit(
+                    TicketEditRequest(
+                        id=int(lead_ctx.ticket_id),
+                        fields=[FieldValueEdit(key=field_key, value=str(recording_url))],
+                    )
+                )
+        except Exception as error:
+            logger.warning(
+                "Recording link field update failed: ci=%s ticket=%s error=%s",
+                runtime.connected_integration_id,
+                lead_ctx.ticket_id,
+                error,
+            )
 
     @classmethod
     async def _post_recording_sidecar_event_best_effort(
@@ -5022,7 +5337,7 @@ return 0
         try:
             if event.status == "recording_ready":
                 await cls._post_recording_event(runtime, event, lead_ctx)
-            else:
+            elif runtime.post_status_messages:
                 operator_name: Optional[str] = None
                 if cls._chat_event_code(event) == "inbound_answered":
                     operator_name = await cls._resolve_operator_display_name_best_effort(
@@ -5043,6 +5358,11 @@ return 0
                         ),
                     ),
                 )
+            else:
+                # Minimal mode: only the CRM actions (create/assign/close) and the recording
+                # are surfaced; per-stage status messages are suppressed. Returning False
+                # keeps the answered WaitingClient transition off as well.
+                return lead_ctx, False
             return lead_ctx, True
         except ChatMessageAddClosedEntityError as error:
             # Keep 1 call = 1 ticket. If ticket is already closed, never reopen/create new.
@@ -5097,29 +5417,40 @@ return 0
             )
 
     @classmethod
-    def _event_is_safe_for_ticket_close(cls, event: CallEvent) -> bool:
-        if str(event.status or "").strip().lower() != "completed":
+    async def _close_ticket_best_effort(
+        cls,
+        runtime: RuntimeConfig,
+        ticket_id: int,
+        resolved_date: Optional[int],
+    ) -> bool:
+        if int(ticket_id or 0) <= 0:
             return False
-        talk_duration = _to_int(event.talk_duration_sec, 0) or 0
-        if talk_duration <= 0:
-            return False
-
-        raw_event_type = cls._raw_event_type(event.raw_payload or {})
-        if raw_event_type in {"cdr", "agentcomplete"}:
-            return True
-        if raw_event_type in {
-            "dialend",
-            "hangup",
-            "hanguprequest",
-            "softhanguprequest",
-            "unlink",
-            "bridgeleave",
-            "stasisend",
-        }:
-            return False
-
-        # Explicit external "completed" events are still accepted, but only with duration.
-        return not raw_event_type
+        try:
+            async with RegosAPI(connected_integration_id=runtime.connected_integration_id) as api:
+                response = await api.crm.ticket.close(
+                    TicketCloseRequest(
+                        id=int(ticket_id),
+                        resolved_date=resolved_date,
+                    )
+                )
+            if response.ok:
+                return True
+            payload = cls._row_to_dict(response.result)
+            logger.warning(
+                "Ticket/Close rejected: ci=%s ticket_id=%s error=%s description=%s",
+                runtime.connected_integration_id,
+                ticket_id,
+                payload.get("error"),
+                payload.get("description"),
+            )
+        except Exception as error:
+            logger.warning(
+                "Ticket close failed: ci=%s ticket_id=%s error=%s",
+                runtime.connected_integration_id,
+                ticket_id,
+                error,
+            )
+        return False
 
     @classmethod
     async def _apply_status_policy_best_effort(
@@ -5135,51 +5466,39 @@ return 0
         status = str(event.status or "").strip().lower()
         if status not in AsteriskCrmChannelConfig.CLOSE_ON_CALL_END_STATUSES:
             return
-        if not cls._event_is_safe_for_ticket_close(event):
-            logger.info(
-                "Ticket close skipped for unsafe call final: ci=%s ticket_id=%s call_id=%s status=%s raw_event=%s duration=%s",
-                runtime.connected_integration_id,
-                lead_ctx.ticket_id,
-                event.external_call_id,
-                status,
-                cls._raw_event_type(event.raw_payload or {}) or None,
-                event.talk_duration_sec,
-            )
-            return
+        resolved_date = int(event.event_ts) if int(event.event_ts or 0) > 0 else None
+        # Close only answered calls: a ticket with no responsible was never picked up by an
+        # agent (missed inbound) and must stay OPEN for callback.
         has_responsible = await cls._ticket_has_responsible_before_close(
             runtime=runtime,
             ticket_id=int(lead_ctx.ticket_id),
         )
         if not has_responsible:
+            # The terminal can win the per-call lock before the answered/assign event under
+            # cross-worker concurrency. Park the close so the assign path performs it once a
+            # responsible is bound; a genuinely missed call never binds one, so the key just
+            # expires and the ticket stays OPEN.
+            if event.external_call_id:
+                await cls._redis_set_with_ttl(
+                    cls._call_close_pending_key(
+                        runtime.connected_integration_id,
+                        runtime.asterisk_hash,
+                        event.external_call_id,
+                    ),
+                    str(resolved_date if resolved_date is not None else _now_ts()),
+                    runtime.state_ttl_sec,
+                    min_ttl_sec=300,
+                )
             return
 
-        resolved_date = int(event.event_ts) if int(event.event_ts or 0) > 0 else None
-        try:
-            async with RegosAPI(connected_integration_id=runtime.connected_integration_id) as api:
-                response = await api.crm.ticket.close(
-                    TicketCloseRequest(
-                        id=int(lead_ctx.ticket_id),
-                        resolved_date=resolved_date,
-                    )
+        await cls._close_ticket_best_effort(runtime, int(lead_ctx.ticket_id), resolved_date)
+        if event.external_call_id:
+            await cls._redis_delete(
+                cls._call_close_pending_key(
+                    runtime.connected_integration_id,
+                    runtime.asterisk_hash,
+                    event.external_call_id,
                 )
-            if response.ok:
-                return
-            payload = cls._row_to_dict(response.result)
-            logger.warning(
-                "Ticket/Close rejected: ci=%s ticket_id=%s status=%s error=%s description=%s",
-                runtime.connected_integration_id,
-                lead_ctx.ticket_id,
-                status,
-                payload.get("error"),
-                payload.get("description"),
-            )
-        except Exception as error:
-            logger.warning(
-                "Ticket close failed: ci=%s ticket_id=%s status=%s error=%s",
-                runtime.connected_integration_id,
-                lead_ctx.ticket_id,
-                status,
-                error,
             )
 
     @classmethod

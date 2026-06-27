@@ -1,0 +1,127 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 78,
+      "nonEmptyLines": 65,
+      "sections": [
+        {
+          "heading": "Agent Notes",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Authoritative Sources",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "REGOS API Conventions",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Webhook Conventions",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Integration Code Style",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Integration Code Review",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "Integration README Conventions",
+          "level": 2,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 155,
+      "nonEmptyLines": 120,
+      "sections": [
+        {
+          "heading": "Python REGOS Integrations Service",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Как работать с репозиторием",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Ветка `main`",
+          "level": 3,
+          "line": 10
+        },
+        {
+          "heading": "Ветка `dev`",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "Как добавить новый API‑сервис (обертку REGOS)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Standards and conventions",
+          "level": 2,
+          "line": 65
+        },
+        {
+          "heading": "Как добавить и зарегистрировать нового клиента (integration)",
+          "level": 2,
+          "line": 69
+        },
+        {
+          "heading": "Стандарты и соглашения",
+          "level": 2,
+          "line": 138
+        },
+        {
+          "heading": "Отладка и логи",
+          "level": 2,
+          "line": 148
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "requirements.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "metrics": {}
+    }
+  ]
+}
