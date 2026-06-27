@@ -205,28 +205,6 @@ _MANAGER_LOCK = asyncio.Lock()
 _WORKER_TASKS: Dict[int, asyncio.Task] = {}
 _AMI_TASKS: Dict[str, asyncio.Task] = {}
 _INSTANCE_ID = f"{socket.gethostname()}:{os.getpid()}:{uuid.uuid4().hex[:8]}"
-
-# TEMPORARY debug sink: raw AMI events are appended here (JSONL) when log_ami_events is on.
-# Lives at the repo root; safe to delete. Remove this block once the answer-detection bug
-# is diagnosed.
-_AMI_DEBUG_LOG_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    "ami_events.log",
-)
-
-
-def _append_ami_event_to_debug_file(packet: Dict[str, Any]) -> None:
-    try:
-        line = json.dumps(
-            {"ts": _now_ts(), "event": packet},
-            ensure_ascii=False,
-            default=str,
-        )
-        with open(_AMI_DEBUG_LOG_PATH, "a", encoding="utf-8") as handle:
-            handle.write(line + "\n")
-    except Exception:
-        # Never let debug logging break the AMI listener.
-        pass
 _HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 _CI_ACTIVE_MEMORY_CACHE: Dict[str, Tuple[bool, int]] = {}
 _CI_ACTIVE_LOCKS: Dict[str, asyncio.Lock] = {}
@@ -1496,7 +1474,7 @@ return 0
             ),
             post_status_messages=_to_bool(
                 settings_map.get("asterisk_post_status_messages"),
-                False,
+                True,
             ),
             log_ami_events=_to_bool(
                 settings_map.get("asterisk_log_ami_events"),
@@ -3138,7 +3116,6 @@ return 0
                                     connected_integration_id,
                                     cls._format_ami_event_for_log(normalized_packet),
                                 )
-                                _append_ami_event_to_debug_file(packet)
                             await cls._maybe_capture_recording_filename(
                                 runtime, normalized_packet
                             )
