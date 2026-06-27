@@ -146,6 +146,7 @@ class RuntimeConfig:
     create_ticket_on_call_start: bool
     assign_responsible_requires_attendance: bool
     post_status_messages: bool
+    log_ami_events: bool
 
 
 @dataclass
@@ -204,6 +205,28 @@ _MANAGER_LOCK = asyncio.Lock()
 _WORKER_TASKS: Dict[int, asyncio.Task] = {}
 _AMI_TASKS: Dict[str, asyncio.Task] = {}
 _INSTANCE_ID = f"{socket.gethostname()}:{os.getpid()}:{uuid.uuid4().hex[:8]}"
+
+# TEMPORARY debug sink: raw AMI events are appended here (JSONL) when log_ami_events is on.
+# Lives at the repo root; safe to delete. Remove this block once the answer-detection bug
+# is diagnosed.
+_AMI_DEBUG_LOG_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "ami_events.log",
+)
+
+
+def _append_ami_event_to_debug_file(packet: Dict[str, Any]) -> None:
+    try:
+        line = json.dumps(
+            {"ts": _now_ts(), "event": packet},
+            ensure_ascii=False,
+            default=str,
+        )
+        with open(_AMI_DEBUG_LOG_PATH, "a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+    except Exception:
+        # Never let debug logging break the AMI listener.
+        pass
 _HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 _CI_ACTIVE_MEMORY_CACHE: Dict[str, Tuple[bool, int]] = {}
 _CI_ACTIVE_LOCKS: Dict[str, asyncio.Lock] = {}
@@ -1475,6 +1498,10 @@ return 0
                 settings_map.get("asterisk_post_status_messages"),
                 False,
             ),
+            log_ami_events=_to_bool(
+                settings_map.get("asterisk_log_ami_events"),
+                False,
+            ),
         )
         async with _RUNTIME_LOCAL_LOCK:
             _RUNTIME_LOCAL_CACHE[ci] = (
@@ -2035,6 +2062,29 @@ return 0
         return normalized
 
     @classmethod
+    def _format_ami_event_for_log(cls, packet: Dict[str, Any]) -> str:
+        """One-line summary of a raw AMI packet for opt-in diagnostics."""
+        fields = [
+            ("event", cls._raw_event_type(packet) or "?"),
+            ("channel", cls._payload_pick(packet, "channel")),
+            ("destchannel", cls._payload_pick(packet, "destchannel", "destinationchannel")),
+            ("calleridnum", cls._payload_pick(packet, "calleridnum")),
+            ("connectedlinenum", cls._payload_pick(packet, "connectedlinenum")),
+            ("exten", cls._payload_pick(packet, "exten")),
+            ("context", cls._payload_pick(packet, "context")),
+            ("state", cls._payload_pick(packet, "channelstatedesc", "channelstate", "state")),
+            ("uniqueid", cls._payload_pick(packet, "uniqueid")),
+            ("linkedid", cls._payload_pick(packet, "linkedid", "linked_id")),
+            ("dialstatus", cls._payload_pick(packet, "dialstatus")),
+            ("disposition", cls._payload_pick(packet, "disposition")),
+        ]
+        return " ".join(
+            f"{name}={value}"
+            for name, value in fields
+            if value not in (None, "")
+        )
+
+    @classmethod
     def _derive_status_from_ami(cls, payload: Dict[str, Any]) -> Optional[str]:
         event_type = cls._raw_event_type(payload)
         if not event_type:
@@ -2047,10 +2097,12 @@ return 0
         if event_type in {"newcallerid", "newexten"}:
             # Too noisy for CRM chat; keep only meaningful call stages.
             return None
-        if event_type in {"dialbegin", "dialstate"}:
-            return "ringing"
-        if event_type == "agentcalled":
-            return "ringing"
+        if event_type in {"dialbegin", "dialstate", "agentcalled"}:
+            # Ring / queue fan-out (one event per dialed member). Never a CRM action — the
+            # ticket is created at Newchannel and the answer arrives via AgentConnect/
+            # BridgeEnter. Dropping these keeps the per-call event stream small so the real
+            # answer is not stuck behind dozens of ring legs in the serialized worker.
+            return None
         if event_type == "agentconnect":
             return "answered"
         if event_type == "agentcomplete":
@@ -2059,10 +2111,20 @@ return 0
             normalized = cls._normalize_status(
                 cls._payload_pick(payload, "channelstatedesc", "state", "channelstate")
             )
-            # "Up" in Newstate is frequently emitted by local/queue legs and can be noisy.
             if normalized == "answered":
+                # "Up" alone is noisy (every channel goes Up). Treat it as the answer only
+                # when a NON-root local-extension channel goes Up — i.e. an operator picked
+                # up a call routed to them (inbound). The root channel going Up is the
+                # originator (outbound) or the trunk leg, not an operator answer. Inbound
+                # dedups to one answered via posted_statuses.
+                channel_ext = _extract_internal_extension_candidate(
+                    cls._payload_pick(payload, "channel")
+                )
+                if channel_ext and not cls._is_root_channel(payload):
+                    return "answered"
                 return None
-            return normalized
+            # Other channel states (Ring/Ringing/Dialing/...) are ring noise.
+            return None
         if event_type in {"bridgeenter", "bridge", "link"}:
             return "answered"
         if event_type == "bridgecreate":
@@ -2071,31 +2133,12 @@ return 0
         if event_type in {"mixmonitorstop", "monitorstop"}:
             return "recording_ready"
         if event_type == "dialend":
+            # Only an actual answer matters. Per-leg noanswer/cancel/busy/congestion is
+            # queue fan-out noise (the call is answered by another member, or ends via the
+            # root Hangup) — never a CRM action.
             dial_status = str(cls._payload_pick(payload, "dialstatus") or "").strip().lower()
             if dial_status in {"answer", "answered"}:
                 return "answered"
-            # Per-leg DialEnd noanswer/cancel frequently appears in queue fan-out
-            # while the same linked call is later answered by another operator.
-            # Treat it as non-final noise to avoid false "missed" in CRM.
-            if dial_status in {
-                "noanswer",
-                "no_answer",
-                "cancel",
-                "cancelled",
-                "canceled",
-                "continue",
-                "goto",
-            } or dial_status.startswith("goto:"):
-                return None
-            if dial_status in {
-                "abort",
-                "busy",
-                "congestion",
-                "chanunavail",
-                "failed",
-                "invalidargs",
-            }:
-                return "failed"
             return None
         if event_type in {"hangup", "hanguprequest", "softhanguprequest"}:
             # A channel hangup ends the call. The master-record gate keeps only the root
@@ -2107,14 +2150,9 @@ return 0
             # Per-leg bridge events are not the call end.
             return None
         if event_type == "cdr":
-            disposition = cls._cdr_disposition(payload)
-            billsec = _to_int(cls._payload_pick(payload, "billableseconds", "billsec"), 0) or 0
-            if disposition in {"answer", "answered"} and billsec > 0:
-                return "completed"
-            if disposition == "noanswer":
-                return "missed"
-            if disposition in {"busy", "failed", "congestion"}:
-                return "failed"
+            # Redundant terminal: the root Hangup already drives the close. CDR carries no
+            # Linkedid (so it cannot be master-gated) and fans out one record per leg, so
+            # forwarding it only floods the serialized worker with duplicate terminals.
             return None
         return cls._normalize_status(event_type)
 
@@ -3094,6 +3132,13 @@ return 0
                             if not normalized_packet.get("event"):
                                 continue
 
+                            if runtime.log_ami_events:
+                                logger.info(
+                                    "AMI event: ci=%s %s",
+                                    connected_integration_id,
+                                    cls._format_ami_event_for_log(normalized_packet),
+                                )
+                                _append_ami_event_to_debug_file(packet)
                             await cls._maybe_capture_recording_filename(
                                 runtime, normalized_packet
                             )
@@ -3458,6 +3503,7 @@ return 0
         call_lock_token: Optional[str] = None
         try:
             event = await cls._canonicalize_event_call_id_best_effort(runtime, event)
+            finalize_call_id = event.external_call_id
             if event.external_call_id:
                 call_lock_key = cls._lock_call_process_key(
                     runtime.connected_integration_id,
@@ -3479,6 +3525,10 @@ return 0
 
             event = await cls._dedupe_and_stabilize_call_event(runtime, event)
             if not event:
+                # Even when this event is deduped/suppressed, retry any close a terminal
+                # parked but could not apply yet (transient failure, or close-before-assign
+                # race). This makes the close self-healing across the call's later events.
+                await cls._finalize_pending_close_best_effort(runtime, finalize_call_id)
                 await cls._redis_set_with_ttl(
                     dedupe_key,
                     "1",
@@ -4431,11 +4481,12 @@ return 0
             return
         operator_ext = cls._operator_phone_from_event_for_runtime(runtime, event)
         if not operator_ext:
-            logger.debug(
-                "Asterisk assign skipped (no operator extension on event): ci=%s call_id=%s status=%s",
+            logger.info(
+                "Asterisk assign skipped (no operator extension on event): ci=%s call_id=%s status=%s raw_event=%s",
                 runtime.connected_integration_id,
                 event.external_call_id,
                 event.status,
+                cls._raw_event_type(event.raw_payload or {}) or None,
             )
             return
 
@@ -4531,23 +4582,9 @@ return 0
                     min_ttl_sec=300,
                 )
             # If the call already finished (terminal won the lock before this answered
-            # event), the close was parked because no responsible existed yet. Perform it
-            # now that one is bound, so an answered call is never left permanently OPEN.
-            if runtime.close_ticket_on_call_end and event.external_call_id:
-                close_pending_key = cls._call_close_pending_key(
-                    runtime.connected_integration_id,
-                    runtime.asterisk_hash,
-                    event.external_call_id,
-                )
-                close_pending = await cls._redis_get(close_pending_key)
-                if close_pending is not None:
-                    closed = await cls._close_ticket_best_effort(
-                        runtime,
-                        int(lead_ctx.ticket_id),
-                        _to_int(close_pending, None),
-                    )
-                    if closed:
-                        await cls._redis_delete(close_pending_key)
+            # event), apply the parked close now that a responsible is bound. Later events
+            # keep retrying via the same finalizer, so a transient failure can't orphan it.
+            await cls._finalize_pending_close_best_effort(runtime, event.external_call_id)
         except Exception as error:
             logger.warning(
                 "Failed to bind responsible by operator extension: ci=%s ticket_id=%s operator_ext=%s user_id=%s error=%s",
@@ -5451,6 +5488,58 @@ return 0
                 error,
             )
         return False
+
+    @classmethod
+    async def _finalize_pending_close_best_effort(
+        cls,
+        runtime: RuntimeConfig,
+        external_call_id: Optional[str],
+    ) -> None:
+        """Apply a close that a terminal parked but could not yet perform.
+
+        Safe to call for EVERY event of a call (including deduped/suppressed ones): it
+        no-ops unless a close is pending AND a responsible is now bound. This is the
+        self-healing retry for the close-before-assign race — a single transient close
+        failure can no longer orphan a genuinely answered ticket, because the call's later
+        events keep retrying until the close succeeds.
+        """
+        if not runtime.close_ticket_on_call_end:
+            return
+        call_id = cls._normalize_call_id(external_call_id)
+        if not call_id:
+            return
+        pending_key = cls._call_close_pending_key(
+            runtime.connected_integration_id, runtime.asterisk_hash, call_id
+        )
+        pending = await cls._redis_get(pending_key)
+        if pending is None:
+            return
+        responsible = _to_int(
+            await cls._redis_get(
+                cls._call_responsible_key(
+                    runtime.connected_integration_id, runtime.asterisk_hash, call_id
+                )
+            ),
+            None,
+        )
+        if not (responsible and responsible > 0):
+            # Not answered yet — leave the close parked (missed inbound stays OPEN).
+            return
+        mapping = cls._parse_cached_json(
+            await cls._redis_get(
+                cls._mapping_by_call_key(
+                    runtime.connected_integration_id, runtime.asterisk_hash, call_id
+                )
+            )
+        )
+        ticket_id = _to_int(mapping.get("ticket_id"), None) if mapping else None
+        if not ticket_id:
+            return
+        closed = await cls._close_ticket_best_effort(
+            runtime, int(ticket_id), _to_int(pending, None)
+        )
+        if closed:
+            await cls._redis_delete(pending_key)
 
     @classmethod
     async def _apply_status_policy_best_effort(
