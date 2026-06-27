@@ -1937,6 +1937,7 @@ return 0
             "event_name",
             "type",
             "scanner",
+            "direction_confident",
             "linkedid",
             "linked_id",
             "external_call_id",
@@ -2354,6 +2355,27 @@ return 0
                 direction = "outbound"
             elif to_is_ext and not from_is_ext:
                 direction = "inbound"
+        # Decide the call direction at the ORIGINATOR (root channel) and LOCK it
+        # (direction_confident) so later leg events — whose own CallerIDNum is the operator
+        # ext — cannot flip the call. Robust to FreePBX CallerID rewriting (outbound calls
+        # get the trunk CID), in priority order:
+        #   1) a recognized dialplan context (from-trunk/pstn -> inbound, from-internal +
+        #      external dialed -> outbound);
+        #   2) the root channel NAME — an extension device (SIP/2012) originates an outbound
+        #      call, a trunk channel (SIP/trunk-...) is inbound;
+        #   3) the caller's nature (internal ext -> outbound, external -> inbound).
+        if is_root:
+            ctx_dir = cls._direction_from_context(runtime, source)
+            root_channel_ext = _extract_internal_extension_candidate(
+                cls._payload_pick(source, "channel")
+            )
+            if ctx_dir:
+                direction = ctx_dir
+            elif root_channel_ext:
+                direction = "outbound"
+            elif from_phone:
+                direction = "outbound" if from_is_ext else "inbound"
+            normalized["direction_confident"] = "1"
         normalized["direction"] = direction
 
         did_phone = _to_international_phone(
@@ -3538,18 +3560,12 @@ return 0
                 event=event,
                 lead_ctx=lead_ctx,
             )
-            lead_ctx, event_written = await cls._write_event_with_1220_policy(
+            lead_ctx, _ = await cls._write_event_with_1220_policy(
                 runtime,
                 event,
                 lead_ctx,
             )
             await cls._save_mapping(runtime, event, lead_ctx)
-            if event_written:
-                await cls._apply_answered_status_policy_best_effort(
-                    runtime=runtime,
-                    event=event,
-                    lead_ctx=lead_ctx,
-                )
             await cls._post_recording_sidecar_event_best_effort(
                 runtime=runtime,
                 event=event,
@@ -3880,12 +3896,16 @@ return 0
         stable_direction = (
             event.direction if event.direction in {"inbound", "outbound"} else stable_direction
         )
-        # Lock the direction once any non-seed packet has classified the call. Only the
-        # root Newchannel seed (whose endpoints may be unpopulated) stays unlocked, so a
-        # later packet with real endpoints (DialBegin/BridgeEnter/CDR) can still correct it.
+        # Lock the direction once it is confidently classified. The root Newchannel locks
+        # immediately via the originator's caller nature (direction_confident), so later leg
+        # events can't flip the call; any non-seed packet also locks. Only a low-information
+        # seed stays unlocked so a later packet can still correct it.
+        direction_confident = _to_bool(
+            (event.raw_payload or {}).get("direction_confident"), False
+        )
         direction_locked = direction_locked or (
             event.direction in {"inbound", "outbound"}
-            and raw_event_type != "newchannel"
+            and (raw_event_type != "newchannel" or direction_confident)
         )
         stable_client_phone = _normalize_phone(event.client_phone) or stable_client_phone
         stable_operator_ext = (
@@ -4558,6 +4578,14 @@ return 0
                     runtime.state_ttl_sec,
                     min_ttl_sec=300,
                 )
+            # Move the ticket to WaitingClient right after the responsible is bound — must
+            # run BEFORE the close finalizer below so it can never reopen a just-closed
+            # ticket in the close-before-assign race. Self-gates on inbound answered.
+            await cls._apply_answered_status_policy_best_effort(
+                runtime=runtime,
+                event=event,
+                lead_ctx=lead_ctx,
+            )
             # If the call already finished (terminal won the lock before this answered
             # event), apply the parked close now that a responsible is bound. Later events
             # keep retrying via the same finalizer, so a transient failure can't orphan it.
@@ -5399,7 +5427,7 @@ return 0
             return
         if str(event.status or "").strip().lower() != "answered":
             return
-        if cls._chat_event_code(event) not in {"inbound_answered", "outbound_answered"}:
+        if cls._chat_event_code(event) != "inbound_answered":
             return
 
         try:
