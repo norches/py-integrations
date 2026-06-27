@@ -296,8 +296,10 @@ class RegosAPI:
     class Rbac:
         def __init__(self, api: "RegosAPI"):
             from core.api.rbac.user import UserService
+            from core.api.rbac.work_attendance import WorkAttendanceService
 
             self.user = UserService(api)
+            self.work_attendance = WorkAttendanceService(api)
 
     class Batch:
         def __init__(self, api: "RegosAPI"):
