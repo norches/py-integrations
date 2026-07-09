@@ -42,7 +42,6 @@ from .storage import (
     active_connected_integration_ids,
     ensure_schema as ensure_meta_leadgen_db_schema,
     mark_page_map_inactive,
-    get_page_map,
     reassign_page_map,
     resolve_ci_by_page_id as resolve_ci_by_page_id_db,
     upsert_page_map,
@@ -101,6 +100,43 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 normalized[key] = str(value_raw or "").strip()
         return normalized
 
+    @staticmethod
+    def _setting_truthy(value: Any) -> bool:
+        return str(value or "").strip().lower() in {"1", "true", "yes", "y", "on"}
+
+    @classmethod
+    def _merge_recent_connection_settings(
+        cls,
+        settings_map: Dict[str, str],
+        cached_settings: Dict[str, str],
+    ) -> Dict[str, str]:
+        if not cls._setting_truthy(cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED)):
+            return settings_map
+
+        cached_page_id = normalize_text(
+            cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID),
+            max_len=128,
+        )
+        settings_page_id = normalize_text(
+            settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID),
+            max_len=128,
+        )
+        if not cached_page_id or (settings_page_id and settings_page_id != cached_page_id):
+            return settings_map
+
+        merged = dict(settings_map)
+        for key in (
+            MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID,
+            MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME,
+            MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN,
+            MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT,
+            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_STATUS,
+            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED,
+        ):
+            if not merged.get(key) and cached_settings.get(key):
+                merged[key] = cached_settings[key]
+        return merged
+
     @classmethod
     async def _cache_settings_map(
         cls,
@@ -138,17 +174,13 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             if key:
                 settings_map[key] = str(getattr(row, "value", "") or "").strip()
 
-        if force_refresh and cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED) == "true":
-            for key in (
-                MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID,
-                MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME,
-                MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN,
-                MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT,
-                MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_STATUS,
-                MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED,
-            ):
-                if not settings_map.get(key) and cached_settings.get(key):
-                    settings_map[key] = cached_settings[key]
+        # REGOS settings reads can lag immediately after Edit; use only same-page
+        # write-through values from the short-lived cache.
+        if force_refresh and cached_settings:
+            settings_map = cls._merge_recent_connection_settings(
+                settings_map,
+                cached_settings,
+            )
 
         await cls._cache_settings_map(connected_integration_id, settings_map)
         return settings_map
@@ -295,6 +327,14 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         page_access_token = normalize_text(
             settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN)
         )
+        page_name = normalize_text(
+            settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME),
+            max_len=250,
+        )
+        access_token_expires_at = to_int(
+            settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT),
+            None,
+        )
         if require_page_id and not page_id:
             raise ValueError("meta_page_id is required")
         if require_access_token and (not page_id or not page_access_token):
@@ -307,15 +347,9 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         return RuntimeConfig(
             connected_integration_id=connected_integration_id,
             page_id=page_id,
-            page_name=normalize_text(
-                settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME),
-                max_len=250,
-            ),
+            page_name=page_name,
             page_access_token=page_access_token,
-            access_token_expires_at=to_int(
-                settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT),
-                None,
-            ),
+            access_token_expires_at=access_token_expires_at,
             pipeline_id=to_int(
                 settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PIPELINE_ID),
                 None,
@@ -439,7 +473,7 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
     ) -> str:
         if cls._is_runtime_authorized(runtime):
             if (
-                settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED) != "true"
+                not cls._setting_truthy(settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED))
                 or settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_STATUS) != "authorized"
                 or settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_URL)
             ):
@@ -468,9 +502,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         *,
         connected_integration_id: str,
         page_id: str,
-        page_name: Optional[str],
-        page_access_token: Optional[str] = None,
-        access_token_expires_at: Optional[int] = None,
         require_persistent_map: bool,
     ) -> None:
         ci = normalize_text(connected_integration_id, max_len=128)
@@ -488,9 +519,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             stored = await upsert_page_map(
                 connected_integration_id=ci,
                 page_id=page,
-                page_name=page_name,
-                page_access_token=page_access_token,
-                access_token_expires_at=access_token_expires_at,
                 is_active=True,
             )
         except PageMapConflictError:
@@ -573,9 +601,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         *,
         connected_integration_id: str,
         page_id: str,
-        page_name: Optional[str],
-        page_access_token: Optional[str] = None,
-        access_token_expires_at: Optional[int] = None,
     ) -> None:
         ci = normalize_text(connected_integration_id, max_len=128)
         page = normalize_text(page_id, max_len=128)
@@ -587,9 +612,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         previous_ci = await reassign_page_map(
             connected_integration_id=ci,
             page_id=page,
-            page_name=page_name,
-            page_access_token=page_access_token,
-            access_token_expires_at=access_token_expires_at,
         )
         if previous_ci and previous_ci != ci:
             await cls._clear_meta_page_binding(
@@ -616,9 +638,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             await cls._write_page_mapping(
                 connected_integration_id=runtime.connected_integration_id,
                 page_id=page_id,
-                page_name=runtime.page_name,
-                page_access_token=runtime.page_access_token,
-                access_token_expires_at=runtime.access_token_expires_at,
                 require_persistent_map=require_persistent_map,
             )
             return
@@ -634,15 +653,13 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         connected_integration_id: str,
         event_page_id: str,
     ) -> RuntimeConfig:
-        try:
-            runtime = await cls._load_runtime(
-                connected_integration_id,
-                require_access_token=True,
-                require_page_id=True,
-            )
-        except ValueError as error:
-            if "meta_page_id" not in str(error) and "Meta authorization required" not in str(error):
-                raise
+        page = normalize_text(event_page_id, max_len=128)
+        runtime = await cls._load_runtime(
+            connected_integration_id,
+            require_access_token=False,
+            require_page_id=False,
+        )
+        if not runtime.page_id or not runtime.page_access_token or (page and runtime.page_id != page):
             runtime = await cls._load_runtime(
                 connected_integration_id,
                 require_access_token=False,
@@ -650,18 +667,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 force_refresh=True,
             )
 
-        page = normalize_text(event_page_id, max_len=128)
-        if page and (not runtime.page_id or not runtime.page_access_token):
-            page_map = await get_page_map(page)
-            if page_map and page_map.get("is_active") and page_map.get("connected_integration_id") == connected_integration_id:
-                runtime = replace(
-                    runtime,
-                    page_id=runtime.page_id or normalize_text(page_map.get("page_id"), max_len=128),
-                    page_name=runtime.page_name or normalize_text(page_map.get("page_name"), max_len=250),
-                    page_access_token=runtime.page_access_token or normalize_text(page_map.get("page_access_token")),
-                    access_token_expires_at=runtime.access_token_expires_at
-                    or to_int(page_map.get("access_token_expires_at"), None),
-                )
+        if page and not runtime.page_id:
+            runtime = replace(runtime, page_id=page)
 
         if not runtime.page_id or not runtime.page_access_token:
             raise ValueError("Meta authorization required: meta_page_id and meta_page_access_token")
@@ -953,11 +960,7 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             return
 
         try:
-            runtime = await cls._load_runtime(
-                ci,
-                require_access_token=True,
-                require_page_id=True,
-            )
+            runtime = await cls._load_runtime_for_page_event(ci, event.page_id)
             if runtime.page_id != event.page_id:
                 logger.warning(
                     "Meta Leadgen stream entry page mismatch: ci=%s runtime_page_id=%s event_page_id=%s",
@@ -1161,7 +1164,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             "status": "connected",
             "authorized": authorized,
             "meta_page_id": runtime.page_id,
-            "verify_token": runtime.webhook_verify_token,
             "queue_enabled": True,
             "authorization_url": authorization_url,
             "page_subscription": subscribe_result,
@@ -1455,12 +1457,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 await self._move_page_mapping_to_integration(
                     connected_integration_id=ci,
                     page_id=page_id,
-                    page_name=page_name,
-                    page_access_token=page_token,
-                    access_token_expires_at=to_int(
-                        long_expires_at or short_expires_at,
-                        None,
-                    ),
                 )
                 await self._edit_settings(
                     ci,

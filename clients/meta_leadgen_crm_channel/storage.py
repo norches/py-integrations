@@ -32,6 +32,18 @@ def _require_meta_leadgen_mariadb() -> None:
         raise RuntimeError("MariaDB is required for meta_leadgen_crm_channel")
 
 
+def _page_map_from_row(row: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not row:
+        return None
+    return {
+        "page_id": str(row.get("page_id") or "").strip(),
+        "connected_integration_id": str(row.get("connected_integration_id") or "").strip(),
+        "is_active": str(row.get("is_active") or "").strip().lower()
+        not in {"", "0", "false", "none"},
+        "updated_at": row.get("updated_at"),
+    }
+
+
 async def ensure_schema(*, force: bool = False) -> bool:
     global _SCHEMA_READY
     _require_meta_leadgen_mariadb()
@@ -57,9 +69,6 @@ async def upsert_page_map(
     *,
     connected_integration_id: str,
     page_id: str,
-    page_name: Optional[str] = None,
-    page_access_token: Optional[str] = None,
-    access_token_expires_at: Optional[int] = None,
     is_active: bool = True,
     allow_reassign: bool = False,
 ) -> bool:
@@ -91,25 +100,30 @@ async def upsert_page_map(
                             connected_integration_id=existing_ci,
                         )
 
+                if is_active:
+                    await cursor.execute(
+                        f"""
+                        UPDATE {_PAGE_MAP_TABLE}
+                        SET `is_active` = 0,
+                            `updated_at` = CURRENT_TIMESTAMP
+                        WHERE `connected_integration_id` = %s AND `page_id` <> %s
+                        """,
+                        (ci, page),
+                    )
+
                 await cursor.execute(
                     f"""
                     INSERT INTO {_PAGE_MAP_TABLE}
-                        (`page_id`, `connected_integration_id`, `page_name`, `page_access_token`, `access_token_expires_at`, `is_active`)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                        (`page_id`, `connected_integration_id`, `is_active`)
+                    VALUES (%s, %s, %s)
                     ON DUPLICATE KEY UPDATE
                         `connected_integration_id` = VALUES(`connected_integration_id`),
-                        `page_name` = VALUES(`page_name`),
-                        `page_access_token` = COALESCE(VALUES(`page_access_token`), `page_access_token`),
-                        `access_token_expires_at` = COALESCE(VALUES(`access_token_expires_at`), `access_token_expires_at`),
                         `is_active` = VALUES(`is_active`),
                         `updated_at` = CURRENT_TIMESTAMP
                     """,
                     (
                         page,
                         ci,
-                        str(page_name or "").strip() or None,
-                        str(page_access_token or "").strip() or None,
-                        int(access_token_expires_at) if access_token_expires_at else None,
                         1 if is_active else 0,
                     ),
                 )
@@ -134,9 +148,6 @@ async def reassign_page_map(
     *,
     connected_integration_id: str,
     page_id: str,
-    page_name: Optional[str] = None,
-    page_access_token: Optional[str] = None,
-    access_token_expires_at: Optional[int] = None,
 ) -> Optional[str]:
     ci = str(connected_integration_id or "").strip()
     page = str(page_id or "").strip()
@@ -166,23 +177,27 @@ async def reassign_page_map(
 
                 await cursor.execute(
                     f"""
+                    UPDATE {_PAGE_MAP_TABLE}
+                    SET `is_active` = 0,
+                        `updated_at` = CURRENT_TIMESTAMP
+                    WHERE `connected_integration_id` = %s AND `page_id` <> %s
+                    """,
+                    (ci, page),
+                )
+
+                await cursor.execute(
+                    f"""
                     INSERT INTO {_PAGE_MAP_TABLE}
-                        (`page_id`, `connected_integration_id`, `page_name`, `page_access_token`, `access_token_expires_at`, `is_active`)
-                    VALUES (%s, %s, %s, %s, %s, 1)
+                        (`page_id`, `connected_integration_id`, `is_active`)
+                    VALUES (%s, %s, 1)
                     ON DUPLICATE KEY UPDATE
                         `connected_integration_id` = VALUES(`connected_integration_id`),
-                        `page_name` = VALUES(`page_name`),
-                        `page_access_token` = COALESCE(VALUES(`page_access_token`), `page_access_token`),
-                        `access_token_expires_at` = COALESCE(VALUES(`access_token_expires_at`), `access_token_expires_at`),
                         `is_active` = 1,
                         `updated_at` = CURRENT_TIMESTAMP
                     """,
                     (
                         page,
                         ci,
-                        str(page_name or "").strip() or None,
-                        str(page_access_token or "").strip() or None,
-                        int(access_token_expires_at) if access_token_expires_at else None,
                     ),
                 )
     except Exception:
@@ -203,24 +218,14 @@ async def get_page_map(page_id: str) -> Optional[Dict[str, Any]]:
     await ensure_schema()
     row = await mariadb_ops.fetchone_dict(
         f"""
-        SELECT `page_id`, `connected_integration_id`, `page_name`, `page_access_token`, `access_token_expires_at`, `is_active`, `updated_at`
+        SELECT `page_id`, `connected_integration_id`, `is_active`, `updated_at`
         FROM {_PAGE_MAP_TABLE}
         WHERE `page_id` = %s
         LIMIT 1
         """,
         (page,),
     )
-    if not row:
-        return None
-    return {
-        "page_id": str(row.get("page_id") or "").strip(),
-        "connected_integration_id": str(row.get("connected_integration_id") or "").strip(),
-        "page_name": str(row.get("page_name") or "").strip(),
-        "page_access_token": str(row.get("page_access_token") or "").strip(),
-        "access_token_expires_at": row.get("access_token_expires_at"),
-        "is_active": str(row.get("is_active") or "").strip().lower() not in {"", "0", "false", "none"},
-        "updated_at": row.get("updated_at"),
-    }
+    return _page_map_from_row(row)
 
 
 async def resolve_ci_by_page_id(page_id: str) -> Optional[str]:
@@ -267,8 +272,6 @@ async def mark_page_map_inactive(
                 f"""
                 UPDATE {_PAGE_MAP_TABLE}
                 SET `is_active` = 0,
-                    `page_access_token` = NULL,
-                    `access_token_expires_at` = NULL,
                     `updated_at` = CURRENT_TIMESTAMP
                 WHERE `connected_integration_id` = %s AND `page_id` = %s
                 """,
@@ -279,8 +282,6 @@ async def mark_page_map_inactive(
                 f"""
                 UPDATE {_PAGE_MAP_TABLE}
                 SET `is_active` = 0,
-                    `page_access_token` = NULL,
-                    `access_token_expires_at` = NULL,
                     `updated_at` = CURRENT_TIMESTAMP
                 WHERE `connected_integration_id` = %s
                 """,
