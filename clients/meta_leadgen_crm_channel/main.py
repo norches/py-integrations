@@ -91,6 +91,27 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             result=IntegrationErrorModel(error=code, description=description)
         )
 
+    @staticmethod
+    def _normalize_settings_map(settings_map: Optional[Dict[Any, Any]]) -> Dict[str, str]:
+        normalized: Dict[str, str] = {}
+        for key_raw, value_raw in (settings_map or {}).items():
+            key = normalize_text(key_raw)
+            if key:
+                normalized[key] = str(value_raw or "").strip()
+        return normalized
+
+    @classmethod
+    async def _cache_settings_map(
+        cls,
+        connected_integration_id: str,
+        settings_map: Dict[Any, Any],
+    ) -> None:
+        await MetaLeadgenRedisState.set_json(
+            MetaLeadgenRedisState.settings_cache_key(connected_integration_id),
+            cls._normalize_settings_map(settings_map),
+            MetaLeadgenCrmChannelConfig.SETTINGS_TTL_SEC,
+        )
+
     @classmethod
     async def _fetch_settings_map(
         cls,
@@ -98,10 +119,11 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         force_refresh: bool = False,
     ) -> Dict[str, str]:
         cache_key = MetaLeadgenRedisState.settings_cache_key(connected_integration_id)
-        if not force_refresh:
-            cached = await MetaLeadgenRedisState.get_json(cache_key)
-            if cached is not None:
-                return {str(k): str(v or "") for k, v in cached.items()}
+        cached_settings = cls._normalize_settings_map(
+            await MetaLeadgenRedisState.get_json(cache_key)
+        )
+        if cached_settings and not force_refresh:
+            return cached_settings
 
         async with RegosAPI(connected_integration_id=connected_integration_id) as api:
             response = await api.integrations.connected_integration_setting.get(
@@ -115,11 +137,19 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             if key:
                 settings_map[key] = str(getattr(row, "value", "") or "").strip()
 
-        await MetaLeadgenRedisState.set_json(
-            cache_key,
-            settings_map,
-            MetaLeadgenCrmChannelConfig.SETTINGS_TTL_SEC,
-        )
+        if force_refresh and cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED) == "true":
+            for key in (
+                MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID,
+                MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME,
+                MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN,
+                MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT,
+                MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_STATUS,
+                MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED,
+            ):
+                if not settings_map.get(key) and cached_settings.get(key):
+                    settings_map[key] = cached_settings[key]
+
+        await cls._cache_settings_map(connected_integration_id, settings_map)
         return settings_map
 
     @classmethod
@@ -127,6 +157,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         cls,
         connected_integration_id: str,
         patch: Dict[str, str],
+        *,
+        settings_map: Optional[Dict[Any, Any]] = None,
     ) -> None:
         rows = [
             ConnectedIntegrationSettingEditItem(
@@ -144,6 +176,11 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             )
         if not response.ok:
             raise RuntimeError(f"ConnectedIntegrationSetting/Edit rejected: {response.result}")
+        if settings_map is not None:
+            updated_settings = cls._normalize_settings_map(settings_map)
+            updated_settings.update(cls._normalize_settings_map(patch))
+            await cls._cache_settings_map(connected_integration_id, updated_settings)
+            return
         await MetaLeadgenRedisState.delete(
             MetaLeadgenRedisState.settings_cache_key(connected_integration_id)
         )
@@ -1379,6 +1416,7 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                         MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT: str(long_expires_at or short_expires_at or ""),
                         **self._authorization_settings_patch(authorized=True),
                     },
+                    settings_map=settings_map,
                 )
                 runtime = replace(
                     runtime,
