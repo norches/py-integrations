@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import replace
 import time
 import uuid
 from typing import Any, Dict, List, Optional, Tuple
@@ -240,8 +241,12 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         *,
         require_access_token: bool,
         require_page_id: bool,
+        force_refresh: bool = False,
     ) -> RuntimeConfig:
-        settings_map = await cls._fetch_settings_map(connected_integration_id)
+        settings_map = await cls._fetch_settings_map(
+            connected_integration_id,
+            force_refresh=force_refresh,
+        )
         MetaLeadgenApi.app_config()
         webhook_verify_token = MetaLeadgenApi.webhook_verify_token()
 
@@ -1375,7 +1380,16 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                         **self._authorization_settings_patch(authorized=True),
                     },
                 )
-                runtime = await self._load_runtime(ci, require_access_token=True, require_page_id=True)
+                runtime = replace(
+                    runtime,
+                    page_id=page_id,
+                    page_name=page_name,
+                    page_access_token=page_token,
+                    access_token_expires_at=to_int(
+                        long_expires_at or short_expires_at,
+                        None,
+                    ),
+                )
                 await MetaLeadgenCrmSync.ensure_required_fields(ci, force=True)
                 await MetaLeadgenCrmSync.validate_mapping_fields(runtime, force=True)
                 await self._mark_ci_active(ci)
@@ -1467,11 +1481,21 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 reasons["connected_integration_inactive"] = reasons.get("connected_integration_inactive", 0) + 1
                 continue
             try:
-                runtime = await self._load_runtime(
-                    ci,
-                    require_access_token=True,
-                    require_page_id=True,
-                )
+                try:
+                    runtime = await self._load_runtime(
+                        ci,
+                        require_access_token=True,
+                        require_page_id=True,
+                    )
+                except ValueError as error:
+                    if "meta_page_id" not in str(error) and "Meta authorization required" not in str(error):
+                        raise
+                    runtime = await self._load_runtime(
+                        ci,
+                        require_access_token=True,
+                        require_page_id=True,
+                        force_refresh=True,
+                    )
                 if runtime.page_id != event.page_id:
                     ignored += 1
                     reasons["page_id_mismatch"] = reasons.get("page_id_mismatch", 0) + 1
