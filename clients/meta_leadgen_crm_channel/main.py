@@ -42,6 +42,7 @@ from .storage import (
     active_connected_integration_ids,
     ensure_schema as ensure_meta_leadgen_db_schema,
     mark_page_map_inactive,
+    get_page_map,
     reassign_page_map,
     resolve_ci_by_page_id as resolve_ci_by_page_id_db,
     upsert_page_map,
@@ -468,6 +469,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         connected_integration_id: str,
         page_id: str,
         page_name: Optional[str],
+        page_access_token: Optional[str] = None,
+        access_token_expires_at: Optional[int] = None,
         require_persistent_map: bool,
     ) -> None:
         ci = normalize_text(connected_integration_id, max_len=128)
@@ -486,6 +489,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 connected_integration_id=ci,
                 page_id=page,
                 page_name=page_name,
+                page_access_token=page_access_token,
+                access_token_expires_at=access_token_expires_at,
                 is_active=True,
             )
         except PageMapConflictError:
@@ -569,6 +574,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         connected_integration_id: str,
         page_id: str,
         page_name: Optional[str],
+        page_access_token: Optional[str] = None,
+        access_token_expires_at: Optional[int] = None,
     ) -> None:
         ci = normalize_text(connected_integration_id, max_len=128)
         page = normalize_text(page_id, max_len=128)
@@ -581,6 +588,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             connected_integration_id=ci,
             page_id=page,
             page_name=page_name,
+            page_access_token=page_access_token,
+            access_token_expires_at=access_token_expires_at,
         )
         if previous_ci and previous_ci != ci:
             await cls._clear_meta_page_binding(
@@ -608,6 +617,8 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 connected_integration_id=runtime.connected_integration_id,
                 page_id=page_id,
                 page_name=runtime.page_name,
+                page_access_token=runtime.page_access_token,
+                access_token_expires_at=runtime.access_token_expires_at,
                 require_persistent_map=require_persistent_map,
             )
             return
@@ -616,6 +627,45 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             runtime.connected_integration_id,
             page_id,
         )
+
+    @classmethod
+    async def _load_runtime_for_page_event(
+        cls,
+        connected_integration_id: str,
+        event_page_id: str,
+    ) -> RuntimeConfig:
+        try:
+            runtime = await cls._load_runtime(
+                connected_integration_id,
+                require_access_token=True,
+                require_page_id=True,
+            )
+        except ValueError as error:
+            if "meta_page_id" not in str(error) and "Meta authorization required" not in str(error):
+                raise
+            runtime = await cls._load_runtime(
+                connected_integration_id,
+                require_access_token=False,
+                require_page_id=False,
+                force_refresh=True,
+            )
+
+        page = normalize_text(event_page_id, max_len=128)
+        if page and (not runtime.page_id or not runtime.page_access_token):
+            page_map = await get_page_map(page)
+            if page_map and page_map.get("is_active") and page_map.get("connected_integration_id") == connected_integration_id:
+                runtime = replace(
+                    runtime,
+                    page_id=runtime.page_id or normalize_text(page_map.get("page_id"), max_len=128),
+                    page_name=runtime.page_name or normalize_text(page_map.get("page_name"), max_len=250),
+                    page_access_token=runtime.page_access_token or normalize_text(page_map.get("page_access_token")),
+                    access_token_expires_at=runtime.access_token_expires_at
+                    or to_int(page_map.get("access_token_expires_at"), None),
+                )
+
+        if not runtime.page_id or not runtime.page_access_token:
+            raise ValueError("Meta authorization required: meta_page_id and meta_page_access_token")
+        return runtime
 
     def _resolve_ci_from_envelope(self, envelope: Dict[str, Any]) -> Optional[str]:
         instance_ci = str(getattr(self, "connected_integration_id", "") or "").strip()
@@ -1406,6 +1456,11 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                     connected_integration_id=ci,
                     page_id=page_id,
                     page_name=page_name,
+                    page_access_token=page_token,
+                    access_token_expires_at=to_int(
+                        long_expires_at or short_expires_at,
+                        None,
+                    ),
                 )
                 await self._edit_settings(
                     ci,
@@ -1519,21 +1574,7 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 reasons["connected_integration_inactive"] = reasons.get("connected_integration_inactive", 0) + 1
                 continue
             try:
-                try:
-                    runtime = await self._load_runtime(
-                        ci,
-                        require_access_token=True,
-                        require_page_id=True,
-                    )
-                except ValueError as error:
-                    if "meta_page_id" not in str(error) and "Meta authorization required" not in str(error):
-                        raise
-                    runtime = await self._load_runtime(
-                        ci,
-                        require_access_token=True,
-                        require_page_id=True,
-                        force_refresh=True,
-                    )
+                runtime = await self._load_runtime_for_page_event(ci, event.page_id)
                 if runtime.page_id != event.page_id:
                     ignored += 1
                     reasons["page_id_mismatch"] = reasons.get("page_id_mismatch", 0) + 1
