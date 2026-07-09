@@ -163,8 +163,9 @@ def _list_html(locale: str, keys: Iterable[str]) -> str:
     return f"<ul class=\"steps\">{items}</ul>" if items else ""
 
 
-def _button(label: str, href: str, *, tone: str = "primary") -> str:
-    return f'<a class="button {tone}" href="{_escape(href, quote=True)}">{_escape(label)}</a>'
+def _button(label: str, href: str, *, tone: str = "primary", external: bool = False) -> str:
+    target = ' target="_blank" rel="noopener noreferrer"' if external else ""
+    return f'<a class="button {tone}" href="{_escape(href, quote=True)}"{target}>{_escape(label)}</a>'
 
 
 def _mode_data(ctx: MetaLeadgenUiContext) -> Dict[str, Any]:
@@ -258,13 +259,13 @@ def _mode_data(ctx: MetaLeadgenUiContext) -> Dict[str, Any]:
         )
     else:
         if ctx.authorization_url:
-            data["actions"] = [_button(t(locale, "action_connect"), ctx.authorization_url, tone="primary")]
+            data["actions"] = [_button(t(locale, "action_connect"), ctx.authorization_url, tone="primary", external=True)]
 
     if mode in {"disconnected", "disconnected_success", "error", "unavailable", "oauth_error", "session_expired"}:
         if ctx.authorization_url:
             current_actions = list(data.get("actions") or [])
             if not current_actions:
-                data["actions"] = [_button(t(locale, "action_connect"), ctx.authorization_url, tone="primary")]
+                data["actions"] = [_button(t(locale, "action_connect"), ctx.authorization_url, tone="primary", external=True)]
             else:
                 data["actions"] = current_actions
         elif not data["actions"]:
