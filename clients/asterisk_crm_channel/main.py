@@ -5154,7 +5154,7 @@ return 0
         event: CallEvent,
         lead_ctx: LeadContext,
     ) -> None:
-        if event.status == "recording_ready" or not event.recording_url:
+        if event.status == "recording_ready":
             return
         if not event.external_call_id:
             return
@@ -5168,8 +5168,23 @@ return 0
         if bool(cached.get("recording_posted")):
             return
 
+        recording_url = event.recording_url
+        event_status = str(event.status or "").strip().lower()
+        if (
+            not recording_url
+            and event_status in AsteriskCrmChannelConfig.CLOSE_ON_CALL_END_STATUSES
+        ):
+            recording_url = await cls._resolve_captured_recording_url_best_effort(
+                runtime, event
+            )
+        if not recording_url:
+            return
+
         raw_payload = dict(event.raw_payload or {})
         raw_payload["recording_source_event"] = cls._raw_event_type(raw_payload) or None
+        raw_payload["recording_source"] = (
+            "event_payload" if event.recording_url else "captured_filename_on_call_end"
+        )
         recording_event = CallEvent(
             event_id=hashlib.md5(
                 f"{event.event_id}:recording_ready".encode("utf-8")
@@ -5183,7 +5198,7 @@ return 0
             status="recording_ready",
             event_ts=event.event_ts,
             talk_duration_sec=event.talk_duration_sec,
-            recording_url=event.recording_url,
+            recording_url=recording_url,
             operator_ext=event.operator_ext,
             raw_payload=raw_payload,
         )
