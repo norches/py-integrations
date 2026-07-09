@@ -95,10 +95,52 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
     def _normalize_settings_map(settings_map: Optional[Dict[Any, Any]]) -> Dict[str, str]:
         normalized: Dict[str, str] = {}
         for key_raw, value_raw in (settings_map or {}).items():
-            key = normalize_text(key_raw)
+            key = MetaLeadgenCrmChannelIntegration._normalize_setting_key(key_raw)
             if key:
                 normalized[key] = str(value_raw or "").strip()
         return normalized
+
+    @staticmethod
+    def _normalize_setting_key(value: Any) -> Optional[str]:
+        key = normalize_text(value, max_len=128)
+        return key.lower() if key else None
+
+    @classmethod
+    async def _fetch_setting_key_aliases(
+        cls,
+        connected_integration_id: str,
+    ) -> Dict[str, str]:
+        async with RegosAPI(connected_integration_id=connected_integration_id) as api:
+            response = await api.integrations.connected_integration_setting.get(
+                ConnectedIntegrationSettingRequest(
+                    connected_integration_id=connected_integration_id
+                )
+            )
+
+        aliases: Dict[str, str] = {}
+        for row in response.result or []:
+            raw_key = normalize_text(getattr(row, "key", None), max_len=128)
+            key = cls._normalize_setting_key(raw_key)
+            if not key or not raw_key:
+                continue
+            if key not in aliases or raw_key != key:
+                aliases[key] = raw_key
+        return aliases
+
+    @classmethod
+    def _store_setting_value(
+        cls,
+        settings_map: Dict[str, str],
+        raw_key: Any,
+        value: Any,
+    ) -> None:
+        key = cls._normalize_setting_key(raw_key)
+        if not key:
+            return
+        raw = normalize_text(raw_key, max_len=128) or key
+        current = settings_map.get(key)
+        if current is None or raw != key or not current:
+            settings_map[key] = str(value or "").strip()
 
     @staticmethod
     def _setting_truthy(value: Any) -> bool:
@@ -137,9 +179,11 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             )
         settings_map: Dict[str, str] = {}
         for row in response.result or []:
-            key = normalize_text(getattr(row, "key", None))
-            if key:
-                settings_map[key] = str(getattr(row, "value", "") or "").strip()
+            cls._store_setting_value(
+                settings_map,
+                getattr(row, "key", None),
+                getattr(row, "value", ""),
+            )
 
         await cls._cache_settings_map(connected_integration_id, settings_map)
         return settings_map
@@ -152,16 +196,19 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         *,
         settings_map: Optional[Dict[Any, Any]] = None,
     ) -> None:
-        rows = [
-            ConnectedIntegrationSettingEditItem(
-                connected_integration_id=connected_integration_id,
-                key=str(key),
-                value=str(value or ""),
-            )
-            for key, value in patch.items()
-        ]
-        if not rows:
+        normalized_patch = cls._normalize_settings_map(patch)
+        if not normalized_patch:
             return
+        aliases = await cls._fetch_setting_key_aliases(connected_integration_id)
+        rows = []
+        for normalized_key, value in normalized_patch.items():
+            rows.append(
+                ConnectedIntegrationSettingEditItem(
+                    connected_integration_id=connected_integration_id,
+                    key=aliases.get(normalized_key, normalized_key),
+                    value=str(value or ""),
+                )
+            )
         async with RegosAPI(connected_integration_id=connected_integration_id) as api:
             response = await api.integrations.connected_integration_setting.edit(
                 ConnectedIntegrationSettingEditRequest(rows)
@@ -170,7 +217,7 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             raise RuntimeError(f"ConnectedIntegrationSetting/Edit rejected: {response.result}")
         if settings_map is not None:
             updated_settings = cls._normalize_settings_map(settings_map)
-            updated_settings.update(cls._normalize_settings_map(patch))
+            updated_settings.update(normalized_patch)
             await cls._cache_settings_map(connected_integration_id, updated_settings)
             return
         await MetaLeadgenRedisState.delete(
