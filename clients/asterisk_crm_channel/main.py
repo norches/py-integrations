@@ -1,7 +1,6 @@
 ﻿from __future__ import annotations
 
 import asyncio
-import base64
 import hashlib
 import json
 import os
@@ -32,7 +31,6 @@ from core.redis import (
     redis_ttl_seconds,
 )
 from schemas.api.chat.chat_message import (
-    ChatMessageAddFileRequest,
     ChatMessageAddRequest,
     ChatMessageTypeEnum,
 )
@@ -42,13 +40,11 @@ from schemas.api.crm.ticket import (
     TicketAddRequest,
     TicketCloseRequest,
     TicketDirectionEnum,
-    TicketEditRequest,
     TicketGetRequest,
     TicketSetResponsibleRequest,
     TicketSetStatusRequest,
     TicketStatusEnum,
 )
-from schemas.api.references.fields import FieldValueEdit
 from schemas.api.integrations.connected_integration_setting import (
     ConnectedIntegrationSettingRequest,
 )
@@ -142,7 +138,6 @@ class RuntimeConfig:
     message_language: str
     close_ticket_on_call_end: bool
     min_external_digits: int
-    recording_link_field_key: str
     create_ticket_on_call_start: bool
     assign_responsible_requires_attendance: bool
     post_status_messages: bool
@@ -205,7 +200,6 @@ _MANAGER_LOCK = asyncio.Lock()
 _WORKER_TASKS: Dict[int, asyncio.Task] = {}
 _AMI_TASKS: Dict[str, asyncio.Task] = {}
 _INSTANCE_ID = f"{socket.gethostname()}:{os.getpid()}:{uuid.uuid4().hex[:8]}"
-_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 _CI_ACTIVE_MEMORY_CACHE: Dict[str, Tuple[bool, int]] = {}
 _CI_ACTIVE_LOCKS: Dict[str, asyncio.Lock] = {}
 _REDIS_TTL_TOUCH_TS: Dict[str, int] = {}
@@ -495,28 +489,42 @@ def _format_duration_hms(total_seconds: int) -> str:
     return f"{hours:02d}:{minutes:02d}:{tail_seconds:02d}"
 
 
-def _recording_name_from_url(url: str, external_call_id: str) -> Tuple[str, str]:
-    parsed = urlparse(url)
-    file_name = os.path.basename(parsed.path or "").strip()
-    if not file_name:
-        file_name = f"recording_{external_call_id}.mp3"
-    if "." not in file_name:
-        file_name = f"{file_name}.mp3"
-    file_name = file_name[:200]
-    extension = file_name.rsplit(".", 1)[-1].strip().lower()[:10] or "mp3"
-    return file_name, extension
-
-
 def _resolve_recording_url(base_url: Optional[str], raw_url: Optional[str]) -> Optional[str]:
-    url = str(raw_url or "").strip()
+    url = str(raw_url or "").strip().replace("\\", "/")
     if not url:
         return None
     if url.startswith("http://") or url.startswith("https://"):
         return url
+
+    path = url
+    lower_path = path.lower()
+    for prefix in (
+        "/var/spool/asterisk/monitor/",
+        "var/spool/asterisk/monitor/",
+    ):
+        prefix_index = lower_path.find(prefix)
+        if prefix_index >= 0:
+            path = path[prefix_index + len(prefix):]
+            break
+
+    path = path.lstrip("/")
+    if "/" not in path:
+        freepbx_date = re.search(
+            r"(?:^|[-_])(?P<year>20\d{2})(?P<month>0[1-9]|1[0-2])(?P<day>0[1-9]|[12]\d|3[01])(?:[-_])",
+            path,
+        )
+        if freepbx_date:
+            path = (
+                f"{freepbx_date.group('year')}/"
+                f"{freepbx_date.group('month')}/"
+                f"{freepbx_date.group('day')}/"
+                f"{path}"
+            )
+
     base = str(base_url or "").strip()
     if not base:
-        return url
-    return urljoin(base.rstrip("/") + "/", url.lstrip("/"))
+        return path or url
+    return urljoin(base.rstrip("/") + "/", path)
 
 
 def _parse_ami_host_port(raw_host: Any, raw_port: Any) -> Tuple[str, int]:
@@ -1106,13 +1114,6 @@ return 0
             return parsed
         return None
 
-    @staticmethod
-    async def _get_http_client() -> httpx.AsyncClient:
-        global _HTTP_CLIENT
-        if _HTTP_CLIENT is None:
-            _HTTP_CLIENT = httpx.AsyncClient(timeout=90)
-        return _HTTP_CLIENT
-
     @classmethod
     async def _is_connected_integration_active(
         cls,
@@ -1459,10 +1460,6 @@ return 0
             min_external_digits=max(
                 _to_int(settings_map.get("asterisk_min_external_digits"), 4) or 4,
                 2,
-            ),
-            recording_link_field_key=(
-                str(settings_map.get("asterisk_recording_link_field_key") or "").strip()
-                or "field_recording_link"
             ),
             create_ticket_on_call_start=_to_bool(
                 settings_map.get("asterisk_create_ticket_on_call_start"),
@@ -2855,14 +2852,6 @@ return 0
             except Exception:
                 logger.exception("Error while stopping Asterisk background task")
 
-        global _HTTP_CLIENT
-        http_client = _HTTP_CLIENT
-        _HTTP_CLIENT = None
-        if http_client is not None:
-            try:
-                await http_client.aclose()
-            except Exception:
-                logger.exception("Error while closing Asterisk shared http client")
         _STREAM_GROUP_READY.clear()
         _STREAM_CLAIM_TS.clear()
         _SETTINGS_LOCAL_CACHE.clear()
@@ -5107,51 +5096,6 @@ return 0
         return message_uuid
 
     @classmethod
-    async def _chat_message_add_file(
-        cls,
-        runtime: RuntimeConfig,
-        chat_id: str,
-        file_name: str,
-        extension: str,
-        payload_b64: str,
-    ) -> int:
-        async with RegosAPI(connected_integration_id=runtime.connected_integration_id) as api:
-            response = await api.chat.chat_message.add_file(
-                ChatMessageAddFileRequest(
-                    chat_id=chat_id,
-                    name=file_name,
-                    extension=extension,
-                    data=payload_b64,
-                ),
-            )
-
-        if not response.ok:
-            payload = cls._row_to_dict(response.result)
-            error_code = _to_int(payload.get("error"), None)
-            error_description = str(payload.get("description") or "").strip() or None
-            if error_code == AsteriskCrmChannelConfig.CHAT_MESSAGE_ADD_CLOSED_ENTITY_ERROR:
-                raise ChatMessageAddClosedEntityError(error_description)
-            raise RuntimeError(
-                "ChatMessage/AddFile rejected: "
-                f"error={payload.get('error')} description={payload.get('description')}"
-            )
-
-        payload = cls._row_to_dict(response.result)
-        file_id = _to_int(payload.get("file_id"), None)
-        if not file_id:
-            file_id = _to_int(getattr(response.result, "file_id", None), None)
-        if not file_id:
-            raise RuntimeError("ChatMessage/AddFile did not return file_id")
-        return int(file_id)
-
-    @classmethod
-    async def _download_recording_bytes(cls, recording_url: str) -> bytes:
-        client = await cls._get_http_client()
-        response = await client.get(recording_url)
-        response.raise_for_status()
-        return response.content
-
-    @classmethod
     async def _post_recording_event(
         cls,
         runtime: RuntimeConfig,
@@ -5164,39 +5108,15 @@ return 0
         recording_url = event.recording_url or await cls._resolve_captured_recording_url_best_effort(
             runtime, event
         )
-        file_ids: List[int] = []
         text_lines = [
             cls._text(language, "recording_ready_title"),
             cls._text(language, "call_id_label", external_call_id=event.external_call_id),
         ]
 
         if recording_url:
-            file_name, extension = _recording_name_from_url(
-                recording_url,
-                event.external_call_id,
+            text_lines.append(
+                cls._text(language, "recording_link", recording_url=recording_url)
             )
-            try:
-                file_bytes = await cls._download_recording_bytes(recording_url)
-                file_id = await cls._chat_message_add_file(
-                    runtime=runtime,
-                    chat_id=lead_ctx.chat_id,
-                    file_name=file_name,
-                    extension=extension,
-                    payload_b64=base64.b64encode(file_bytes).decode("ascii"),
-                )
-                file_ids = [file_id]
-            except ChatMessageAddClosedEntityError:
-                raise
-            except Exception as error:
-                logger.warning(
-                    "Recording attach failed, fallback to link: ci=%s call_id=%s error=%s",
-                    runtime.connected_integration_id,
-                    event.external_call_id,
-                    error,
-                )
-                text_lines.append(
-                    cls._text(language, "recording_link", recording_url=recording_url)
-                )
         else:
             text_lines.append(cls._text(language, "recording_url_missing"))
 
@@ -5205,12 +5125,7 @@ return 0
             lead_ctx=lead_ctx,
             event=event,
             text="\n".join(text_lines),
-            file_ids=file_ids,
         )
-
-        # Mirror the recording link into a ticket custom field (idempotent write).
-        if recording_url:
-            await cls._set_recording_link_field_best_effort(runtime, lead_ctx, recording_url)
 
     @classmethod
     async def _resolve_captured_recording_url_best_effort(
@@ -5231,39 +5146,6 @@ return 0
         except Exception:
             return None
         return _resolve_recording_url(runtime.recording_base_url, filename)
-
-    @classmethod
-    async def _set_recording_link_field_best_effort(
-        cls,
-        runtime: RuntimeConfig,
-        lead_ctx: LeadContext,
-        recording_url: str,
-    ) -> None:
-        """Write the recording URL into the ticket's custom field (spec contract).
-
-        Best-effort: the chat message already carries the link, so a CRM field write
-        failure must not fail the call event.
-        """
-        field_key = str(runtime.recording_link_field_key or "").strip()
-        if not field_key or not recording_url or not lead_ctx or not lead_ctx.ticket_id:
-            return
-        try:
-            async with RegosAPI(
-                connected_integration_id=runtime.connected_integration_id
-            ) as api:
-                await api.crm.ticket.edit(
-                    TicketEditRequest(
-                        id=int(lead_ctx.ticket_id),
-                        fields=[FieldValueEdit(key=field_key, value=str(recording_url))],
-                    )
-                )
-        except Exception as error:
-            logger.warning(
-                "Recording link field update failed: ci=%s ticket=%s error=%s",
-                runtime.connected_integration_id,
-                lead_ctx.ticket_id,
-                error,
-            )
 
     @classmethod
     async def _post_recording_sidecar_event_best_effort(
