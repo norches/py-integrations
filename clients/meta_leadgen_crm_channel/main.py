@@ -105,39 +105,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         return str(value or "").strip().lower() in {"1", "true", "yes", "y", "on"}
 
     @classmethod
-    def _merge_recent_connection_settings(
-        cls,
-        settings_map: Dict[str, str],
-        cached_settings: Dict[str, str],
-    ) -> Dict[str, str]:
-        if not cls._setting_truthy(cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED)):
-            return settings_map
-
-        cached_page_id = normalize_text(
-            cached_settings.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID),
-            max_len=128,
-        )
-        settings_page_id = normalize_text(
-            settings_map.get(MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID),
-            max_len=128,
-        )
-        if not cached_page_id or (settings_page_id and settings_page_id != cached_page_id):
-            return settings_map
-
-        merged = dict(settings_map)
-        for key in (
-            MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID,
-            MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME,
-            MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN,
-            MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT,
-            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_STATUS,
-            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZED,
-        ):
-            if not merged.get(key) and cached_settings.get(key):
-                merged[key] = cached_settings[key]
-        return merged
-
-    @classmethod
     async def _cache_settings_map(
         cls,
         connected_integration_id: str,
@@ -173,14 +140,6 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             key = normalize_text(getattr(row, "key", None))
             if key:
                 settings_map[key] = str(getattr(row, "value", "") or "").strip()
-
-        # REGOS settings reads can lag immediately after Edit; use only same-page
-        # write-through values from the short-lived cache.
-        if force_refresh and cached_settings:
-            settings_map = cls._merge_recent_connection_settings(
-                settings_map,
-                cached_settings,
-            )
 
         await cls._cache_settings_map(connected_integration_id, settings_map)
         return settings_map
@@ -402,6 +361,22 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
         }
 
     @classmethod
+    def _authorization_url_settings_patch(
+        cls,
+        *,
+        authorization_url: str,
+        generated_at: int,
+    ) -> Dict[str, str]:
+        return {
+            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_URL: str(
+                authorization_url or ""
+            ).strip(),
+            MetaLeadgenCrmChannelConfig.SETTING_AUTHORIZATION_URL_GENERATED_AT: str(
+                generated_at or ""
+            ),
+        }
+
+    @classmethod
     async def _save_authorization_state(
         cls,
         connected_integration_id: str,
@@ -488,11 +463,13 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
 
         generated_at = now_ts()
         authorization_url = await MetaLeadgenApi.build_oauth_url(connected_integration_id, locale)
-        await cls._save_authorization_state(
+        await cls._edit_settings(
             connected_integration_id,
-            authorized=False,
-            authorization_url=authorization_url,
-            generated_at=generated_at,
+            cls._authorization_url_settings_patch(
+                authorization_url=authorization_url,
+                generated_at=generated_at,
+            ),
+            settings_map=settings_map,
         )
         return authorization_url
 
@@ -1124,11 +1101,12 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             else:
                 generated_at = now_ts()
                 authorization_url = await MetaLeadgenApi.build_oauth_url(ci)
-                await self._save_authorization_state(
+                await self._edit_settings(
                     ci,
-                    authorized=False,
-                    authorization_url=authorization_url,
-                    generated_at=generated_at,
+                    self._authorization_url_settings_patch(
+                        authorization_url=authorization_url,
+                        generated_at=generated_at,
+                    ),
                 )
             await self._mark_ci_active(ci)
             await MetaLeadgenRedisState.ensure_consumer_group(
@@ -1464,7 +1442,9 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                         MetaLeadgenCrmChannelConfig.SETTING_PAGE_ID: page_id,
                         MetaLeadgenCrmChannelConfig.SETTING_PAGE_NAME: page_name or "",
                         MetaLeadgenCrmChannelConfig.SETTING_PAGE_ACCESS_TOKEN: page_token,
-                        MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT: str(long_expires_at or short_expires_at or ""),
+                        MetaLeadgenCrmChannelConfig.SETTING_ACCESS_TOKEN_EXPIRES_AT: str(
+                            long_expires_at or short_expires_at or ""
+                        ),
                         **self._authorization_settings_patch(authorized=True),
                     },
                     settings_map=settings_map,
@@ -1563,17 +1543,20 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
             ci = await self._resolve_ci_by_page_id(event.page_id) or explicit_ci
             if not ci:
                 ignored += 1
-                reasons["connected_integration_id_not_resolved"] = reasons.get("connected_integration_id_not_resolved", 0) + 1
+                reason = "connected_integration_id_not_resolved"
+                reasons[reason] = reasons.get(reason, 0) + 1
                 continue
             if not await self._is_connected_integration_active(ci):
                 ignored += 1
-                reasons["connected_integration_inactive"] = reasons.get("connected_integration_inactive", 0) + 1
+                reason = "connected_integration_inactive"
+                reasons[reason] = reasons.get(reason, 0) + 1
                 continue
             try:
                 runtime = await self._load_runtime_for_page_event(ci, event.page_id)
                 if runtime.page_id != event.page_id:
                     ignored += 1
-                    reasons["page_id_mismatch"] = reasons.get("page_id_mismatch", 0) + 1
+                    reason = "page_id_mismatch"
+                    reasons[reason] = reasons.get(reason, 0) + 1
                     continue
                 await self._sync_reverse_indexes(
                     runtime,
@@ -1587,7 +1570,12 @@ class MetaLeadgenCrmChannelIntegration(ClientBase):
                 )
                 accepted += 1
             except Exception as error:
-                logger.exception("Failed to enqueue Meta lead webhook: ci=%s page_id=%s leadgen_id=%s", ci, event.page_id, event.leadgen_id)
+                logger.exception(
+                    "Failed to enqueue Meta lead webhook: ci=%s page_id=%s leadgen_id=%s",
+                    ci,
+                    event.page_id,
+                    event.leadgen_id,
+                )
                 ignored += 1
                 reason = f"enqueue_failed:{type(error).__name__}"
                 reasons[reason] = reasons.get(reason, 0) + 1
