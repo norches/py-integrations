@@ -1,207 +1,143 @@
-"""Schemas for CRM client endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, model_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, ArrayResult, BaseSchema
-from schemas.api.common.filters import Filter
-from schemas.api.references.fields import FieldValue, FieldValueAdd, FieldValueEdit
-
-
-class Client(BaseSchema):
-    """CRM client read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, description="Client id.")
-    external_id: Optional[str] = PydField(default=None, description="External client id.")
-    name: Optional[str] = PydField(default=None, description="Client name.")
-    phone: Optional[str] = PydField(default=None, description="Client phone.")
-    email: Optional[str] = PydField(default=None, description="Client email.")
-    photo_url: Optional[str] = PydField(default=None, description="Avatar URL.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    responsible_user_id: Optional[int] = PydField(default=None, description="Responsible user id.")
-    deleted: Optional[bool] = PydField(default=None, description="Soft-delete flag.")
-    created_user_id: Optional[int] = PydField(default=None, description="Creator user id.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
-    fields: Optional[List[FieldValue]] = PydField(default=None, description="Custom fields.")
-
-    # Legacy integration ids kept for backward compatibility in client code.
-    telegram_id: Optional[str] = PydField(default=None, description="Legacy Telegram id.")
-    whatsapp_id: Optional[str] = PydField(default=None, description="Legacy WhatsApp id.")
-    instagram_id: Optional[str] = PydField(default=None, description="Legacy Instagram id.")
-    facebook_id: Optional[str] = PydField(default=None, description="Legacy Facebook id.")
-    vk_id: Optional[str] = PydField(default=None, description="Legacy VK id.")
+from schemas.api.common.base import RegosModel
 
 
-class ClientGetRequest(BaseSchema):
-    """Request for Client/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(default=None, description="Client ids.")
-    phones: Optional[List[str]] = PydField(default=None, description="Client phones.")
-    external_ids: Optional[List[str]] = PydField(default=None, description="External ids.")
-    emails: Optional[List[str]] = PydField(default=None, description="Client emails.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    responsible_user_ids: Optional[List[int]] = PydField(
-        default=None,
-        description="Responsible user ids.",
-    )
-    filters: Optional[List[Filter]] = PydField(default=None, description="Additional filters.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-
-    # Legacy lookup filters mapped to external_ids by service.
-    telegram_ids: Optional[List[str]] = PydField(default=None, description="Legacy Telegram ids.")
-    whatsapp_ids: Optional[List[str]] = PydField(default=None, description="Legacy WhatsApp ids.")
-    instagram_ids: Optional[List[str]] = PydField(default=None, description="Legacy Instagram ids.")
-    facebook_ids: Optional[List[str]] = PydField(default=None, description="Legacy Facebook ids.")
-    vk_ids: Optional[List[str]] = PydField(default=None, description="Legacy VK ids.")
+class Client(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    phone: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    photo_url: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    sentiment_score_avg: _Decimal | None = PydField(default=None)
+    sentiment_score_count: int | None = PydField(default=None)
+    sentiment_score_rolling_avg: _Decimal | None = PydField(default=None)
+    deleted: bool | None = PydField(default=None)
+    created_user_id: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
 
 
-class ClientAddRequest(BaseSchema):
-    """Request for Client/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    external_id: Optional[str] = PydField(default=None, description="External client id.")
-    name: Optional[str] = PydField(default=None, description="Client name.")
-    phone: Optional[str] = PydField(default=None, description="Client phone.")
-    email: Optional[str] = PydField(default=None, description="Client email.")
-    photo_url: Optional[str] = PydField(default=None, description="Avatar URL.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    responsible_user_id: Optional[int] = PydField(default=None, ge=1, description="Responsible user id.")
-    fields: Optional[List[FieldValueAdd]] = PydField(default=None, description="Custom field values.")
-
-    # Legacy fields mapped to external_id by service.
-    telegram_id: Optional[str] = PydField(default=None, description="Legacy Telegram id.")
-    whatsapp_id: Optional[str] = PydField(default=None, description="Legacy WhatsApp id.")
-    instagram_id: Optional[str] = PydField(default=None, description="Legacy Instagram id.")
-    facebook_id: Optional[str] = PydField(default=None, description="Legacy Facebook id.")
-    vk_id: Optional[str] = PydField(default=None, description="Legacy VK id.")
-
-    @model_validator(mode="after")
-    def _validate_identifiers(self) -> "ClientAddRequest":
-        identifiers = (
-            self.external_id,
-            self.phone,
-            self.email,
-            self.telegram_id,
-            self.whatsapp_id,
-            self.instagram_id,
-            self.facebook_id,
-            self.vk_id,
-        )
-        if any(str(value or "").strip() for value in identifiers):
-            return self
-        raise ValueError(
-            "At least one identifier is required: external_id/phone/email "
-            "(or legacy telegram_id/whatsapp_id/instagram_id/facebook_id/vk_id)"
-        )
+class ClientAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    external_id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    phone: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    photo_url: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
 
 
-class ClientEditRequest(BaseSchema):
-    """Request for Client/Edit."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Client id.")
-    external_id: Optional[str] = PydField(default=None, description="External client id.")
-    name: Optional[str] = PydField(default=None, description="Client name.")
-    phone: Optional[str] = PydField(default=None, description="Client phone.")
-    email: Optional[str] = PydField(default=None, description="Client email.")
-    photo_url: Optional[str] = PydField(default=None, description="Avatar URL.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    responsible_user_id: Optional[int] = PydField(default=None, ge=1, description="Responsible user id.")
-    fields: Optional[List[FieldValueEdit]] = PydField(default=None, description="Custom field changes.")
-
-    # Legacy fields mapped to external_id by service.
-    telegram_id: Optional[str] = PydField(default=None, description="Legacy Telegram id.")
-    whatsapp_id: Optional[str] = PydField(default=None, description="Legacy WhatsApp id.")
-    instagram_id: Optional[str] = PydField(default=None, description="Legacy Instagram id.")
-    facebook_id: Optional[str] = PydField(default=None, description="Legacy Facebook id.")
-    vk_id: Optional[str] = PydField(default=None, description="Legacy VK id.")
+class ClientDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class ClientDeleteRequest(BaseSchema):
-    """Request for Client/Delete."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Client id.")
-
-
-class ClientSetResponsibleRequest(BaseSchema):
-    """Request for Client/SetResponsible."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Client id.")
-    responsible_user_id: int = PydField(..., ge=1, description="Responsible user id.")
+class ClientEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    phone: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    photo_url: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
 
 
-class ClientMergeRequest(BaseSchema):
-    """Request for Client/Merge."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    source_client_id: int = PydField(..., ge=1, description="Source client id.")
-    target_client_id: int = PydField(..., ge=1, description="Target client id.")
-    comment: Optional[str] = PydField(default=None, description="Merge comment.")
-
-
-class ClientGetResponse(APIBaseResponse[List[Client]]):
-    """Response for Client/Get."""
-
-    model_config = ConfigDict(extra="ignore")
+class ClientGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    phones: list[str] | None = PydField(default=None)
+    external_ids: list[str] | None = PydField(default=None)
+    emails: list[str] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    responsible_user_ids: list[int] | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
 
 
-class ClientAddResponse(APIBaseResponse[AddResult]):
-    """Response for Client/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ClientEditResponse(APIBaseResponse[ArrayResult]):
-    """Response for Client/Edit."""
-
-    model_config = ConfigDict(extra="ignore")
+class ClientMerge(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    source_client_id: int | None = PydField(default=None)
+    target_client_id: int | None = PydField(default=None)
+    comment: str | None = PydField(default=None)
 
 
-class ClientDeleteResponse(APIBaseResponse[ArrayResult]):
-    """Response for Client/Delete."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ClientSetResponsibleResponse(APIBaseResponse[ArrayResult]):
-    """Response for Client/SetResponsible."""
-
-    model_config = ConfigDict(extra="ignore")
+class ClientRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Client] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
 
 
-class ClientMergeResponse(APIBaseResponse[ArrayResult]):
-    """Response for Client/Merge."""
+class ClientSetResponsible(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, InsertResult, UpdateResult
+from schemas.api.common.filter import Filter
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
+
+
+ClientAddRequest: TypeAlias = ClientAdd
+ClientAddResponse: TypeAlias = InsertResult
+ClientDeleteRequest: TypeAlias = ClientDelete
+ClientDeleteResponse: TypeAlias = UpdateResult
+ClientEditRequest: TypeAlias = ClientEdit
+ClientEditResponse: TypeAlias = UpdateResult
+ClientGetRequest: TypeAlias = ClientGet
+ClientGetResponse: TypeAlias = ClientRegosOffsettedArrayResult
+ClientMergeRequest: TypeAlias = ClientMerge
+ClientMergeResponse: TypeAlias = UpdateResult
+ClientSetResponsibleRequest: TypeAlias = ClientSetResponsible
+ClientSetResponsibleResponse: TypeAlias = UpdateResult
+
+
+_MODEL_NAMES = ['Client', 'ClientAdd', 'ClientDelete', 'ClientEdit', 'ClientGet', 'ClientMerge', 'ClientRegosOffsettedArrayResult', 'ClientSetResponsible']
 
 
 __all__ = [
-    "Client",
-    "ClientAddRequest",
-    "ClientAddResponse",
-    "ClientDeleteRequest",
-    "ClientDeleteResponse",
-    "ClientEditRequest",
-    "ClientEditResponse",
-    "ClientGetRequest",
-    "ClientGetResponse",
-    "ClientMergeRequest",
-    "ClientMergeResponse",
-    "ClientSetResponsibleRequest",
-    "ClientSetResponsibleResponse",
+    'Client',
+    'ClientAdd',
+    'ClientDelete',
+    'ClientEdit',
+    'ClientGet',
+    'ClientMerge',
+    'ClientRegosOffsettedArrayResult',
+    'ClientSetResponsible',
+    'ClientGetRequest',
+    'ClientGetResponse',
+    'ClientAddRequest',
+    'ClientAddResponse',
+    'ClientEditRequest',
+    'ClientEditResponse',
+    'ClientDeleteRequest',
+    'ClientDeleteResponse',
+    'ClientSetResponsibleRequest',
+    'ClientSetResponsibleResponse',
+    'ClientMergeRequest',
+    'ClientMergeResponse'
 ]

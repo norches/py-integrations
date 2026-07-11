@@ -1,116 +1,138 @@
-"""Схемы справочника складов."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
+from schemas.api.common.base import RegosModel
+
+
+class Stock(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    firm: Firm | None = PydField(default=None)
+    area: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class StockAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    area: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class StockDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class StockDeleteConfirm(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    confirm_code: str | None = PydField(default=None)
+
+
+class StockDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class StockEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    area: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class StockGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    firm_ids: list[int] | None = PydField(default=None)
+    sort_orders: list[Stock_SortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class StockRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Stock] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class Stock_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: Stock_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class Stock_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ApiResult, ColumnSortOrderDirection, Error, InsertResult, UpdateResult
 from schemas.api.references.firm import Firm
 
 
-class SortColumn(str, Enum):
-    """Колонки сортировки списка складов."""
-
-    ID = "Id"
-    NAME = "Name"
-    LAST_UPDATE = "LastUpdate"
-
-
-class SortDirection(str, Enum):
-    """Направление сортировки."""
-
-    ASC = "asc"
-    DESC = "desc"
-
-
-class SortOrder(BaseSchema):
-    """Правило сортировки складов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    column: SortColumn = PydField(..., description="Колонка сортировки.")
-    direction: SortDirection = PydField(
-        ..., description="Направление сортировки (asc|desc)."
-    )
+StockAddRequest: TypeAlias = StockAdd
+StockAddResponse: TypeAlias = InsertResult
+StockDeleteConfirmRequest: TypeAlias = StockDeleteConfirm
+StockDeleteConfirmResponse: TypeAlias = ApiResult
+StockDeleteMarkRequest: TypeAlias = StockDeleteMark
+StockDeleteMarkResponse: TypeAlias = UpdateResult
+StockDeleteRequest: TypeAlias = StockDelete
+StockDeleteResponse: TypeAlias = ApiResult
+StockEditRequest: TypeAlias = StockEdit
+StockEditResponse: TypeAlias = UpdateResult
+StockGetRequest: TypeAlias = StockGet
+StockGetResponse: TypeAlias = StockRegosOffsettedArrayResult
 
 
-class Stock(BaseSchema):
-    """Рид-модель склада."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="ID склада.")
-    name: Optional[str] = PydField(default=None, description="Наименование склада.")
-    address: Optional[str] = PydField(default=None, description="Адрес склада.")
-    firm: Firm = PydField(..., description="Предприятие, к которому относится склад.")
-    area: Decimal = PydField(..., ge=0, description="Площадь склада.")
-    description: Optional[str] = PydField(
-        default=None, description="Дополнительное описание."
-    )
-    deleted_mark: bool = PydField(..., description="Метка удаления.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего изменения (unixtime)."
-    )
-
-    @field_validator("name", "address", "description", mode="before")
-    @classmethod
-    def _strip_strings(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-
-class StockGetRequest(BaseSchema):
-    """Фильтры получения складов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Список ID складов для выборки."
-    )
-    firm_ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по ID предприятий."
-    )
-    sort_orders: Optional[List[SortOrder]] = PydField(
-        default=None, description="Набор правил сортировки."
-    )
-    search: Optional[str] = PydField(
-        default=None, description="Поиск по названию склада."
-    )
-    deleted_mark: Optional[bool] = PydField(
-        default=None, description="Фильтр по метке удаления."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        le=10000,
-        description="Лимит возвращаемых записей (максимум 10000).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-
-class StockGetResponse(APIBaseResponse[List[Stock]]):
-    """Ответ на запрос списка складов."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['Stock', 'StockAdd', 'StockDelete', 'StockDeleteConfirm', 'StockDeleteMark', 'StockEdit', 'StockGet', 'StockRegosOffsettedArrayResult', 'Stock_SortOrder']
 
 
 __all__ = [
-    "SortColumn",
-    "SortDirection",
-    "SortOrder",
-    "Stock",
-    "StockGetRequest",
-    "StockGetResponse",
+    'Stock',
+    'StockAdd',
+    'StockDelete',
+    'StockDeleteConfirm',
+    'StockDeleteMark',
+    'StockEdit',
+    'StockGet',
+    'StockRegosOffsettedArrayResult',
+    'Stock_SortOrder',
+    'Stock_SortOrderColumn',
+    'StockGetRequest',
+    'StockGetResponse',
+    'StockAddRequest',
+    'StockAddResponse',
+    'StockEditRequest',
+    'StockEditResponse',
+    'StockDeleteMarkRequest',
+    'StockDeleteMarkResponse',
+    'StockDeleteRequest',
+    'StockDeleteResponse',
+    'StockDeleteConfirmRequest',
+    'StockDeleteConfirmResponse'
 ]

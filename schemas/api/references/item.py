@@ -1,676 +1,838 @@
-# schemas/api/references/item.py
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import Field as PydField, field_validator
-from pydantic.config import ConfigDict
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from schemas.api.references.tax_vat import TaxVat
+from schemas.api.common.base import RegosModel
+
+
+class GetWithoutICPSRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ImageSize(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+class ImportItems(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    comparation_value: ItemImportComparationValue | None = PydField(default=None)
+    group_separator: str | None = PydField(default=None)
+    barcode_separator: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    unit_id: int | None = PydField(default=None)
+    vat_value_id: int | None = PydField(default=None)
+    data: list[ItemImportData] | None = PydField(default=None)
+
+
+class Int64ArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[int] | Error | None = PydField(default=None)
+
+
+class Item(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    type: ItemType | None = PydField(default=None)
+    code: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    kdt: int | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    comission_tin: str | None = PydField(default=None)
+    package_code: str | None = PydField(default=None)
+    origin: ItemOriginEnum | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group: ItemGroup | None = PydField(default=None)
+    department: Department | None = PydField(default=None)
+    vat: TaxVat | None = PydField(default=None)
+    barcode_list: str | None = PydField(default=None)
+    base_barcode: str | None = PydField(default=None)
+    unit: Unit | None = PydField(default=None)
+    unit2: Unit | None = PydField(default=None)
+    color: Color | None = PydField(default=None)
+    size: SizeChart | None = PydField(default=None)
+    brand: Brand | None = PydField(default=None)
+    producer: Producer | None = PydField(default=None)
+    country: Country | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    image_url: str | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    has_child: bool | None = PydField(default=None)
+    min_quantity: int | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class ItemAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    type: ItemType | None = PydField(default=None)
+    code: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    kdt: int | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    comission_tin: str | None = PydField(default=None)
+    package_code: str | None = PydField(default=None)
+    origin: ItemOriginEnum | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    department_id: int | None = PydField(default=None)
+    vat_id: int | None = PydField(default=None)
+    unit_id: int | None = PydField(default=None)
+    unit2_id: int | None = PydField(default=None)
+    color_id: int | None = PydField(default=None)
+    size_id: int | None = PydField(default=None)
+    brand_id: int | None = PydField(default=None)
+    producer_id: int | None = PydField(default=None)
+    country_id: int | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    min_quantity: int | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
+
+
+class ItemAddCopy(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class ItemAddToCompound(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    compound_id: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+
+
+class ItemCodeCheckIn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code: int | None = PydField(default=None)
+
+
+class ItemCodeCheckOut(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    enable: bool | None = PydField(default=None)
+
+
+class ItemCodeCheckOutRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: ItemCodeCheckOut | Error | None = PydField(default=None)
+
+
+class ItemCodeGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code: int | None = PydField(default=None)
+
+
+class ItemCodeGetRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: ItemCodeGet | Error | None = PydField(default=None)
+
+
+class ItemCompound(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    item: Item | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    image_url: str | None = PydField(default=None)
+
+
+class ItemCompoundGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    image_size: ImageSize | None = PydField(default=None)
+
+
+class ItemCompoundRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemCompound] | Error | None = PydField(default=None)
+
+
+class ItemCurrentQuantity(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    stock_id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+
+
+class ItemCurrentQuantityGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_ids: list[int] | None = PydField(default=None)
+    stock_ids: list[int] | None = PydField(default=None)
+
+
+class ItemCurrentQuantityRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemCurrentQuantity] | Error | None = PydField(default=None)
+
+
+class ItemDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class ItemDeleteFromCompound(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    compound_id: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+
+
+class ItemDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class ItemEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    type: ItemType | None = PydField(default=None)
+    code: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    kdt: int | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    comission_tin: str | None = PydField(default=None)
+    package_code: str | None = PydField(default=None)
+    origin: ItemOriginEnum | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    department_id: int | None = PydField(default=None)
+    vat_id: int | None = PydField(default=None)
+    unit_id: int | None = PydField(default=None)
+    unit2_id: int | None = PydField(default=None)
+    color_id: int | None = PydField(default=None)
+    size_id: int | None = PydField(default=None)
+    brand_id: int | None = PydField(default=None)
+    producer_id: int | None = PydField(default=None)
+    country_id: int | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    min_quantity: int | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
+
+
+class ItemExt(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    item: Item | None = PydField(default=None)
+    quantity: ItemQuantity | None = PydField(default=None)
+    pricetype: PriceType | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    last_purchase_cost: _Decimal | None = PydField(default=None)
+    image_url: str | None = PydField(default=None)
+
+
+class ItemExtGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    type: ItemType | None = PydField(default=None)
+    parent_ids: list[int] | None = PydField(default=None)
+    codes: list[int] | None = PydField(default=None)
+    department_ids: list[int] | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    has_child: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+    stock_id: int | None = PydField(default=None)
+    price_type_id: int | None = PydField(default=None)
+    sort_orders: list[ItemOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    zero_quantity: bool | None = PydField(default=None)
+    zero_price: bool | None = PydField(default=None)
+    has_image: bool | None = PydField(default=None)
+    image_size: ImageSize | None = PydField(default=None)
+
+
+class ItemExtRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemExt] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ItemGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    type: ItemType | None = PydField(default=None)
+    parent_ids: list[int] | None = PydField(default=None)
+    codes: list[int] | None = PydField(default=None)
+    department_ids: list[int] | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    has_child: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ItemGetQuantityIncome(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    stock_ids: list[int] | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+
+
+class ItemGetQuantityOutcome(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    common: _Decimal | None = PydField(default=None)
+    allowed: _Decimal | None = PydField(default=None)
+    booked: _Decimal | None = PydField(default=None)
+    stock: Stock | None = PydField(default=None)
+
+
+class ItemGetQuantityOutcomeRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemGetQuantityOutcome] | Error | None = PydField(default=None)
+
+
+class ItemGetQuantityPosIncome(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    stock_ids: list[int] | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+
+
+class ItemGetQuantityPosOutcome(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    common: _Decimal | None = PydField(default=None)
+    allowed: _Decimal | None = PydField(default=None)
+    booked: _Decimal | None = PydField(default=None)
+    stock_name: str | None = PydField(default=None)
+    firm_name: str | None = PydField(default=None)
+
+
+class ItemGetQuantityPosOutcomeRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemGetQuantityPosOutcome] | Error | None = PydField(default=None)
+
+
+class ItemImportComparationValue(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+class ItemImportData(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    index: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    group_path: str | None = PydField(default=None)
+    barcodes: str | None = PydField(default=None)
+    color_name: str | None = PydField(default=None)
+    brand_name: str | None = PydField(default=None)
+    producer_name: str | None = PydField(default=None)
+    size_name: str | None = PydField(default=None)
+    unit_name: str | None = PydField(default=None)
+    department_name: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    vat_name: str | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    icpsbarcode: str | None = PydField(default=None)
+    labeled: int | None = PydField(default=None)
+    package_code: int | None = PydField(default=None)
+    parent_code: int | None = PydField(default=None)
+
+
+class ItemImportDataResponse(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    success: bool | None = PydField(default=None)
+    index: str | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+
+
+class ItemImportDataResponseArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemImportDataResponse] | Error | None = PydField(default=None)
+
+
+class ItemMatchingRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    type: MatchingType | None = PydField(default=None)
+    data: list[ItemMatchingRequestData] | None = PydField(default=None)
+
+
+class ItemMatchingRequestData(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    index: str | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+
+
+class ItemMatchingResponse(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    index: str | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+
+
+class ItemMatchingResponseArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemMatchingResponse] | Error | None = PydField(default=None)
+
+
+class ItemOFDPackage(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    code: str | None = PydField(default=None)
+    nameUz: str | None = PydField(default=None)
+    nameRu: str | None = PydField(default=None)
+    nameLat: str | None = PydField(default=None)
+
+
+class ItemOFDPackageRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemOFDPackage] | Error | None = PydField(default=None)
+
+
+class ItemOFDPackagesGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    icps: str | None = PydField(default=None)
+
+
+class ItemOprOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: ItemOprOrderColumn | None = PydField(default=None)
+    direction: ItemOprOrderDirection | None = PydField(default=None)
+
+
+class ItemOprOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+
+
+class ItemOprOrderDirection(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+
+
+class ItemOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: ItemOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class ItemOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+
+
+class ItemOriginEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    NEGATIVE_1 = -1
+
+
+class ItemPreCost(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    value: _Decimal | None = PydField(default=None)
+    cost_date: int | None = PydField(default=None)
+
+
+class ItemPreCostArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemPreCost] | Error | None = PydField(default=None)
+
+
+class ItemPreCostGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_ids: list[int] | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    cost_date: int | None = PydField(default=None)
+
+
+class ItemQuantity(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    common: _Decimal | None = PydField(default=None)
+    allowed: _Decimal | None = PydField(default=None)
+    booked: _Decimal | None = PydField(default=None)
+
+
+class ItemRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Item] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ItemReplaceICPS(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    old_icps: str | None = PydField(default=None)
+    new_icps: str | None = PydField(default=None)
+
+
+class ItemSearch(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    barcode: str | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    has_child: bool | None = PydField(default=None)
+    type: ItemType | None = PydField(default=None)
+
+
+class ItemSetICPS(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    icps: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+
+
+class ItemShort(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    type: ItemType | None = PydField(default=None)
+    code: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    articul: str | None = PydField(default=None)
+    kdt: int | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    assemblable: bool | None = PydField(default=None)
+    disassemblable: bool | None = PydField(default=None)
+    is_labeled: bool | None = PydField(default=None)
+    comission_tin: str | None = PydField(default=None)
+    package_code: str | None = PydField(default=None)
+    origin: ItemOriginEnum | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    department_id: int | None = PydField(default=None)
+    vat_id: int | None = PydField(default=None)
+    unit_id: int | None = PydField(default=None)
+    unit2_id: int | None = PydField(default=None)
+    color_id: int | None = PydField(default=None)
+    size_id: int | None = PydField(default=None)
+    brand_id: int | None = PydField(default=None)
+    producer_id: int | None = PydField(default=None)
+    country_id: int | None = PydField(default=None)
+    compound: bool | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    has_child: bool | None = PydField(default=None)
+    min_quantity: int | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    base_barcode: str | None = PydField(default=None)
+
+
+class ItemShortRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemShort] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ItemType(IntEnum):
+    VALUE_1 = 1
+    VALUE_2 = 2
+
+
+class ItemWithoutICPS(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    barcode: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+
+
+class ItemWithoutICPSRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemWithoutICPS] | Error | None = PydField(default=None)
+
+
+class ItemWithoutICPSShort(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    barcode: str | None = PydField(default=None)
+
+
+class ItemWithoutICPSShortRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemWithoutICPSShort] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class MatchingType(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import BooleanRegosObjectResult, ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+from schemas.api.common.filter import Filter
 from schemas.api.references.brand import Brand
 from schemas.api.references.color import Color
 from schemas.api.references.country import Country
 from schemas.api.references.department import Department
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
+from schemas.api.references.item_group import ItemGroup
 from schemas.api.references.price_type import PriceType
 from schemas.api.references.producer import Producer
-from schemas.api.references.size import SizeChart
+from schemas.api.references.size_chart import SizeChart
 from schemas.api.references.stock import Stock
+from schemas.api.references.tax_vat import TaxVat
 from schemas.api.references.unit import Unit
-from schemas.api.references.item_group import ItemGroup
 
 
-# ---------- Общие enum ----------
-class ItemType(str, Enum):
-    """Тип номенклатуры."""
-
-    Item = "Item"
-    Service = "Service"
-
-
-class SortDirection(str, Enum):
-    """Направление сортировки."""
-
-    ASC = "ASC"
-    DESC = "DESC"
-
-
-class ItemImportComparationValue(str, Enum):
-    """Item import duplicate matching type."""
-
-    Default = "Default"
-    Code = "Code"
-    Name = "Name"
-    Articul = "Articul"
-    Barcode = "Barcode"
-    ICPS = "ICPS"
-    ICPSBarcode = "ICPSBarcode"
-
-
-class ItemMatchingType(str, Enum):
-    """Item matching type."""
-
-    Default = "Default"
-    Code = "Code"
-    Name = "Name"
-    Articul = "Articul"
-    Barcode = "Barcode"
-    ICPS = "ICPS"
-    ICPSBarcode = "ICPSBarcode"
-
-
-# ---------- Базовая номенклатура (рид-модель) ----------
-class Item(BaseSchema):
-    """
-    Номенклатурная позиция.
-    """
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID номенклатуры.")
-    group: ItemGroup = PydField(None, description="Группа номенклатуры.")
-    department: Optional[Department] = PydField(None, description="Подразделение.")
-    vat: Optional[TaxVat] = PydField(None, description="Ставка НДС.")
-    barcode_list: Optional[str] = PydField(
-        None, description="Список штрихкодов (строка)."
-    )
-    base_barcode: Optional[str] = PydField(None, description="Базовый штрихкод.")
-    unit: Optional[Unit] = PydField(None, description="Единица измерения (основная).")
-    unit2: Optional[Unit] = PydField(
-        None, description="Единица измерения (дополнительная)."
-    )
-    color: Optional[Color] = PydField(None, description="Цвет.")
-    size: Optional[SizeChart] = PydField(None, description="Размер.")
-    brand: Optional[Brand] = PydField(None, description="Бренд.")
-    producer: Optional[Producer] = PydField(None, description="Производитель.")
-    country: Optional[Country] = PydField(None, description="Страна происхождения.")
-    compound: Optional[bool] = PydField(None, description="Составной товар.")
-    deleted_mark: Optional[bool] = PydField(None, description="Метка удаления.")
-    image_url: Optional[str] = PydField(None, description="URL изображения.")
-    parent_id: Optional[int] = PydField(None, description="ID родителя (для иерархии).")
-    has_child: Optional[bool] = PydField(None, description="Есть дочерние элементы.")
-    last_update: int = PydField(
-        ..., description="Unix time (сек) последнего изменения."
-    )
-
-    # BC: поле type оставляем строкой с дефолтом "none" (исторически); позволяем подавать Enum и приводим к str валидатором
-    type: str = PydField(
-        "none", description='Тип позиции (исторически строка, "none" по умолчанию).'
-    )
-    code: Optional[int] = PydField(None, description="Внутренний код.")
-    name: Optional[str] = PydField(None, description="Краткое наименование.")
-    fullname: Optional[str] = PydField(None, description="Полное наименование.")
-    description: Optional[str] = PydField(None, description="Описание.")
-    articul: Optional[str] = PydField(None, description="Артикул.")
-    kdt: Optional[int] = PydField(None, description="КДТ (если применимо).")
-    min_quantity: Optional[int] = PydField(None, description="Минимальное количество.")
-    icps: Optional[str] = PydField(None, description="ICPS (если применимо).")
-    assemblable: Optional[bool] = PydField(
-        None, description="Можно собирать (комплектовать)."
-    )
-    disassemblable: Optional[bool] = PydField(
-        None, description="Можно разукомплектовать."
-    )
-    is_labeled: Optional[bool] = PydField(None, description="Маркируемый товар.")
-    comission_tin: Optional[str] = PydField(
-        None, description="ИНН комитента (для комиссионной торговли)."
-    )
-    package_code: Optional[str] = PydField(None, description="Код упаковки.")
-    # BC: origin оставляем строкой с дефолтом "none" (исторически); можно было бы ввести Enum, но не меняем тип
-    origin: str = PydField(
-        "none", description='Происхождение (исторически строка, "none" по умолчанию).'
-    )
-    partner_id: Optional[int] = PydField(
-        None, description="ID партнёра-поставщика (если связан)."
-    )
-
-    @field_validator(
-        "barcode_list",
-        "base_barcode",
-        "image_url",
-        "name",
-        "fullname",
-        "description",
-        "articul",
-        "icps",
-        "comission_tin",
-        "package_code",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-    @field_validator("type", mode="before")
-    @classmethod
-    def _normalize_type(cls, v):
-        # BC: принимаем как str, так и ItemType и сохраняем строку
-        if isinstance(v, ItemType):
-            return v.value
-        return v
-
-
-# ---------- Search ----------
-class ItemSearchRequest(BaseSchema):
-    """
-    Поиск номенклатуры по полям: code, name, articul, barcode.
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    code: Optional[str] = PydField(None, description="Код (частичное совпадение).")
-    name: Optional[str] = PydField(
-        None, description="Наименование (частичное совпадение)."
-    )
-    articul: Optional[str] = PydField(
-        None, description="Артикул (частичное совпадение)."
-    )
-    barcode: Optional[str] = PydField(
-        None, description="Штрихкод (частичное совпадение)."
-    )
-
-    deleted_mark: Optional[bool] = PydField(None, description="Метка удаления.")
-    assemblable: Optional[bool] = PydField(
-        None, description="Фильтр по признаку сборки."
-    )
-    disassemblable: Optional[bool] = PydField(
-        None, description="Фильтр по признаку разборки."
-    )
-    compound: Optional[bool] = PydField(
-        None, description="Фильтр по составным товарам."
-    )
-    has_child: Optional[bool] = PydField(
-        None, description="Фильтр по наличию дочерних."
-    )
-    type: Optional[ItemType] = PydField(None, description="Тип номенклатуры.")
-
-    @field_validator("code", "name", "articul", "barcode", mode="before")
-    @classmethod
-    def _strip_search(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-
-# ---------- Get ----------
-class RedefinitionOption(BaseSchema):
-    """Опции переопределений (локализация и пр.)."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    language: Optional[str] = PydField(None, description='Код языка, напр. "RUS".')
-    app_id: Optional[int] = PydField(
-        None, ge=1, description="ID приложения (если применимо)."
-    )
-
-
-class ItemGetRequest(BaseSchema):
-    """
-    Получение списка номенклатуры по фильтрам.
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(None, description="ID позиций.")
-    group_ids: Optional[List[int]] = PydField(None, description="ID групп.")
-    type: Optional[ItemType] = PydField(None, description="Тип номенклатуры.")
-    parent_ids: Optional[List[int]] = PydField(
-        None, description="ID родительских элементов."
-    )
-    codes: Optional[List[int]] = PydField(None, description="Коды позиций.")
-    redefinition_option: Optional[RedefinitionOption] = PydField(
-        None, description="Опции переопределения."
-    )
-    department_ids: Optional[List[int]] = PydField(
-        None, description="ID подразделений."
-    )
-    deleted_mark: Optional[bool] = PydField(None, description="Метка удаления.")
-    assemblable: Optional[bool] = PydField(None, description="Признак собираемости.")
-    disassemblable: Optional[bool] = PydField(
-        None, description="Признак разукомплектования."
-    )
-    compound: Optional[bool] = PydField(None, description="Составной товар.")
-    has_child: Optional[bool] = PydField(None, description="Есть дочерние.")
-    is_labeled: Optional[bool] = PydField(None, description="Маркируемый товар.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Лимит.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Смещение.")
-
-
-# ---------- GetExt ----------
-class ItemGetExtSortColumn(str, Enum):
-    """Колонки сортировки для GetExt."""
-
-    Name = "Name"
-    Articul = "Articul"
-    Code = "Code"
-    Unit = "Unit"
-    Color = "Color"
-    Size = "Size"
-    Brand = "Brand"
-    Producer = "Producer"
-    Country = "Country"
-    TaxVat = "TaxVat"
-    Department = "Department"
-
-
-class ItemGetExtSortOrder(BaseSchema):
-    """Ступень сортировки для GetExt."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    column: ItemGetExtSortColumn = PydField(..., description="Колонка сортировки.")
-    direction: SortDirection = PydField(..., description="Направление: ASC|DESC.")
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_dir(cls, v):
-        # BC: принимаем 'asc'/'desc' в любом регистре и приводим к Enum
-        if isinstance(v, str):
-            up = v.strip().upper()
-            if up in {"ASC", "DESC"}:
-                return SortDirection[up]
-        return v
-
-
-class ItemGetExtImageSize(str, Enum):
-    """Размер изображения в выдаче GetExt."""
-
-    Large = "Large"
-    Medium = "Medium"
-    Small = "Small"
-
-
-class ItemGetExtRequest(BaseSchema):
-    """
-    Получение расширенной информации о номенклатуре с ценой/остатками/изображением.
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    stock_id: Optional[int] = PydField(None, ge=1, description="ID склада.")
-    price_type_id: Optional[int] = PydField(None, ge=1, description="ID типа цены.")
-    sort_orders: Optional[List[ItemGetExtSortOrder]] = PydField(
-        None, description="Сортировка."
-    )
-    search: Optional[str] = PydField(None, description="Строка поиска.")
-    zero_quantity: Optional[bool] = PydField(
-        None, description="Включать позиции с нулевым остатком."
-    )
-    zero_price: Optional[bool] = PydField(
-        None, description="Включать позиции с нулевой ценой."
-    )
-    image_size: Optional[ItemGetExtImageSize] = PydField(
-        None, description="Размер изображения."
-    )
-
-    ids: Optional[List[int]] = PydField(None, description="ID позиций.")
-    group_ids: Optional[List[int]] = PydField(None, description="ID групп.")
-    type: Optional[ItemType] = PydField(None, description="Тип номенклатуры.")
-    parent_ids: Optional[List[int]] = PydField(None, description="ID родителей.")
-    codes: Optional[List[int]] = PydField(None, description="Коды позиций.")
-    redefinition_option: Optional[RedefinitionOption] = PydField(
-        None, description="Опции переопределения."
-    )
-    department_ids: Optional[List[int]] = PydField(
-        None, description="ID подразделений."
-    )
-    deleted_mark: Optional[bool] = PydField(None, description="Метка удаления.")
-    assemblable: Optional[bool] = PydField(None, description="Собираемый.")
-    disassemblable: Optional[bool] = PydField(None, description="Разукомплектуемый.")
-    compound: Optional[bool] = PydField(None, description="Составной.")
-    has_child: Optional[bool] = PydField(None, description="Есть дочерние.")
-    has_image: Optional[bool] = PydField(None, description="Только с изображением.")
-    is_labeled: Optional[bool] = PydField(None, description="Маркируемый товар.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Лимит.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Смещение.")
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-
-# ---------- Расширенная структура для GetExt ----------
-class ItemQuantity(BaseSchema):
-    """Остатки по складам/разрезам."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    stock: Optional[Stock] = PydField(None, description="Склад.")
-    common: Optional[Decimal] = PydField(None, description="Доступно всего.")
-    allowed: Optional[Decimal] = PydField(None, description="Разрешено к продаже.")
-    booked: Optional[Decimal] = PydField(None, description="Зарезервировано.")
-
-
-# ---------- GetQuantity ----------
-class ItemGetQuantityRequest(BaseSchema):
-    """Параметры запроса количества номенклатуры."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    item_id: int = PydField(..., ge=1, description="ID номенклатуры.")
-    stock_ids: Optional[List[int]] = PydField(
-        None, description="Список ID складов для выборки остатков."
-    )
-    date: Optional[int] = PydField(
-        None,
-        ge=0,
-        description="Дата, на которую требуется остаток (Unix time, секунд).",
-    )
-
-
-class ItemGetQuantityResponse(APIBaseResponse[List[ItemQuantity]]):
-    """Ответ на запрос /v1/Item/GetQuantity."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ItemGetCurrentQuantityRequest(BaseSchema):
-    """Request for current item quantities by item and stock ids."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    item_ids: List[int] = PydField(..., max_length=250, description="Item ids.")
-    stock_ids: List[int] = PydField(..., description="Stock ids.")
-
-
-class ItemCurrentQuantity(BaseSchema):
-    """Current quantity row returned by Item/GetCurrentQuantity."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    item_id: int = PydField(..., ge=1, description="Item id.")
-    stock_id: int = PydField(..., ge=1, description="Stock id.")
-    quantity: Decimal = PydField(default=Decimal("0"), description="Quantity.")
-
-
-class ItemGetCurrentQuantityResponse(APIBaseResponse[List[ItemCurrentQuantity]]):
-    """Response for Item/GetCurrentQuantity."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ItemShort(BaseSchema):
-    """Short item read model returned by Item/GetShort."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="Item id.")
-    group_id: Optional[int] = PydField(default=None, description="Group id.")
-    code: Optional[int] = PydField(default=None, description="Item code.")
-    name: Optional[str] = PydField(default=None, description="Item name.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    last_update: Optional[int] = PydField(default=None, description="Last update.")
-
-
-class ItemGetShortResponse(APIBaseResponse[List[ItemShort]]):
-    """Response for Item/GetShort."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ItemExt(BaseSchema):
-    """Элемент расширенной выдачи."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    item: Item = PydField(..., description="Основная карточка товара.")
-    quantity: Optional[ItemQuantity] = PydField(None, description="Остатки/резервы.")
-    pricetype: Optional[PriceType] = PydField(None, description="Тип цены.")
-    price: Optional[Decimal] = PydField(None, description="Цена.")
-    last_purchase_cost: Optional[Decimal] = PydField(
-        None, description="Последняя закупочная цена."
-    )
-    image_url: Optional[str] = PydField(
-        None, description="URL изображения (с учётом image_size)."
-    )
-
-    @field_validator("image_url", mode="before")
-    @classmethod
-    def _strip_img(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-
-# ---------- Импорт ----------
-class ItemImportData(BaseSchema):
-    """Строка данных импорта номенклатуры."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    index: Optional[str] = PydField(
-        None, description="Индекс записи (идентификатор в исходных данных)."
-    )
-    name: str = PydField(..., description="Наименование.")
-    fullname: Optional[str] = PydField(None, description="Полное наименование.")
-    code: Optional[str] = PydField(None, description="Код.")
-    articul: Optional[str] = PydField(None, description="Артикул.")
-    group_path: Optional[str] = PydField(
-        None, description='Путь группы, разделитель в request: "group_separator".'
-    )
-    barcodes: Optional[str] = PydField(
-        None,
-        description='Список штрихкодов, разделитель в request: "barcode_separator".',
-    )
-    color_name: Optional[str] = PydField(None, description="Цвет (наименование).")
-    brand_name: Optional[str] = PydField(None, description="Бренд (наименование).")
-    producer_name: Optional[str] = PydField(
-        None, description="Производитель (наименование)."
-    )
-    size_name: Optional[str] = PydField(None, description="Размер (наименование).")
-    unit_name: Optional[str] = PydField(
-        None, description="Единица измерения (наименование)."
-    )
-    department_name: Optional[str] = PydField(
-        None, description="Подразделение (наименование)."
-    )
-    description: Optional[str] = PydField(None, description="Описание.")
-    vat_name: Optional[str] = PydField(None, description="Ставка НДС (наименование).")
-    icps: Optional[str] = PydField(None, description="ICPS.")
-    icpsbarcode: Optional[str] = PydField(None, description="ICPS plus barcode.")
-    labeled: Optional[int] = PydField(
-        None, description="Маркируемый (0/1)."
-    )  # BC: тип int сохранён
-    package_code: Optional[int] = PydField(
-        None, description="Код упаковки."
-    )  # BC: тип int сохранён
-    parent_code: Optional[int] = PydField(
-        None, description="Код родителя."
-    )  # BC: тип int сохранён
-
-    @field_validator(
-        "index",
-        "name",
-        "fullname",
-        "code",
-        "articul",
-        "group_path",
-        "barcodes",
-        "color_name",
-        "brand_name",
-        "producer_name",
-        "size_name",
-        "unit_name",
-        "department_name",
-        "description",
-        "vat_name",
-        "icps",
-        "icpsbarcode",
-        mode="before",
-    )
-    @classmethod
-    def _strip_import(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-
-class ItemImportRequest(BaseSchema):
-    """
-    Пакет на импорт номенклатуры.
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    comparation_value: ItemImportComparationValue | str = PydField(
-        default=ItemImportComparationValue.Default,
-        description="Duplicate matching type.",
-    )
-    # BC: поля с '= None' были типизированы как 'str = None'; переводим в Optional[str] = None без смены имени/значения по умолчанию
-    group_separator: Optional[str] = PydField(
-        None, description="Разделитель групп в пути (напр. '/')."
-    )  # BC
-    barcode_separator: Optional[str] = PydField(
-        None, description="Разделитель штрихкодов (напр. ',')."
-    )  # BC
-    group_id: Optional[int] = PydField(
-        None, ge=0, description="Группа по умолчанию для импорта."
-    )  # BC
-    unit_id: Optional[int] = PydField(
-        None, ge=0, description="Ед. измерения по умолчанию."
-    )  # BC
-    vat_value_id: Optional[int] = PydField(
-        None, ge=0, description="Ставка НДС по умолчанию."
-    )  # BC
-    # BC: раньше было data: List[ItemImportData] = [] — заменено на default_factory=list (та же семантика пустого списка)
-    data: List[ItemImportData] = PydField(
-        default_factory=list, description="Массив строк импорта."
-    )  # BC
-
-    @field_validator("group_separator", "barcode_separator", mode="before")
-    @classmethod
-    def _strip_req(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-    @field_validator("comparation_value", mode="before")
-    @classmethod
-    def _normalize_comparation(cls, v):
-        if isinstance(v, ItemImportComparationValue):
-            return v
-        if isinstance(v, str):
-            normalized = v.strip()
-            for item in ItemImportComparationValue:
-                if item.value.lower() == normalized.lower():
-                    return item
-            return normalized
-        return v
-
-
-class ItemImportResult(BaseSchema):
-    """Item import result row."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    success: Optional[bool] = PydField(default=None, description="Import success flag.")
-    index: Optional[str] = PydField(default=None, description="Source row index.")
-    item_id: Optional[int] = PydField(default=None, ge=0, description="Item id.")
-
-    @field_validator("index", mode="before")
-    @classmethod
-    def _normalize_index(cls, value):
-        if value is None:
-            return value
-        return str(value).strip()
-
-
-class ItemImportResponse(APIBaseResponse[List[ItemImportResult]]):
-    """Response for Item/Import."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ItemMatchingData(BaseSchema):
-    """Item matching request row."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    index: str = PydField(..., description="Source row index.")
-    value: str = PydField(..., min_length=1, description="Matching value.")
-
-    @field_validator("index", "value", mode="before")
-    @classmethod
-    def _normalize_match_data(cls, value):
-        if value is None:
-            return value
-        return str(value).strip()
-
-
-class ItemMatchingRequest(BaseSchema):
-    """Request for Item/Match."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    type: ItemMatchingType = PydField(..., description="Matching type.")
-    data: List[ItemMatchingData] = PydField(..., max_length=250, description="Rows to match.")
-
-    @field_validator("type", mode="before")
-    @classmethod
-    def _normalize_type(cls, v):
-        if isinstance(v, ItemMatchingType):
-            return v
-        if isinstance(v, str):
-            normalized = v.strip()
-            for item in ItemMatchingType:
-                if item.value.lower() == normalized.lower():
-                    return item
-        return v
-
-
-class ItemMatchingResult(BaseSchema):
-    """Item matching response row."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    index: Optional[str] = PydField(default=None, description="Source row index.")
-    item_id: Optional[int] = PydField(default=None, ge=0, description="Matched item id.")
-    value: Optional[str] = PydField(default=None, description="Matched value.")
-
-    @field_validator("index", "value", mode="before")
-    @classmethod
-    def _normalize_match_result(cls, value):
-        if value is None:
-            return value
-        return str(value).strip()
-
-
-class ItemMatchingResponse(APIBaseResponse[List[ItemMatchingResult]]):
-    """Response for Item/Match."""
-
-    model_config = ConfigDict(extra="ignore")
+ItemAddRequest: TypeAlias = ItemAdd
+ItemAddResponse: TypeAlias = InsertResult
+ItemAddToCompoundRequest: TypeAlias = ItemAddToCompound
+ItemAddToCompoundResponse: TypeAlias = UpdateResult
+ItemCheckCodeRequest: TypeAlias = ItemCodeCheckIn
+ItemCheckCodeResponse: TypeAlias = ItemCodeCheckOutRegosObjectResult
+ItemCopyRequest: TypeAlias = ItemAddCopy
+ItemCopyResponse: TypeAlias = InsertResult
+ItemDeleteFromCompoundRequest: TypeAlias = ItemDeleteFromCompound
+ItemDeleteFromCompoundResponse: TypeAlias = UpdateResult
+ItemDeleteMarkRequest: TypeAlias = ItemDeleteMark
+ItemDeleteMarkResponse: TypeAlias = UpdateResult
+ItemDeleteRequest: TypeAlias = ItemDelete
+ItemDeleteResponse: TypeAlias = UpdateResult
+ItemEditRequest: TypeAlias = ItemEdit
+ItemEditResponse: TypeAlias = UpdateResult
+ItemFillIcpsByBarcodeRequest: TypeAlias = list[ItemWithoutICPSShort]
+ItemFillIcpsByBarcodeResponse: TypeAlias = ItemWithoutICPSRegosArrayResult
+ItemGetCodeRequest: TypeAlias = ItemCodeGet
+ItemGetCodeResponse: TypeAlias = ItemCodeGetRegosObjectResult
+ItemGetCompoundRequest: TypeAlias = ItemCompoundGet
+ItemGetCompoundResponse: TypeAlias = ItemCompoundRegosArrayResult
+ItemGetCurrentQuantityRequest: TypeAlias = ItemCurrentQuantityGet
+ItemGetCurrentQuantityResponse: TypeAlias = ItemCurrentQuantityRegosArrayResult
+ItemGetExtImageSize: TypeAlias = ImageSize
+ItemGetExtRequest: TypeAlias = ItemExtGet
+ItemGetExtResponse: TypeAlias = ItemExtRegosOffsettedArrayResult
+ItemGetPackagesByIcpsRequest: TypeAlias = ItemOFDPackagesGet
+ItemGetPackagesByIcpsResponse: TypeAlias = ItemOFDPackageRegosArrayResult
+ItemGetQuantityPosRequest: TypeAlias = ItemGetQuantityPosIncome
+ItemGetQuantityPosResponse: TypeAlias = ItemGetQuantityPosOutcomeRegosArrayResult
+ItemGetQuantityRequest: TypeAlias = ItemGetQuantityIncome
+ItemGetQuantityResponse: TypeAlias = ItemGetQuantityOutcomeRegosArrayResult
+ItemGetRequest: TypeAlias = ItemGet
+ItemGetResponse: TypeAlias = ItemRegosOffsettedArrayResult
+ItemGetShortRequest: TypeAlias = ItemGet
+ItemGetShortResponse: TypeAlias = ItemShortRegosOffsettedArrayResult
+ItemGetWithoutIcpsRequest: TypeAlias = GetWithoutICPSRequest
+ItemGetWithoutIcpsResponse: TypeAlias = ItemWithoutICPSShortRegosOffsettedArrayResult
+ItemImportRequest: TypeAlias = ImportItems
+ItemImportResponse: TypeAlias = ItemImportDataResponseArrayRegosObjectResult
+ItemMatchRequest: TypeAlias = ItemMatchingRequest
+ItemMatchResponse: TypeAlias = ItemMatchingResponseArrayRegosObjectResult
+ItemMatchingData: TypeAlias = ItemMatchingRequestData
+ItemMatchingType: TypeAlias = MatchingType
+ItemReplaceIcpsRequest: TypeAlias = ItemReplaceICPS
+ItemReplaceIcpsResponse: TypeAlias = BooleanRegosObjectResult
+ItemSearchRequest: TypeAlias = ItemSearch
+ItemSearchResponse: TypeAlias = Int64ArrayRegosObjectResult
+ItemSetIcpsFromServerRequest: TypeAlias = list[ItemWithoutICPSShort]
+ItemSetIcpsFromServerResponse: TypeAlias = ItemWithoutICPSRegosArrayResult
+ItemSetIcpsRequest: TypeAlias = ItemSetICPS
+ItemSetIcpsResponse: TypeAlias = BooleanRegosObjectResult
+ItemSetLabeledMarkResponse: TypeAlias = BooleanRegosObjectResult
+
+
+_MODEL_NAMES = ['GetWithoutICPSRequest', 'ImportItems', 'Int64ArrayRegosObjectResult', 'Item', 'ItemAdd', 'ItemAddCopy', 'ItemAddToCompound', 'ItemCodeCheckIn', 'ItemCodeCheckOut', 'ItemCodeCheckOutRegosObjectResult', 'ItemCodeGet', 'ItemCodeGetRegosObjectResult', 'ItemCompound', 'ItemCompoundGet', 'ItemCompoundRegosArrayResult', 'ItemCurrentQuantity', 'ItemCurrentQuantityGet', 'ItemCurrentQuantityRegosArrayResult', 'ItemDelete', 'ItemDeleteFromCompound', 'ItemDeleteMark', 'ItemEdit', 'ItemExt', 'ItemExtGet', 'ItemExtRegosOffsettedArrayResult', 'ItemGet', 'ItemGetQuantityIncome', 'ItemGetQuantityOutcome', 'ItemGetQuantityOutcomeRegosArrayResult', 'ItemGetQuantityPosIncome', 'ItemGetQuantityPosOutcome', 'ItemGetQuantityPosOutcomeRegosArrayResult', 'ItemImportData', 'ItemImportDataResponse', 'ItemImportDataResponseArrayRegosObjectResult', 'ItemMatchingRequest', 'ItemMatchingRequestData', 'ItemMatchingResponse', 'ItemMatchingResponseArrayRegosObjectResult', 'ItemOFDPackage', 'ItemOFDPackageRegosArrayResult', 'ItemOFDPackagesGet', 'ItemOprOrder', 'ItemOrder', 'ItemPreCost', 'ItemPreCostArrayRegosObjectResult', 'ItemPreCostGet', 'ItemQuantity', 'ItemRegosOffsettedArrayResult', 'ItemReplaceICPS', 'ItemSearch', 'ItemSetICPS', 'ItemShort', 'ItemShortRegosOffsettedArrayResult', 'ItemWithoutICPS', 'ItemWithoutICPSRegosArrayResult', 'ItemWithoutICPSShort', 'ItemWithoutICPSShortRegosOffsettedArrayResult']
 
 
 __all__ = [
-    "ItemType",
-    "SortDirection",
-    "ItemImportComparationValue",
-    "ItemMatchingType",
-    "Item",
-    "ItemSearchRequest",
-    "RedefinitionOption",
-    "ItemGetRequest",
-    "ItemGetExtSortColumn",
-    "ItemGetExtSortOrder",
-    "ItemGetExtImageSize",
-    "ItemGetExtRequest",
-    "ItemQuantity",
-    "ItemGetQuantityRequest",
-    "ItemGetQuantityResponse",
-    "ItemCurrentQuantity",
-    "ItemGetCurrentQuantityRequest",
-    "ItemGetCurrentQuantityResponse",
-    "ItemGetShortResponse",
-    "ItemShort",
-    "ItemExt",
-    "ItemImportData",
-    "ItemImportRequest",
-    "ItemImportResult",
-    "ItemImportResponse",
-    "ItemMatchingData",
-    "ItemMatchingRequest",
-    "ItemMatchingResult",
-    "ItemMatchingResponse",
-    "ItemGroup",
-    "Department",
-    "TaxVat",
-    "Color",
-    "SizeChart",
-    "Producer",
-    "Country",
+    'GetWithoutICPSRequest',
+    'ImageSize',
+    'ImportItems',
+    'Int64ArrayRegosObjectResult',
+    'Item',
+    'ItemAdd',
+    'ItemAddCopy',
+    'ItemAddToCompound',
+    'ItemCodeCheckIn',
+    'ItemCodeCheckOut',
+    'ItemCodeCheckOutRegosObjectResult',
+    'ItemCodeGet',
+    'ItemCodeGetRegosObjectResult',
+    'ItemCompound',
+    'ItemCompoundGet',
+    'ItemCompoundRegosArrayResult',
+    'ItemCurrentQuantity',
+    'ItemCurrentQuantityGet',
+    'ItemCurrentQuantityRegosArrayResult',
+    'ItemDelete',
+    'ItemDeleteFromCompound',
+    'ItemDeleteMark',
+    'ItemEdit',
+    'ItemExt',
+    'ItemExtGet',
+    'ItemExtRegosOffsettedArrayResult',
+    'ItemGet',
+    'ItemGetQuantityIncome',
+    'ItemGetQuantityOutcome',
+    'ItemGetQuantityOutcomeRegosArrayResult',
+    'ItemGetQuantityPosIncome',
+    'ItemGetQuantityPosOutcome',
+    'ItemGetQuantityPosOutcomeRegosArrayResult',
+    'ItemImportComparationValue',
+    'ItemImportData',
+    'ItemImportDataResponse',
+    'ItemImportDataResponseArrayRegosObjectResult',
+    'ItemMatchingRequest',
+    'ItemMatchingRequestData',
+    'ItemMatchingResponse',
+    'ItemMatchingResponseArrayRegosObjectResult',
+    'ItemOFDPackage',
+    'ItemOFDPackageRegosArrayResult',
+    'ItemOFDPackagesGet',
+    'ItemOprOrder',
+    'ItemOprOrderColumn',
+    'ItemOprOrderDirection',
+    'ItemOrder',
+    'ItemOrderColumn',
+    'ItemOriginEnum',
+    'ItemPreCost',
+    'ItemPreCostArrayRegosObjectResult',
+    'ItemPreCostGet',
+    'ItemQuantity',
+    'ItemRegosOffsettedArrayResult',
+    'ItemReplaceICPS',
+    'ItemSearch',
+    'ItemSetICPS',
+    'ItemShort',
+    'ItemShortRegosOffsettedArrayResult',
+    'ItemType',
+    'ItemWithoutICPS',
+    'ItemWithoutICPSRegosArrayResult',
+    'ItemWithoutICPSShort',
+    'ItemWithoutICPSShortRegosOffsettedArrayResult',
+    'MatchingType',
+    'ItemGetRequest',
+    'ItemGetResponse',
+    'ItemGetShortRequest',
+    'ItemGetShortResponse',
+    'ItemGetExtRequest',
+    'ItemGetExtResponse',
+    'ItemAddRequest',
+    'ItemAddResponse',
+    'ItemCopyRequest',
+    'ItemCopyResponse',
+    'ItemEditRequest',
+    'ItemEditResponse',
+    'ItemDeleteMarkRequest',
+    'ItemDeleteMarkResponse',
+    'ItemDeleteRequest',
+    'ItemDeleteResponse',
+    'ItemCheckCodeRequest',
+    'ItemCheckCodeResponse',
+    'ItemGetCodeRequest',
+    'ItemGetCodeResponse',
+    'ItemSearchRequest',
+    'ItemSearchResponse',
+    'ItemGetQuantityRequest',
+    'ItemGetQuantityResponse',
+    'ItemGetQuantityPosRequest',
+    'ItemGetQuantityPosResponse',
+    'ItemGetCurrentQuantityRequest',
+    'ItemGetCurrentQuantityResponse',
+    'ItemMatchRequest',
+    'ItemMatchResponse',
+    'ItemImportRequest',
+    'ItemImportResponse',
+    'ItemSetIcpsRequest',
+    'ItemSetIcpsResponse',
+    'ItemReplaceIcpsRequest',
+    'ItemReplaceIcpsResponse',
+    'ItemGetWithoutIcpsRequest',
+    'ItemGetWithoutIcpsResponse',
+    'ItemSetIcpsFromServerRequest',
+    'ItemSetIcpsFromServerResponse',
+    'ItemSetLabeledMarkResponse',
+    'ItemFillIcpsByBarcodeRequest',
+    'ItemFillIcpsByBarcodeResponse',
+    'ItemGetPackagesByIcpsRequest',
+    'ItemGetPackagesByIcpsResponse',
+    'ItemGetCompoundRequest',
+    'ItemGetCompoundResponse',
+    'ItemAddToCompoundRequest',
+    'ItemAddToCompoundResponse',
+    'ItemDeleteFromCompoundRequest',
+    'ItemDeleteFromCompoundResponse',
+    'ItemGetExtImageSize',
+    'ItemMatchingData',
+    'ItemMatchingType'
 ]

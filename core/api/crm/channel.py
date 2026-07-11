@@ -1,58 +1,52 @@
-"""CRM channel service."""
+"""REGOS API service for Channel."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
-from schemas.api.crm.channel import (
-    ChannelAddRequest,
-    ChannelAddResponse,
-    ChannelDeleteRequest,
-    ChannelDeleteResponse,
-    ChannelEditRequest,
-    ChannelEditResponse,
-    ChannelGetRequest,
-    ChannelGetResponse,
-    ChannelSetIntervalsRequest,
-    ChannelSetIntervalsResponse,
-    ChannelSetOperatorsRequest,
-    ChannelSetOperatorsResponse,
-)
+from __future__ import annotations
+
+from typing import Any
+
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class ChannelService:
+class ChannelService(RegosAPIService):
     PATH_GET = "Channel/Get"
     PATH_ADD = "Channel/Add"
     PATH_EDIT = "Channel/Edit"
     PATH_DELETE = "Channel/Delete"
     PATH_SET_OPERATORS = "Channel/SetOperators"
     PATH_SET_INTERVALS = "Channel/SetIntervals"
+    REQUEST_MODELS = {
+        'add': models.ChannelAdd,
+        'delete': models.ChannelDelete,
+        'edit': models.ChannelEdit,
+        'get': models.ChannelGet,
+        'set_intervals': models.ChannelSetIntervals,
+        'set_operators': models.ChannelSetOperators,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.ChannelGet | dict[str, Any]) -> models.ChannelRegosOffsettedArrayResult:
+        """POST Channel/Get."""
+        return await self._call(self.PATH_GET, req, models.ChannelRegosOffsettedArrayResult)
 
-    async def get(self, req: ChannelGetRequest) -> ChannelGetResponse:
-        return await self.api.call(self.PATH_GET, req, ChannelGetResponse)
+    async def add(self, req: models.ChannelAdd | dict[str, Any]) -> models.InsertResult:
+        """POST Channel/Add."""
+        return await self._call(self.PATH_ADD, req, models.InsertResult)
 
-    async def add(self, req: ChannelAddRequest) -> ChannelAddResponse:
-        return await self.api.call(self.PATH_ADD, req, ChannelAddResponse)
+    async def edit(self, req: models.ChannelEdit | dict[str, Any]) -> models.UpdateResult:
+        """POST Channel/Edit."""
+        return await self._call(self.PATH_EDIT, req, models.UpdateResult)
 
-    async def edit(self, req: ChannelEditRequest) -> ChannelEditResponse:
-        return await self.api.call(self.PATH_EDIT, req, ChannelEditResponse)
+    async def delete(self, req: models.ChannelDelete | dict[str, Any]) -> models.UpdateResult:
+        """POST Channel/Delete."""
+        return await self._call(self.PATH_DELETE, req, models.UpdateResult)
 
-    async def delete(self, req: ChannelDeleteRequest) -> ChannelDeleteResponse:
-        return await self.api.call(self.PATH_DELETE, req, ChannelDeleteResponse)
+    async def set_operators(self, req: models.ChannelSetOperators | dict[str, Any]) -> models.UpdateResult:
+        """POST Channel/SetOperators."""
+        return await self._call(self.PATH_SET_OPERATORS, req, models.UpdateResult)
 
-    async def set_operators(
-        self, req: ChannelSetOperatorsRequest
-    ) -> ChannelSetOperatorsResponse:
-        return await self.api.call(
-            self.PATH_SET_OPERATORS,
-            req,
-            ChannelSetOperatorsResponse,
-        )
+    async def set_intervals(self, req: models.ChannelSetIntervals | dict[str, Any]) -> models.UpdateResult:
+        """POST Channel/SetIntervals."""
+        return await self._call(self.PATH_SET_INTERVALS, req, models.UpdateResult)
 
-    async def set_intervals(
-        self, req: ChannelSetIntervalsRequest
-    ) -> ChannelSetIntervalsResponse:
-        return await self.api.call(
-            self.PATH_SET_INTERVALS,
-            req,
-            ChannelSetIntervalsResponse,
-        )
+__all__ = ['ChannelService']

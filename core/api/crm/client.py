@@ -1,162 +1,52 @@
-"""CRM client service."""
+"""REGOS API service for Client."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, List
+from typing import Any
 
-from schemas.api.crm.client import (
-    ClientAddRequest,
-    ClientAddResponse,
-    ClientDeleteRequest,
-    ClientDeleteResponse,
-    ClientEditRequest,
-    ClientEditResponse,
-    ClientGetRequest,
-    ClientGetResponse,
-    ClientMergeRequest,
-    ClientMergeResponse,
-    ClientSetResponsibleRequest,
-    ClientSetResponsibleResponse,
-)
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class ClientService:
+class ClientService(RegosAPIService):
     PATH_GET = "Client/Get"
     PATH_ADD = "Client/Add"
     PATH_EDIT = "Client/Edit"
     PATH_DELETE = "Client/Delete"
     PATH_SET_RESPONSIBLE = "Client/SetResponsible"
     PATH_MERGE = "Client/Merge"
+    REQUEST_MODELS = {
+        'add': models.ClientAdd,
+        'delete': models.ClientDelete,
+        'edit': models.ClientEdit,
+        'get': models.ClientGet,
+        'merge': models.ClientMerge,
+        'set_responsible': models.ClientSetResponsible,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.ClientGet | dict[str, Any]) -> models.ClientRegosOffsettedArrayResult:
+        """POST Client/Get."""
+        return await self._call(self.PATH_GET, req, models.ClientRegosOffsettedArrayResult)
 
-    @staticmethod
-    def _first_non_empty(values: Iterable[Any]) -> str | None:
-        for value in values:
-            text = str(value or "").strip()
-            if text:
-                return text
-        return None
+    async def add(self, req: models.ClientAdd | dict[str, Any]) -> models.InsertResult:
+        """POST Client/Add."""
+        return await self._call(self.PATH_ADD, req, models.InsertResult)
 
-    @staticmethod
-    def _merge_text_lists(*collections: List[str] | None) -> List[str] | None:
-        merged: list[str] = []
-        seen: set[str] = set()
-        for collection in collections:
-            for value in collection or []:
-                text = str(value or "").strip()
-                if not text or text in seen:
-                    continue
-                seen.add(text)
-                merged.append(text)
-        return merged or None
+    async def edit(self, req: models.ClientEdit | dict[str, Any]) -> models.UpdateResult:
+        """POST Client/Edit."""
+        return await self._call(self.PATH_EDIT, req, models.UpdateResult)
 
-    def _normalize_external_id(self, payload: Dict[str, Any]) -> None:
-        external_id = self._first_non_empty([payload.get("external_id")])
-        if external_id:
-            payload["external_id"] = external_id
-            return
+    async def delete(self, req: models.ClientDelete | dict[str, Any]) -> models.UpdateResult:
+        """POST Client/Delete."""
+        return await self._call(self.PATH_DELETE, req, models.UpdateResult)
 
-        legacy_external = self._first_non_empty(
-            [
-                payload.get("telegram_id"),
-                payload.get("whatsapp_id"),
-                payload.get("instagram_id"),
-                payload.get("facebook_id"),
-                payload.get("vk_id"),
-            ]
-        )
-        if legacy_external:
-            payload["external_id"] = legacy_external
+    async def set_responsible(self, req: models.ClientSetResponsible | dict[str, Any]) -> models.UpdateResult:
+        """POST Client/SetResponsible."""
+        return await self._call(self.PATH_SET_RESPONSIBLE, req, models.UpdateResult)
 
-    async def get(self, req: ClientGetRequest) -> ClientGetResponse:
-        payload = req.model_dump(exclude_none=True)
-        external_ids = self._merge_text_lists(
-            payload.get("external_ids"),
-            payload.get("telegram_ids"),
-            payload.get("whatsapp_ids"),
-            payload.get("instagram_ids"),
-            payload.get("facebook_ids"),
-            payload.get("vk_ids"),
-        )
+    async def merge(self, req: models.ClientMerge | dict[str, Any]) -> models.UpdateResult:
+        """POST Client/Merge."""
+        return await self._call(self.PATH_MERGE, req, models.UpdateResult)
 
-        sanitized = {
-            "ids": payload.get("ids"),
-            "phones": payload.get("phones"),
-            "external_ids": external_ids,
-            "emails": payload.get("emails"),
-            "search": payload.get("search"),
-            "responsible_user_ids": payload.get("responsible_user_ids"),
-            "filters": payload.get("filters"),
-            "limit": payload.get("limit"),
-            "offset": payload.get("offset"),
-        }
-        sanitized = {key: value for key, value in sanitized.items() if value is not None}
-        return await self.api.call(self.PATH_GET, sanitized, ClientGetResponse)
-
-    async def add(self, req: ClientAddRequest) -> ClientAddResponse:
-        payload = req.model_dump(exclude_none=True)
-        self._normalize_external_id(payload)
-
-        sanitized = {
-            "external_id": payload.get("external_id"),
-            "name": payload.get("name"),
-            "phone": payload.get("phone"),
-            "email": payload.get("email"),
-            "photo_url": payload.get("photo_url"),
-            "description": payload.get("description"),
-            "responsible_user_id": payload.get("responsible_user_id"),
-            "fields": payload.get("fields"),
-        }
-        sanitized = {key: value for key, value in sanitized.items() if value is not None}
-        return await self.api.call(self.PATH_ADD, sanitized, ClientAddResponse)
-
-    async def edit(self, req: ClientEditRequest) -> ClientEditResponse:
-        payload = req.model_dump(exclude_none=True)
-        self._normalize_external_id(payload)
-        responsible_user_id = payload.get("responsible_user_id")
-
-        sanitized = {
-            "id": payload.get("id"),
-            "external_id": payload.get("external_id"),
-            "name": payload.get("name"),
-            "phone": payload.get("phone"),
-            "email": payload.get("email"),
-            "photo_url": payload.get("photo_url"),
-            "description": payload.get("description"),
-            "fields": payload.get("fields"),
-        }
-        sanitized = {key: value for key, value in sanitized.items() if value is not None}
-        response: ClientEditResponse | None = None
-        if len(sanitized) > 1:
-            response = await self.api.call(self.PATH_EDIT, sanitized, ClientEditResponse)
-            if not getattr(response, "ok", False) or responsible_user_id is None:
-                return response
-
-        if responsible_user_id is not None:
-            return await self.set_responsible(
-                ClientSetResponsibleRequest(
-                    id=int(payload["id"]),
-                    responsible_user_id=int(responsible_user_id),
-                )
-            )
-
-        if response is not None:
-            return response
-        return await self.api.call(self.PATH_EDIT, sanitized, ClientEditResponse)
-
-    async def delete(self, req: ClientDeleteRequest) -> ClientDeleteResponse:
-        return await self.api.call(self.PATH_DELETE, req, ClientDeleteResponse)
-
-    async def set_responsible(
-        self, req: ClientSetResponsibleRequest
-    ) -> ClientSetResponsibleResponse:
-        return await self.api.call(
-            self.PATH_SET_RESPONSIBLE,
-            req,
-            ClientSetResponsibleResponse,
-        )
-
-    async def merge(self, req: ClientMergeRequest) -> ClientMergeResponse:
-        return await self.api.call(self.PATH_MERGE, req, ClientMergeResponse)
+__all__ = ['ClientService']

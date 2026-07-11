@@ -1,130 +1,123 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from .currency import Currency
-
-
-class PriceType(BaseSchema):
-    """Модель вида цены."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="ID вида цены.")
-    name: Optional[str] = PydField(default=None, description="Наименование вида цены.")
-    round_to: Optional[Decimal] = PydField(
-        default=None, description="Предел округления."
-    )
-    markup: Optional[Decimal] = PydField(
-        default=None, description="Наценка для вида цены."
-    )
-    max_discount: Optional[Decimal] = PydField(
-        default=None, description="Максимальная скидка."
-    )
-    currency: Optional[Currency] = PydField(
-        default=None, description="Основная валюта вида цены."
-    )
-    currency_additional: Optional[Currency] = PydField(
-        default=None, description="Дополнительная валюта."
-    )
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего изменения (unixtime, сек)."
-    )
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+from schemas.api.common.base import RegosModel
 
 
-class PriceTypeSortColumn(str, Enum):
-    """Колонки сортировки списка видов цен."""
-
-    ID = "Id"
-    NAME = "Name"
-    ROUND_TO = "RoundTo"
-    MARK_UP = "MarkUp"
-    MAX_DISCOUNT = "MaxDiscount"
-    LAST_UPDATE = "LastUpdate"
-
-
-class PriceTypeSortDirection(str, Enum):
-    """Направление сортировки."""
-
-    ASC = "ASC"
-    DESC = "DESC"
+class PriceType(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    round_to: _Decimal | None = PydField(default=None)
+    markup: _Decimal | None = PydField(default=None)
+    max_discount: _Decimal | None = PydField(default=None)
+    currency: Currency | None = PydField(default=None)
+    currency_additional: Currency | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class PriceTypeSortOrder(BaseSchema):
-    """Правило сортировки для /PriceType/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    column: PriceTypeSortColumn = PydField(..., description="Колонка сортировки.")
-    direction: PriceTypeSortDirection = PydField(
-        PriceTypeSortDirection.ASC, description="Направление сортировки."
-    )
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_direction(cls, value):
-        if isinstance(value, str):
-            upper = value.strip().upper()
-            if upper in {"ASC", "DESC"}:
-                return upper
-        return value
+class PriceTypeAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    currency_additional_id: int | None = PydField(default=None)
+    round_to: _Decimal | None = PydField(default=None)
+    markup: _Decimal | None = PydField(default=None)
+    max_discount: _Decimal | None = PydField(default=None)
 
 
-class PriceTypeGetRequest(BaseSchema):
-    """Параметры запроса /v1/PriceType/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Массив ID видов цен."
-    )
-    currency_ids: Optional[List[int]] = PydField(
-        default=None, description="Массив ID валют."
-    )
-    sort_orders: Optional[List[PriceTypeSortOrder]] = PydField(
-        default=None, description="Правила сортировки результата."
-    )
-    search: Optional[str] = PydField(
-        default=None, description="Поиск по наименованию вида цены."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выдаче (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class PriceTypeDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class PriceTypeGetResponse(APIBaseResponse[List[PriceType]]):
-    """Ответ на запрос /v1/PriceType/Get."""
+class PriceTypeEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    currency_additional_id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    round_to: _Decimal | None = PydField(default=None)
+    markup: _Decimal | None = PydField(default=None)
+    max_discount: _Decimal | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+class PriceTypeGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    currency_ids: list[int] | None = PydField(default=None)
+    sort_orders: list[PriceType_SortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class PriceTypeRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[PriceType] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class PriceType_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: PriceType_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class PriceType_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+from schemas.api.references.currency import Currency
+
+
+PriceTypeAddRequest: TypeAlias = PriceTypeAdd
+PriceTypeAddResponse: TypeAlias = InsertResult
+PriceTypeDeleteRequest: TypeAlias = PriceTypeDelete
+PriceTypeDeleteResponse: TypeAlias = UpdateResult
+PriceTypeEditRequest: TypeAlias = PriceTypeEdit
+PriceTypeEditResponse: TypeAlias = UpdateResult
+PriceTypeGetRequest: TypeAlias = PriceTypeGet
+PriceTypeGetResponse: TypeAlias = PriceTypeRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['PriceType', 'PriceTypeAdd', 'PriceTypeDelete', 'PriceTypeEdit', 'PriceTypeGet', 'PriceTypeRegosOffsettedArrayResult', 'PriceType_SortOrder']
 
 
 __all__ = [
-    "PriceType",
-    "PriceTypeSortColumn",
-    "PriceTypeSortDirection",
-    "PriceTypeSortOrder",
-    "PriceTypeGetRequest",
-    "PriceTypeGetResponse",
+    'PriceType',
+    'PriceTypeAdd',
+    'PriceTypeDelete',
+    'PriceTypeEdit',
+    'PriceTypeGet',
+    'PriceTypeRegosOffsettedArrayResult',
+    'PriceType_SortOrder',
+    'PriceType_SortOrderColumn',
+    'PriceTypeGetRequest',
+    'PriceTypeGetResponse',
+    'PriceTypeAddRequest',
+    'PriceTypeAddResponse',
+    'PriceTypeEditRequest',
+    'PriceTypeEditResponse',
+    'PriceTypeDeleteRequest',
+    'PriceTypeDeleteResponse'
 ]

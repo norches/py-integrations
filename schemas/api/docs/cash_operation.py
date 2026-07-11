@@ -1,77 +1,86 @@
-"""Схемы кассовых операций."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-from schemas.api.docs.cash_operation_type import CashOperationType
-
-
-class CashOperation(BaseSchema):
-    """Рид-модель кассовой операции."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="ID операции.")
-    date: Optional[int] = PydField(
-        default=None, ge=0, description="Дата операции (Unix time, сек)."
-    )
-    type: Optional[CashOperationType] = PydField(
-        default=None, description="Тип кассовой операции."
-    )
-    payment_type_id: Optional[int] = PydField(
-        default=None, ge=1, description="ID формы оплаты."
-    )
-    payment_type_name: Optional[str] = PydField(
-        default=None, description="Наименование формы оплаты."
-    )
-    session_uuid: Optional[str] = PydField(
-        default=None, description="UUID кассовой смены."
-    )
-    document_uuid: Optional[str] = PydField(
-        default=None, description="UUID связанного документа."
-    )
-    operating_cash_id: Optional[int] = PydField(
-        default=None, ge=1, description="ID кассы."
-    )
-    value: Optional[Decimal] = PydField(default=None, description="Сумма операции.")
-    description: Optional[str] = PydField(
-        default=None, description="Комментарий к операции."
-    )
-    user_id: Optional[int] = PydField(
-        default=None, ge=1, description="ID пользователя, выполнившего операцию."
-    )
-    user_full_name: Optional[str] = PydField(
-        default=None, description="ФИО пользователя."
-    )
-    last_update: Optional[int] = PydField(
-        default=None, ge=0, description="Время обновления записи (Unix time, сек)."
-    )
+from schemas.api.common.base import RegosModel
 
 
-class CashOperationGetRequest(BaseSchema):
-    """Фильтры получения кассовых операций."""
+class CashAmountDetailsGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    operating_cash_id: int | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    start_date: int = PydField(..., ge=0, description="Дата начала периода (Unix).")
-    end_date: int = PydField(..., ge=0, description="Дата окончания периода (Unix).")
-    operating_cash_id: Optional[int] = PydField(
-        default=None, ge=1, description="ID кассы."
-    )
-    limit: Optional[int] = PydField(
-        default=None, ge=1, description="Количество записей в выдаче."
-    )
-    offset: Optional[int] = PydField(
-        default=None, ge=0, description="Смещение для пагинации."
-    )
+class CashOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    type: CashOperationType | None = PydField(default=None)
+    payment_type_id: int | None = PydField(default=None)
+    payment_type_name: str | None = PydField(default=None)
+    session_uuid: str | None = PydField(default=None)
+    document_uuid: str | None = PydField(default=None)
+    operating_cash_id: int | None = PydField(default=None)
+    value: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+    user_full_name: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class CashOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    operating_cash_id: int | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class CashOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[CashOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class CashOperationType(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import CashAmountDetailsRegosObjectResult, Error
+
+
+CashOperationGetAmountDetailsRequest: TypeAlias = CashAmountDetailsGet
+CashOperationGetAmountDetailsResponse: TypeAlias = CashAmountDetailsRegosObjectResult
+CashOperationGetRequest: TypeAlias = CashOperationGet
+CashOperationGetResponse: TypeAlias = CashOperationRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['CashAmountDetailsGet', 'CashOperation', 'CashOperationGet', 'CashOperationRegosOffsettedArrayResult', 'CashOperationType']
 
 
 __all__ = [
-    "CashOperation",
-    "CashOperationGetRequest",
+    'CashAmountDetailsGet',
+    'CashOperation',
+    'CashOperationGet',
+    'CashOperationRegosOffsettedArrayResult',
+    'CashOperationType',
+    'CashOperationGetRequest',
+    'CashOperationGetResponse',
+    'CashOperationGetAmountDetailsRequest',
+    'CashOperationGetAmountDetailsResponse'
 ]

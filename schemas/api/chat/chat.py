@@ -1,260 +1,401 @@
-"""Schemas for chat endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Any, Dict, List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
+
+from pydantic import ConfigDict, Field as PydField, RootModel
+
+from schemas.api.common.base import RegosModel
+
+
+class Chat(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    chat_type: ChatTypeEnum | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    logo_url: str | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    last_message_id: str | None = PydField(default=None)
+    last_message_date: int | None = PydField(default=None)
+    last_message_text: str | None = PydField(default=None)
+    created_user_id: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    closed: bool | None = PydField(default=None)
+    closed_date: int | None = PydField(default=None)
+    participants: list[ChatParticipant] | None = PydField(default=None)
+    entity_type: ChatLinkedEntityTypeEnum | None = PydField(default=None)
+    entity_id: int | None = PydField(default=None)
+    unread_count: int | None = PydField(default=None)
+    muted: bool | None = PydField(default=None)
+    archived: bool | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
+
+
+class ChatAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    logo_url: str | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    chat_type: ChatTypeEnum | None = PydField(default=None)
+    participants: list[ChatParticipantAddEdit] | None = PydField(default=None)
+
+
+class ChatAddBot(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    connected_integration_id: str | None = PydField(default=None)
+
+
+class ChatAddParticipant(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    participant: ChatParticipantAddEdit | None = PydField(default=None)
+
+
+class ChatAvailableReaction(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    reaction: str | None = PydField(default=None)
+    sort_order: int | None = PydField(default=None)
+
+
+class ChatAvailableReactionRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatAvailableReaction] | Error | None = PydField(default=None)
+
+
+class ChatEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    logo_url: str | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+
+
+class ChatEntityTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_3 = 3
+    VALUE_6 = 6
+
+
+class ChatGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[str] | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    chat_type: ChatTypeEnum | None = PydField(default=None)
+    participant_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    participant_entity_id: int | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    closed: bool | None = PydField(default=None)
+    archived: bool | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
+    entity_type: ChatLinkedEntityTypeEnum | None = PydField(default=None)
+    entity_bound: bool | None = PydField(default=None)
+    sort_orders: list[ChatOrder] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
 
-from pydantic import ConfigDict, Field as PydField, model_validator
 
-from schemas.api.base import APIBaseResponse, ArrayResult, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
+class ChatGetAvailableReactions(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
 
 
-class ChatEntityTypeEnum(str, Enum):
-    User = "User"
-    ChatBot = "ChatBot"
-    Client = "Client"
+class ChatJoin(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
 
 
-class ChatParticipantRoleEnum(str, Enum):
-    Staff = "Staff"
-    Member = "Member"
-    Bot = "Bot"
-
-
-class ChatLinkedEntityTypeEnum(str, Enum):
-    Task = "Task"
-    Lead = "Lead"
-    Deal = "Deal"
-    Ticket = "Ticket"
+class ChatLeave(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
 
 
-class ChatParticipant(BaseSchema):
-    """Chat participant read model."""
+class ChatLinkedEntityTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_11 = 11
 
-    model_config = ConfigDict(extra="ignore")
 
-    entity_type: Optional[ChatEntityTypeEnum] = PydField(default=None, description="Participant entity type.")
-    entity_id: Optional[int] = PydField(default=None, description="Participant entity id.")
-    connected_integration_id: Optional[str] = PydField(
-        default=None,
-        description="Connected integration id for chatbot participant.",
-    )
-    role: Optional[ChatParticipantRoleEnum] = PydField(default=None, description="Participant role.")
-    name: Optional[str] = PydField(default=None, description="Participant display name.")
-    photo_url: Optional[str] = PydField(default=None, description="Participant photo URL.")
-    joined_date: Optional[int] = PydField(default=None, description="Joined unix time.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
+class ChatOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: ChatOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
 
 
-class Chat(BaseSchema):
-    """Chat read model."""
+class ChatOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
 
-    model_config = ConfigDict(extra="ignore")
 
-    id: Optional[str] = PydField(default=None, description="Chat UUID.")
-    name: Optional[str] = PydField(default=None, description="Chat name.")
-    logo_url: Optional[str] = PydField(default=None, description="Chat logo URL.")
-    external_id: Optional[str] = PydField(default=None, description="External chat id.")
-    last_message_id: Optional[str] = PydField(default=None, description="Last message UUID.")
-    last_message_date: Optional[int] = PydField(default=None, description="Last message unix time.")
-    last_message_text: Optional[str] = PydField(default=None, description="Last visible message text.")
-    created_user_id: Optional[int] = PydField(default=None, description="Created user id.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
-    closed: Optional[bool] = PydField(default=None, description="Closed chat flag.")
-    closed_date: Optional[int] = PydField(default=None, description="Closed date unix time.")
-    entity_type: Optional[ChatLinkedEntityTypeEnum] = PydField(default=None, description="Linked entity type.")
-    entity_id: Optional[int] = PydField(default=None, description="Linked entity id.")
-    unread_count: Optional[int] = PydField(default=None, description="Unread count for current user.")
-    participants: Optional[List[ChatParticipant]] = PydField(default=None, description="Chat participants.")
+class ChatParticipant(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    entity_id: int | None = PydField(default=None)
+    role: ChatParticipantRoleEnum | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    photo_url: str | None = PydField(default=None)
+    joined_date: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class ChatParticipantAddEdit(BaseSchema):
-    """Participant payload for add/edit operations."""
+class ChatParticipantAddEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    entity_id: int | None = PydField(default=None)
+    role: ChatParticipantRoleEnum | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    entity_type: ChatEntityTypeEnum = PydField(..., description="Participant entity type.")
-    entity_id: int = PydField(..., ge=1, description="Participant entity id.")
-    role: ChatParticipantRoleEnum = PydField(..., description="Participant role.")
+class ChatParticipantRemove(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    entity_id: int | None = PydField(default=None)
 
-    @model_validator(mode="after")
-    def _validate_allowed_values(self) -> "ChatParticipantAddEdit":
-        if self.entity_type == ChatEntityTypeEnum.ChatBot:
-            raise ValueError("ChatBot participants must be added via Chat/AddBot")
-        if self.role == ChatParticipantRoleEnum.Bot:
-            raise ValueError("role=Bot is not allowed in ChatParticipantAddEdit")
-        return self
 
+class ChatParticipantRoleEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
 
-class ChatParticipantRemove(BaseSchema):
-    """Participant payload for remove operations."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Chat] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
 
-    entity_type: ChatEntityTypeEnum = PydField(..., description="Participant entity type.")
-    entity_id: int = PydField(..., ge=1, description="Participant entity id.")
 
+class ChatRemoveParticipants(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    participants: list[ChatParticipantRemove] | None = PydField(default=None)
 
-class ChatGetRequest(BaseSchema):
-    """Request for Chat/Get."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatSetArchived(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    archived: bool | None = PydField(default=None)
 
-    ids: Optional[List[str]] = PydField(default=None, description="Chat UUIDs.")
-    external_id: Optional[str] = PydField(default=None, description="External chat id exact filter.")
-    participant_entity_type: Optional[ChatEntityTypeEnum] = PydField(
-        default=None,
-        description="Participant entity type filter.",
-    )
-    entity_type: Optional[ChatLinkedEntityTypeEnum] = PydField(
-        default=None,
-        description="Linked entity type filter.",
-    )
-    participant_entity_id: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Participant entity id filter.",
-    )
-    search: Optional[str] = PydField(default=None, description="Chat name search.")
-    closed: Optional[bool] = PydField(default=None, description="Closed chat filter.")
-    sort_orders: Optional[SortOrders] = PydField(default=None, description="Sort payload.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
 
+class ChatSetAvailableReactions(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    reactions: list[str] | None = PydField(default=None)
 
-class ChatAddRequest(BaseSchema):
-    """Request for Chat/Add."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatSetMuted(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    muted: bool | None = PydField(default=None)
 
-    name: Optional[str] = PydField(default=None, description="Chat name.")
-    logo_url: Optional[str] = PydField(default=None, description="Chat logo URL.")
-    external_id: Optional[str] = PydField(default=None, description="External chat id.")
-    participants: Optional[List[ChatParticipantAddEdit]] = PydField(
-        default=None,
-        description="Participants payload.",
-    )
 
+class ChatSetParticipants(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    participants: list[ChatParticipantAddEdit] | None = PydField(default=None)
 
-class ChatEditRequest(BaseSchema):
-    """Request for Chat/Edit."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatSetPinned(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
 
-    id: str = PydField(..., description="Chat UUID.")
-    name: Optional[str] = PydField(default=None, description="Chat name.")
-    logo_url: Optional[str] = PydField(default=None, description="Chat logo URL.")
-    external_id: Optional[str] = PydField(default=None, description="External chat id.")
 
+class ChatTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
 
-class ChatRemoveParticipantsRequest(BaseSchema):
-    """Request for Chat/RemoveParticipants."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatUnreadCount(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    unread_count: int | None = PydField(default=None)
 
-    id: str = PydField(..., description="Chat UUID.")
-    participants: List[ChatParticipantRemove] = PydField(..., description="Participants to remove.")
 
+class ChatUnreadCountByKey(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    unread_count: int | None = PydField(default=None)
 
-class ChatSetParticipantsRequest(BaseSchema):
-    """Request for Chat/SetParticipants."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatUnreadCountByKeyRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatUnreadCountByKey] | Error | None = PydField(default=None)
 
-    id: str = PydField(..., description="Chat UUID.")
-    participants: List[ChatParticipantAddEdit] = PydField(..., description="Participants to set.")
 
+class ChatUnreadCountRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: ChatUnreadCount | Error | None = PydField(default=None)
 
-class ChatAddParticipantRequest(BaseSchema):
-    """Request for Chat/AddParticipant."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatUnreadCountsFilter(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    ids: list[str] | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    chat_type: ChatTypeEnum | None = PydField(default=None)
+    participant_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    participant_entity_id: int | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    closed: bool | None = PydField(default=None)
+    archived: bool | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
+    entity_type: ChatLinkedEntityTypeEnum | None = PydField(default=None)
+    entity_bound: bool | None = PydField(default=None)
 
-    chat_id: str = PydField(..., description="Chat UUID.")
-    participant: ChatParticipantAddEdit = PydField(..., description="Participant payload.")
 
+class ChatUnreadCountsGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    participant_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    participant_entity_id: int | None = PydField(default=None)
+    filters: list[ChatUnreadCountsFilter] | None = PydField(default=None)
 
-class ChatAddBotRequest(BaseSchema):
-    """Request for Chat/AddBot."""
 
-    model_config = ConfigDict(extra="forbid")
+class ChatUserPresence(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+    online: bool | None = PydField(default=None)
+    last_online_date: int | None = PydField(default=None)
 
-    chat_id: str = PydField(..., description="Chat UUID.")
-    connected_integration_id: str = PydField(..., description="Connected integration id.")
 
+class ChatUserPresenceGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    user_ids: list[int] | None = PydField(default=None)
 
-class ChatAddResult(BaseSchema):
-    """Result payload for Chat/Add."""
 
-    model_config = ConfigDict(extra="ignore")
+class ChatUserPresenceRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatUserPresence] | Error | None = PydField(default=None)
 
-    new_uuid: Optional[str] = PydField(default=None, description="Created chat UUID.")
 
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, Insert_uuid_Result, UpdateResult
 
-class ChatGetResponse(APIBaseResponse[List[Chat] | Dict[str, Any]]):
-    """Response for Chat/Get."""
 
-    model_config = ConfigDict(extra="ignore")
+ChatAddBotRequest: TypeAlias = ChatAddBot
+ChatAddBotResponse: TypeAlias = UpdateResult
+ChatAddParticipantRequest: TypeAlias = ChatAddParticipant
+ChatAddParticipantResponse: TypeAlias = UpdateResult
+ChatAddRequest: TypeAlias = ChatAdd
+ChatAddResponse: TypeAlias = Insert_uuid_Result
+ChatEditRequest: TypeAlias = ChatEdit
+ChatEditResponse: TypeAlias = UpdateResult
+ChatGetAvailableReactionsRequest: TypeAlias = ChatGetAvailableReactions
+ChatGetAvailableReactionsResponse: TypeAlias = ChatAvailableReactionRegosArrayResult
+ChatGetRequest: TypeAlias = ChatGet
+ChatGetResponse: TypeAlias = ChatRegosOffsettedArrayResult
+ChatGetUnreadCountResponse: TypeAlias = ChatUnreadCountRegosObjectResult
+ChatGetUnreadCountsRequest: TypeAlias = ChatUnreadCountsGet
+ChatGetUnreadCountsResponse: TypeAlias = ChatUnreadCountByKeyRegosArrayResult
+ChatGetUserPresenceRequest: TypeAlias = ChatUserPresenceGet
+ChatGetUserPresenceResponse: TypeAlias = ChatUserPresenceRegosArrayResult
+ChatJoinRequest: TypeAlias = ChatJoin
+ChatJoinResponse: TypeAlias = UpdateResult
+ChatLeaveRequest: TypeAlias = ChatLeave
+ChatLeaveResponse: TypeAlias = UpdateResult
+ChatRemoveParticipantsRequest: TypeAlias = ChatRemoveParticipants
+ChatRemoveParticipantsResponse: TypeAlias = UpdateResult
+ChatSetArchivedRequest: TypeAlias = ChatSetArchived
+ChatSetArchivedResponse: TypeAlias = UpdateResult
+ChatSetAvailableReactionsRequest: TypeAlias = ChatSetAvailableReactions
+ChatSetAvailableReactionsResponse: TypeAlias = UpdateResult
+ChatSetMutedRequest: TypeAlias = ChatSetMuted
+ChatSetMutedResponse: TypeAlias = UpdateResult
+ChatSetParticipantsRequest: TypeAlias = ChatSetParticipants
+ChatSetParticipantsResponse: TypeAlias = UpdateResult
+ChatSetPinnedRequest: TypeAlias = ChatSetPinned
+ChatSetPinnedResponse: TypeAlias = UpdateResult
 
 
-class ChatAddResponse(APIBaseResponse[ChatAddResult | Dict[str, Any]]):
-    """Response for Chat/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatEditResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for Chat/Edit."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatRemoveParticipantsResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for Chat/RemoveParticipants."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatSetParticipantsResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for Chat/SetParticipants."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatAddParticipantResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for Chat/AddParticipant."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatAddBotResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for Chat/AddBot."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['Chat', 'ChatAdd', 'ChatAddBot', 'ChatAddParticipant', 'ChatAvailableReaction', 'ChatAvailableReactionRegosArrayResult', 'ChatEdit', 'ChatGet', 'ChatGetAvailableReactions', 'ChatJoin', 'ChatLeave', 'ChatOrder', 'ChatParticipant', 'ChatParticipantAddEdit', 'ChatParticipantRemove', 'ChatRegosOffsettedArrayResult', 'ChatRemoveParticipants', 'ChatSetArchived', 'ChatSetAvailableReactions', 'ChatSetMuted', 'ChatSetParticipants', 'ChatSetPinned', 'ChatUnreadCount', 'ChatUnreadCountByKey', 'ChatUnreadCountByKeyRegosArrayResult', 'ChatUnreadCountRegosObjectResult', 'ChatUnreadCountsFilter', 'ChatUnreadCountsGet', 'ChatUserPresence', 'ChatUserPresenceGet', 'ChatUserPresenceRegosArrayResult']
 
 
 __all__ = [
-    "Chat",
-    "ChatAddBotRequest",
-    "ChatAddBotResponse",
-    "ChatAddParticipantRequest",
-    "ChatAddParticipantResponse",
-    "ChatAddRequest",
-    "ChatAddResponse",
-    "ChatEditRequest",
-    "ChatEditResponse",
-    "ChatEntityTypeEnum",
-    "ChatGetRequest",
-    "ChatGetResponse",
-    "ChatLinkedEntityTypeEnum",
-    "ChatParticipant",
-    "ChatParticipantAddEdit",
-    "ChatParticipantRemove",
-    "ChatParticipantRoleEnum",
-    "ChatRemoveParticipantsRequest",
-    "ChatRemoveParticipantsResponse",
-    "ChatSetParticipantsRequest",
-    "ChatSetParticipantsResponse",
+    'Chat',
+    'ChatAdd',
+    'ChatAddBot',
+    'ChatAddParticipant',
+    'ChatAvailableReaction',
+    'ChatAvailableReactionRegosArrayResult',
+    'ChatEdit',
+    'ChatEntityTypeEnum',
+    'ChatGet',
+    'ChatGetAvailableReactions',
+    'ChatJoin',
+    'ChatLeave',
+    'ChatLinkedEntityTypeEnum',
+    'ChatOrder',
+    'ChatOrderColumn',
+    'ChatParticipant',
+    'ChatParticipantAddEdit',
+    'ChatParticipantRemove',
+    'ChatParticipantRoleEnum',
+    'ChatRegosOffsettedArrayResult',
+    'ChatRemoveParticipants',
+    'ChatSetArchived',
+    'ChatSetAvailableReactions',
+    'ChatSetMuted',
+    'ChatSetParticipants',
+    'ChatSetPinned',
+    'ChatTypeEnum',
+    'ChatUnreadCount',
+    'ChatUnreadCountByKey',
+    'ChatUnreadCountByKeyRegosArrayResult',
+    'ChatUnreadCountRegosObjectResult',
+    'ChatUnreadCountsFilter',
+    'ChatUnreadCountsGet',
+    'ChatUserPresence',
+    'ChatUserPresenceGet',
+    'ChatUserPresenceRegosArrayResult',
+    'ChatGetRequest',
+    'ChatGetResponse',
+    'ChatAddRequest',
+    'ChatAddResponse',
+    'ChatEditRequest',
+    'ChatEditResponse',
+    'ChatSetParticipantsRequest',
+    'ChatSetParticipantsResponse',
+    'ChatRemoveParticipantsRequest',
+    'ChatRemoveParticipantsResponse',
+    'ChatLeaveRequest',
+    'ChatLeaveResponse',
+    'ChatJoinRequest',
+    'ChatJoinResponse',
+    'ChatAddParticipantRequest',
+    'ChatAddParticipantResponse',
+    'ChatAddBotRequest',
+    'ChatAddBotResponse',
+    'ChatGetUnreadCountResponse',
+    'ChatGetUnreadCountsRequest',
+    'ChatGetUnreadCountsResponse',
+    'ChatGetUserPresenceRequest',
+    'ChatGetUserPresenceResponse',
+    'ChatSetMutedRequest',
+    'ChatSetMutedResponse',
+    'ChatSetArchivedRequest',
+    'ChatSetArchivedResponse',
+    'ChatSetPinnedRequest',
+    'ChatSetPinnedResponse',
+    'ChatGetAvailableReactionsRequest',
+    'ChatGetAvailableReactionsResponse',
+    'ChatSetAvailableReactionsRequest',
+    'ChatSetAvailableReactionsResponse'
 ]

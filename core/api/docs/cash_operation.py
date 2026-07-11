@@ -1,35 +1,28 @@
-from core.logger import setup_logger
-from schemas.api.base import APIBaseResponse
-from schemas.api.docs.cash_operation import CashOperation, CashOperationGetRequest
-from schemas.api.docs.cash_amount_details import (
-    CashAmountDetails,
-    CashAmountDetailsGetRequest,
-)
+"""REGOS API service for CashOperation."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
-logger = setup_logger("docs.CashOperation")
+from __future__ import annotations
+
+from typing import Any
+
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class CashOperationService:
+class CashOperationService(RegosAPIService):
     PATH_GET = "CashOperation/Get"
     PATH_GET_AMOUNT_DETAILS = "CashOperation/GetAmountDetails"
+    REQUEST_MODELS = {
+        'get': models.CashOperationGet,
+        'get_amount_details': models.CashAmountDetailsGet,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.CashOperationGet | dict[str, Any]) -> models.CashOperationRegosOffsettedArrayResult:
+        """POST CashOperation/Get."""
+        return await self._call(self.PATH_GET, req, models.CashOperationRegosOffsettedArrayResult)
 
-    async def get(
-        self, req: CashOperationGetRequest
-    ) -> APIBaseResponse[list[CashOperation]]:
-        resp = await self.api.call(
-            self.PATH_GET, req, APIBaseResponse[list[CashOperation]]
-        )
-        return resp
+    async def get_amount_details(self, req: models.CashAmountDetailsGet | dict[str, Any]) -> models.CashAmountDetailsRegosObjectResult:
+        """POST CashOperation/GetAmountDetails."""
+        return await self._call(self.PATH_GET_AMOUNT_DETAILS, req, models.CashAmountDetailsRegosObjectResult)
 
-    async def get_amount_details(
-        self, req: CashAmountDetailsGetRequest
-    ) -> APIBaseResponse[CashAmountDetails]:
-        """
-        POST …/v1/CashOperation/GetAmountDetails
-        Возвращает детали по денежным средствам в кассе.
-        """
-        resp = await self.api.call(self.PATH_GET_AMOUNT_DETAILS, req, APIBaseResponse)
-        return resp
+__all__ = ['CashOperationService']

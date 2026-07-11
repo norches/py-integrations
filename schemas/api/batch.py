@@ -1,88 +1,66 @@
-"""Схемы пакетного выполнения запросов (Batch)."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-
-
-class BatchStep(BaseSchema):
-    """Описание одного шага batch-запроса."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    key: str = PydField(..., description="Уникальный ключ шага в пределах запроса.")
-    path: str = PydField(..., description="Путь метода, например 'Producer/Add'.")
-    payload: Optional[Any] = PydField(
-        default=None, description="Тело запроса, передаваемое в шаге."
-    )
-
-    @field_validator("key")
-    @classmethod
-    def _validate_key(cls, value: str) -> str:
-        if not value or " " in value or "." in value:
-            raise ValueError("key должен быть непустым и без пробелов/точек")
-        return value
-
-    @field_validator("path")
-    @classmethod
-    def _validate_path(cls, value: str) -> str:
-        if "batch" in value.lower():
-            raise ValueError("Нельзя вызывать batch изнутри batch")
-        return value
+from schemas.api.common.base import RegosModel
 
 
-class BatchRequest(BaseSchema):
-    """Запрос на пакетное выполнение шагов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    stop_on_error: bool = PydField(
-        default=False,
-        description="Остановить выполнение на первом ошибочном шаге.",
-    )
-    requests: List[BatchStep] = PydField(
-        ..., min_length=1, description="Список шагов batch-запроса."
-    )
+class BatchRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    stop_on_error: bool | None = PydField(default=None)
+    requests: list[BatchStep] | None = PydField(default=None)
 
 
-class BatchStepResponse(BaseSchema):
-    """Ответ одного шага batch."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    key: str = PydField(..., description="Ключ шага, совпадает с запросом.")
-    status: int = PydField(..., ge=100, description="HTTP-статус, вернувшийся шагом.")
-    response: APIBaseResponse = PydField(
-        ..., description="Обёртка ответа шага, включая ok/result."
-    )
+class BatchResponse(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    responses: list[BatchStepResponse] | None = PydField(default=None)
 
 
-class BatchResponse(BaseSchema):
-    """Результат выполнения пакетного запроса."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    ok: bool = PydField(..., description="Признак успеха всего batch-запроса.")
-    result: List[BatchStepResponse] = PydField(
-        ..., description="Ответы по каждому шагу batch-запроса."
-    )
+class BatchResponseRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: BatchResponse | Error | None = PydField(default=None)
 
 
-def ph(step_key: str, *path: str) -> str:
-    """Вернуть плейсхолдер вида ${StepKey.result.some.path}."""
+class BatchStep(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    path: str | None = PydField(default=None)
+    payload: Any = PydField(default=None)
 
-    tail = ".".join(path)
-    return f"${{{step_key}.{tail}}}"
+
+class BatchStepResponse(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    status: int | None = PydField(default=None)
+    response: Any = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error
+
+
+BatchBatchRequest: TypeAlias = BatchRequest
+BatchBatchResponse: TypeAlias = BatchResponseRegosObjectResult
+
+
+_MODEL_NAMES = ['BatchRequest', 'BatchResponse', 'BatchResponseRegosObjectResult', 'BatchStep', 'BatchStepResponse']
 
 
 __all__ = [
-    "BatchRequest",
-    "BatchResponse",
-    "BatchStep",
-    "BatchStepResponse",
-    "ph",
+    'BatchRequest',
+    'BatchResponse',
+    'BatchResponseRegosObjectResult',
+    'BatchStep',
+    'BatchStepResponse',
+    'BatchBatchRequest',
+    'BatchBatchResponse'
 ]

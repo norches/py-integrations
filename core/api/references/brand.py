@@ -1,39 +1,40 @@
-# services/brand.py
+"""REGOS API service for Brand."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from typing import List
+from typing import Any
 
-from core.logger import setup_logger
-from schemas.api.base import APIBaseResponse, ArrayResult
-from schemas.api.references.brand import (
-    Brand,
-    BrandGetRequest,
-    BrandAddRequest,
-    BrandEditRequest,
-    BrandDeleteRequest,
-)
-
-logger = setup_logger("references.Brand")
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class BrandService:
+class BrandService(RegosAPIService):
     PATH_GET = "Brand/Get"
     PATH_ADD = "Brand/Add"
     PATH_EDIT = "Brand/Edit"
     PATH_DELETE = "Brand/Delete"
+    REQUEST_MODELS = {
+        'add': models.BrandAdd,
+        'delete': models.BrandDelete,
+        'edit': models.BrandEdit,
+        'get': models.BrandGet,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.BrandGet | dict[str, Any]) -> models.BrandRegosOffsettedArrayResult:
+        """POST Brand/Get."""
+        return await self._call(self.PATH_GET, req, models.BrandRegosOffsettedArrayResult)
 
-    # ---------- RAW слой (1:1 к эндпоинтам) ----------
-    async def get(self, req: BrandGetRequest) -> APIBaseResponse[List[Brand]]:
-        return await self.api.call(self.PATH_GET, req, APIBaseResponse[List[Brand]])
+    async def add(self, req: models.BrandAdd | dict[str, Any]) -> models.InsertResult:
+        """POST Brand/Add."""
+        return await self._call(self.PATH_ADD, req, models.InsertResult)
 
-    async def add(self, req: BrandAddRequest) -> APIBaseResponse[ArrayResult]:
-        return await self.api.call(self.PATH_ADD, req, APIBaseResponse[ArrayResult])
+    async def edit(self, req: models.BrandEdit | dict[str, Any]) -> models.UpdateResult:
+        """POST Brand/Edit."""
+        return await self._call(self.PATH_EDIT, req, models.UpdateResult)
 
-    async def edit(self, req: BrandEditRequest) -> APIBaseResponse[ArrayResult]:
-        return await self.api.call(self.PATH_EDIT, req, APIBaseResponse[ArrayResult])
+    async def delete(self, req: models.BrandDelete | dict[str, Any]) -> models.UpdateResult:
+        """POST Brand/Delete."""
+        return await self._call(self.PATH_DELETE, req, models.UpdateResult)
 
-    async def delete(self, req: BrandDeleteRequest) -> APIBaseResponse[ArrayResult]:
-        return await self.api.call(self.PATH_DELETE, req, APIBaseResponse[ArrayResult])
+__all__ = ['BrandService']

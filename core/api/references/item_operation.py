@@ -1,19 +1,22 @@
+"""REGOS API service for ItemOperation."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from core.logger import setup_logger
-from schemas.api.references.item_operation import (
-    ItemOperationGetRequest,
-    ItemOperationGetResponse,
-)
+from typing import Any
 
-logger = setup_logger("references.ItemOperation")
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class ItemOperationService:
+class ItemOperationService(RegosAPIService):
     PATH_GET = "ItemOperation/Get"
+    REQUEST_MODELS = {
+        'get': models.ItemOperationGet,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.ItemOperationGet | dict[str, Any]) -> models.ItemOperationRegosOffsettedArrayResult:
+        """POST ItemOperation/Get."""
+        return await self._call(self.PATH_GET, req, models.ItemOperationRegosOffsettedArrayResult)
 
-    async def get(self, req: ItemOperationGetRequest) -> ItemOperationGetResponse:
-        return await self.api.call(self.PATH_GET, req, ItemOperationGetResponse)
+__all__ = ['ItemOperationService']

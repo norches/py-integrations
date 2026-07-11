@@ -1,97 +1,103 @@
-"""Схемы справочника отделов."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class Department(BaseSchema):
-    """Рид-модель отдела."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID отдела.")
-    name: Optional[str] = PydField(default=None, description="Наименование отдела.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime)."
-    )
+from schemas.api.common.base import RegosModel
 
 
-class DepartmentGetRequest(BaseSchema):
-    """Параметры выборки отделов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по списку идентификаторов отделов."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Правила сортировки результата."
-    )
-    search: Optional[str] = PydField(
-        default=None, description="Поиск по названию отдела."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выборке (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class Department(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class DepartmentAddRequest(BaseSchema):
-    """Создание нового отдела."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    name: str = PydField(..., min_length=1, description="Наименование отдела.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class DepartmentAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
 
 
-class DepartmentEditRequest(BaseSchema):
-    """Обновление существующего отдела."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID отдела.")
-    name: str = PydField(..., min_length=1, description="Новое название отдела.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class DepartmentDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class DepartmentDeleteRequest(BaseSchema):
-    """Удаление отдела."""
+class DepartmentEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    id: int = PydField(..., ge=1, description="ID отдела.")
+class DepartmentGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    sort_orders: list[DepartmentSortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class DepartmentRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Department] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class DepartmentSortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: DepartmentSortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class DepartmentSortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+DepartmentAddRequest: TypeAlias = DepartmentAdd
+DepartmentAddResponse: TypeAlias = InsertResult
+DepartmentDeleteRequest: TypeAlias = DepartmentDelete
+DepartmentDeleteResponse: TypeAlias = UpdateResult
+DepartmentEditRequest: TypeAlias = DepartmentEdit
+DepartmentEditResponse: TypeAlias = UpdateResult
+DepartmentGetRequest: TypeAlias = DepartmentGet
+DepartmentGetResponse: TypeAlias = DepartmentRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['Department', 'DepartmentAdd', 'DepartmentDelete', 'DepartmentEdit', 'DepartmentGet', 'DepartmentRegosOffsettedArrayResult', 'DepartmentSortOrder']
 
 
 __all__ = [
-    "Department",
-    "DepartmentAddRequest",
-    "DepartmentDeleteRequest",
-    "DepartmentEditRequest",
-    "DepartmentGetRequest",
+    'Department',
+    'DepartmentAdd',
+    'DepartmentDelete',
+    'DepartmentEdit',
+    'DepartmentGet',
+    'DepartmentRegosOffsettedArrayResult',
+    'DepartmentSortOrder',
+    'DepartmentSortOrderColumn',
+    'DepartmentGetRequest',
+    'DepartmentGetResponse',
+    'DepartmentAddRequest',
+    'DepartmentAddResponse',
+    'DepartmentEditRequest',
+    'DepartmentEditResponse',
+    'DepartmentDeleteRequest',
+    'DepartmentDeleteResponse'
 ]

@@ -1,325 +1,426 @@
-"""Schemas for chat message endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Any, Dict, List, Optional
-
-from pydantic import ConfigDict, Field as PydField, field_validator, model_validator
-
-from schemas.api.base import APIBaseResponse, ArrayResult, BaseSchema
-from schemas.api.chat.chat import ChatEntityTypeEnum
-
-
-class ChatMessageTypeEnum(str, Enum):
-    Regular = "Regular"
-    System = "System"
-    Private = "Private"
-
-
-class ChatMessage(BaseSchema):
-    """Chat message read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[str] = PydField(default=None, description="Message UUID.")
-    chat_id: Optional[str] = PydField(default=None, description="Chat UUID.")
-    reply_id: Optional[str] = PydField(default=None, description="Reply-to message UUID.")
-    replay_text: Optional[str] = PydField(default=None, description="Reply-to message text snapshot.")
-    author_entity_type: Optional[ChatEntityTypeEnum] = PydField(default=None, description="Author entity type.")
-    author_entity_id: Optional[int] = PydField(default=None, description="Author entity id.")
-    author_role: Optional[str] = PydField(default=None, description="Author role in chat.")
-    author_entity_name: Optional[str] = PydField(default=None, description="Author display name.")
-    author_entity_photo: Optional[str] = PydField(default=None, description="Author photo URL.")
-    message_type: Optional[ChatMessageTypeEnum] = PydField(default=None, description="Message type.")
-    text: Optional[str] = PydField(default=None, description="Message text.")
-    file_ids: Optional[List[int]] = PydField(default=None, description="Attached file ids.")
-    action_code: Optional[str] = PydField(default=None, description="System action code.")
-    action_payload: Optional[str] = PydField(default=None, description="System action payload JSON.")
-    event_id: Optional[str] = PydField(default=None, description="Event id.")
-    external_message_id: Optional[str] = PydField(default=None, description="External message id.")
-    edited: Optional[bool] = PydField(default=None, description="Edited flag.")
-    read: Optional[bool] = PydField(default=None, description="Read flag for current user.")
-    created_date: Optional[int] = PydField(default=None, description="Created unix time.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
-
-    # Compatibility flag that can still appear in old payloads.
-    deleted: Optional[bool] = PydField(default=None, description="Legacy deleted flag.")
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
+
+from pydantic import ConfigDict, Field as PydField, RootModel
+
+from schemas.api.common.base import RegosModel
+
+
+class ChatMessage(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    reply_id: str | None = PydField(default=None)
+    replay_text: str | None = PydField(default=None)
+    id: str | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+    author_role: ChatParticipantRoleEnum | None = PydField(default=None)
+    author_entity_name: str | None = PydField(default=None)
+    author_entity_photo: str | None = PydField(default=None)
+    message_type: ChatMessageTypeEnum | None = PydField(default=None)
+    text: str | None = PydField(default=None)
+    mentions: list[CommonMention] | None = PydField(default=None)
+    file_ids: list[int] | None = PydField(default=None)
+    action_code: str | None = PydField(default=None)
+    action_payload: str | None = PydField(default=None)
+    actions: list[list[ChatMessageAction]] | None = PydField(default=None)
+    event_id: str | None = PydField(default=None)
+    external_message_id: str | None = PydField(default=None)
+    edited: bool | None = PydField(default=None)
+    read: bool | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
+    reactions: list[ChatMessageReaction] | None = PydField(default=None)
+    recipient_count: int | None = PydField(default=None)
+    read_count: int | None = PydField(default=None)
+    created_date: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class ChatMessageAction(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    text: str | None = PydField(default=None)
+    payload: Any = PydField(default=None)
+
+
+class ChatMessageAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    reply_id: str | None = PydField(default=None)
+    replay_text: str | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+    message_type: ChatMessageTypeEnum | None = PydField(default=None)
+    text: str | None = PydField(default=None)
+    mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    file_ids: list[int] | None = PydField(default=None)
+    actions: list[list[ChatMessageAction]] | None = PydField(default=None)
+    external_message_id: str | None = PydField(default=None)
+
+
+class ChatMessageAddFileResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    file_id: int | None = PydField(default=None)
+
+
+class ChatMessageAddFileResultRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: ChatMessageAddFileResult | Error | None = PydField(default=None)
+
+
+class ChatMessageCallback(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    message_id: str | None = PydField(default=None)
+    action_id: str | None = PydField(default=None)
+
+
+class ChatMessageDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+
+
+class ChatMessageEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    text: str | None = PydField(default=None)
+    mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    file_ids: list[int] | None = PydField(default=None)
+
+
+class ChatMessageFile(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    message_id: str | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+    author_role: ChatParticipantRoleEnum | None = PydField(default=None)
+    author_entity_name: str | None = PydField(default=None)
+    author_entity_photo: str | None = PydField(default=None)
+    message_type: ChatMessageTypeEnum | None = PydField(default=None)
+    message_created_date: int | None = PydField(default=None)
+    file_order: int | None = PydField(default=None)
+    file: CommonFile | None = PydField(default=None)
+
+
+class ChatMessageFileKind(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+
+
+class ChatMessageFileRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatMessageFile] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ChatMessageGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    ids: list[str] | None = PydField(default=None)
+    from_date: int | None = PydField(default=None)
+    to_date: int | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+    include_staff_private: bool | None = PydField(default=None)
+
+
+class ChatMessageGetAround(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    id: str | None = PydField(default=None)
+    limit_before: int | None = PydField(default=None)
+    limit_after: int | None = PydField(default=None)
+    include_staff_private: bool | None = PydField(default=None)
+
+
+class ChatMessageGetFiles(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+    kind: ChatMessageFileKind | None = PydField(default=None)
+    from_date: int | None = PydField(default=None)
+    to_date: int | None = PydField(default=None)
+    include_staff_private: bool | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ChatMessageGetPinned(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+    include_staff_private: bool | None = PydField(default=None)
+
+
+class ChatMessageGetReactions(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    reaction: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ChatMessageGetReadUsers(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ChatMessageMarkRead(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    last_read_message_id: str | None = PydField(default=None)
+
+
+class ChatMessageMarkSent(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    external_message_id: str | None = PydField(default=None)
+
+
+class ChatMessageReaction(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    reaction: str | None = PydField(default=None)
+    count: int | None = PydField(default=None)
+    selected: bool | None = PydField(default=None)
 
 
-class ChatMessageGetRequest(BaseSchema):
-    """Request for ChatMessage/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    ids: Optional[List[str]] = PydField(default=None, description="Message UUIDs.")
-    from_date: Optional[int] = PydField(default=None, description="From unix time.")
-    to_date: Optional[int] = PydField(default=None, description="To unix time.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-    include_staff_private: Optional[bool] = PydField(
-        default=None,
-        description="Include private/staff messages where allowed.",
-    )
+class ChatMessageReactionUser(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+    user_name: str | None = PydField(default=None)
+    user_photo_url: str | None = PydField(default=None)
+    reaction: str | None = PydField(default=None)
+    created_date: int | None = PydField(default=None)
 
-
-class ChatMessageAddRequest(BaseSchema):
-    """Request for ChatMessage/Add."""
 
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    reply_id: Optional[str] = PydField(default=None, description="Reply-to message UUID.")
-    replay_text: Optional[str] = PydField(default=None, description="Reply-to message text snapshot.")
-    author_entity_type: Optional[ChatEntityTypeEnum] = PydField(
-        default=None,
-        description="Optional explicit author entity type.",
-    )
-    author_entity_id: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Optional explicit author entity id.",
-    )
-    message_type: Optional[ChatMessageTypeEnum] = PydField(default=None, description="Message type.")
-    text: Optional[str] = PydField(default=None, description="Message text.")
-    file_ids: Optional[List[int]] = PydField(default=None, description="Attached file ids.")
-    event_id: Optional[str] = PydField(default=None, description="Legacy event id (ignored by server).")
-    external_message_id: Optional[str] = PydField(default=None, description="External message id.")
-
-    @model_validator(mode="after")
-    def _validate_payload(self) -> "ChatMessageAddRequest":
-        if (self.author_entity_type is None) != (self.author_entity_id is None):
-            raise ValueError("author_entity_type and author_entity_id must be provided together")
-
-        has_text = bool(str(self.text or "").strip())
-        has_files = bool(self.file_ids)
-        if not has_text and not has_files:
-            raise ValueError("At least one of text or file_ids is required")
-        return self
-
-
-class ChatMessageDeleteRequest(BaseSchema):
-    """Request for ChatMessage/Delete."""
-
-    model_config = ConfigDict(extra="forbid")
+class ChatMessageReactionUserRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatMessageReactionUser] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
 
-    id: str = PydField(..., description="Message UUID.")
 
-
-class ChatMessageEditRequest(BaseSchema):
-    """Request for ChatMessage/Edit."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: str = PydField(..., description="Message UUID.")
-    text: Optional[str] = PydField(default=None, description="Message text.")
-    file_ids: Optional[List[int]] = PydField(default=None, description="Attached file ids.")
-
-    @model_validator(mode="after")
-    def _validate_payload(self) -> "ChatMessageEditRequest":
-        if self.text is None and self.file_ids is None:
-            raise ValueError("At least one of text or file_ids must be provided")
-        return self
-
-
-class ChatMessageSearchRequest(BaseSchema):
-    """Request for ChatMessage/Search."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    query: str = PydField(..., description="Search query.")
-    from_date: Optional[int] = PydField(default=None, description="From unix time.")
-    to_date: Optional[int] = PydField(default=None, description="To unix time.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-    include_staff_private: Optional[bool] = PydField(
-        default=None,
-        description="Include private/staff messages where allowed.",
-    )
-
-
-class ChatMessageWritingRequest(BaseSchema):
-    """Request for ChatMessage/Writing."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    author_entity_type: Optional[ChatEntityTypeEnum] = PydField(
-        default=None,
-        description="Author entity type.",
-    )
-    author_entity_id: Optional[int] = PydField(default=None, ge=1, description="Author entity id.")
-
-    @model_validator(mode="after")
-    def _validate_pair(self) -> "ChatMessageWritingRequest":
-        if (self.author_entity_type is None) != (self.author_entity_id is None):
-            raise ValueError("author_entity_type and author_entity_id must be provided together")
-        return self
-
-
-class ChatMessageSuggestRequest(BaseSchema):
-    """Request for ChatMessage/Suggest."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    author_entity_type: ChatEntityTypeEnum = PydField(..., description="Suggestion author entity type.")
-    author_entity_id: int = PydField(..., ge=1, description="Suggestion author entity id.")
-    suggestions: List[str] = PydField(..., description="Quick reply suggestions.")
-    source_message_id: Optional[str] = PydField(default=None, description="Source message UUID.")
-
-    @field_validator("suggestions", mode="before")
-    @classmethod
-    def _normalize_suggestions(cls, value: object) -> List[str]:
-        raw = list(value or []) if isinstance(value, list) else []
-        normalized: list[str] = []
-        seen: set[str] = set()
-        for item in raw:
-            text = str(item or "").strip()
-            if not text or text in seen:
-                continue
-            if len(text) > 200:
-                raise ValueError("Each suggestion must be 200 characters or less")
-            seen.add(text)
-            normalized.append(text)
-        if not (1 <= len(normalized) <= 5):
-            raise ValueError("suggestions must contain from 1 to 5 unique non-empty values")
-        return normalized
-
-    @model_validator(mode="after")
-    def _validate_author(self) -> "ChatMessageSuggestRequest":
-        if self.author_entity_type != ChatEntityTypeEnum.ChatBot:
-            raise ValueError("author_entity_type must be ChatBot for suggest")
-        return self
-
-
-class ChatMessageAddResult(BaseSchema):
-    """Result payload for ChatMessage/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    new_uuid: Optional[str] = PydField(default=None, description="Created message UUID.")
-
-
-class ChatMessageAddResponse(APIBaseResponse[ChatMessageAddResult | Dict[str, Any]]):
-    """Response for ChatMessage/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageAddFileRequest(BaseSchema):
-    """Request for ChatMessage/AddFile in JSON/base64 mode."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-    name: str = PydField(..., description="File display name.")
-    extension: str = PydField(..., description="File extension without dot.")
-    data: str = PydField(..., description="Base64 file payload.")
-
-
-class ChatMessageAddFileResult(BaseSchema):
-    """Result payload for ChatMessage/AddFile."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    file_id: Optional[int] = PydField(default=None, description="Created file id.")
-
-
-class ChatMessageAddFileResponse(APIBaseResponse[ChatMessageAddFileResult | Dict[str, Any]]):
-    """Response for ChatMessage/AddFile."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageMarkSentRequest(BaseSchema):
-    """Request for ChatMessage/MarkSent."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: str = PydField(..., description="Message UUID.")
-    external_message_id: str = PydField(..., description="External message id.")
-
-
-class ChatMessageMarkReadRequest(BaseSchema):
-    """Request for ChatMessage/MarkRead."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    chat_id: str = PydField(..., description="Chat UUID.")
-
-
-class ChatMessageGetResponse(APIBaseResponse[List[ChatMessage] | Dict[str, Any]]):
-    """Response for ChatMessage/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageSearchResponse(APIBaseResponse[List[ChatMessage] | Dict[str, Any]]):
-    """Response for ChatMessage/Search."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageDeleteResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/Delete."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageEditResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/Edit."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageMarkSentResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/MarkSent."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageMarkReadResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/MarkRead."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageWritingResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/Writing."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class ChatMessageSuggestResponse(APIBaseResponse[ArrayResult | Dict[str, Any]]):
-    """Response for ChatMessage/Suggest."""
-
-    model_config = ConfigDict(extra="ignore")
+class ChatMessageReadUser(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+    user_name: str | None = PydField(default=None)
+    user_photo_url: str | None = PydField(default=None)
+    read_date: int | None = PydField(default=None)
+
+
+class ChatMessageReadUserRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatMessageReadUser] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ChatMessageRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatMessage] | Error | None = PydField(default=None)
+
+
+class ChatMessageRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ChatMessage] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class ChatMessageSearch(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    query: str | None = PydField(default=None)
+    from_date: int | None = PydField(default=None)
+    to_date: int | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+    include_staff_private: bool | None = PydField(default=None)
+
+
+class ChatMessageSetPinned(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    pinned: bool | None = PydField(default=None)
+
+
+class ChatMessageSetReaction(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    reaction: str | None = PydField(default=None)
+
+
+class ChatMessageSuggest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+    suggestions: list[str] | None = PydField(default=None)
+    source_message_id: str | None = PydField(default=None)
+
+
+class ChatMessageTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+class ChatMessageWriting(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    author_entity_type: ChatEntityTypeEnum | None = PydField(default=None)
+    author_entity_id: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.chat.chat import ChatEntityTypeEnum, ChatParticipantRoleEnum
+from schemas.api.common.base import CommonFile, CommonMention, CommonMentionInput, CommonMentionOptions, Error, Insert_uuid_Result, UpdateResult
+
+
+
+
+class ChatMessageAddFileRequest(RegosModel):
+    """Compatibility request for ChatMessage/AddFile JSON payloads."""
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    chat_id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    extension: str | None = PydField(default=None)
+    data: str | None = PydField(default=None)
+
+
+ChatMessageAddFileResponse: TypeAlias = ChatMessageAddFileResultRegosObjectResult
+ChatMessageAddRequest: TypeAlias = ChatMessageAdd
+ChatMessageAddResponse: TypeAlias = Insert_uuid_Result
+ChatMessageCallbackRequest: TypeAlias = ChatMessageCallback
+ChatMessageCallbackResponse: TypeAlias = UpdateResult
+ChatMessageDeleteRequest: TypeAlias = ChatMessageDelete
+ChatMessageDeleteResponse: TypeAlias = UpdateResult
+ChatMessageEditRequest: TypeAlias = ChatMessageEdit
+ChatMessageEditResponse: TypeAlias = UpdateResult
+ChatMessageGetAroundRequest: TypeAlias = ChatMessageGetAround
+ChatMessageGetAroundResponse: TypeAlias = ChatMessageRegosArrayResult
+ChatMessageGetFilesRequest: TypeAlias = ChatMessageGetFiles
+ChatMessageGetFilesResponse: TypeAlias = ChatMessageFileRegosOffsettedArrayResult
+ChatMessageGetPinnedRequest: TypeAlias = ChatMessageGetPinned
+ChatMessageGetPinnedResponse: TypeAlias = ChatMessageRegosOffsettedArrayResult
+ChatMessageGetReactionsRequest: TypeAlias = ChatMessageGetReactions
+ChatMessageGetReactionsResponse: TypeAlias = ChatMessageReactionUserRegosOffsettedArrayResult
+ChatMessageGetReadUsersRequest: TypeAlias = ChatMessageGetReadUsers
+ChatMessageGetReadUsersResponse: TypeAlias = ChatMessageReadUserRegosOffsettedArrayResult
+ChatMessageGetRequest: TypeAlias = ChatMessageGet
+ChatMessageGetResponse: TypeAlias = ChatMessageRegosOffsettedArrayResult
+ChatMessageMarkReadRequest: TypeAlias = ChatMessageMarkRead
+ChatMessageMarkReadResponse: TypeAlias = UpdateResult
+ChatMessageMarkSentRequest: TypeAlias = ChatMessageMarkSent
+ChatMessageMarkSentResponse: TypeAlias = UpdateResult
+ChatMessageSearchRequest: TypeAlias = ChatMessageSearch
+ChatMessageSearchResponse: TypeAlias = ChatMessageRegosOffsettedArrayResult
+ChatMessageSetPinnedRequest: TypeAlias = ChatMessageSetPinned
+ChatMessageSetPinnedResponse: TypeAlias = UpdateResult
+ChatMessageSetReactionRequest: TypeAlias = ChatMessageSetReaction
+ChatMessageSetReactionResponse: TypeAlias = UpdateResult
+ChatMessageSuggestRequest: TypeAlias = ChatMessageSuggest
+ChatMessageSuggestResponse: TypeAlias = UpdateResult
+ChatMessageWritingRequest: TypeAlias = ChatMessageWriting
+ChatMessageWritingResponse: TypeAlias = UpdateResult
+
+
+_MODEL_NAMES = ['ChatMessage', 'ChatMessageAction', 'ChatMessageAdd', 'ChatMessageAddFileResult', 'ChatMessageAddFileResultRegosObjectResult', 'ChatMessageCallback', 'ChatMessageDelete', 'ChatMessageEdit', 'ChatMessageFile', 'ChatMessageFileRegosOffsettedArrayResult', 'ChatMessageGet', 'ChatMessageGetAround', 'ChatMessageGetFiles', 'ChatMessageGetPinned', 'ChatMessageGetReactions', 'ChatMessageGetReadUsers', 'ChatMessageMarkRead', 'ChatMessageMarkSent', 'ChatMessageReaction', 'ChatMessageReactionUser', 'ChatMessageReactionUserRegosOffsettedArrayResult', 'ChatMessageReadUser', 'ChatMessageReadUserRegosOffsettedArrayResult', 'ChatMessageRegosArrayResult', 'ChatMessageRegosOffsettedArrayResult', 'ChatMessageSearch', 'ChatMessageSetPinned', 'ChatMessageSetReaction', 'ChatMessageSuggest', 'ChatMessageWriting', 'ChatMessageAddFileRequest']
 
 
 __all__ = [
-    "ChatMessage",
-    "ChatMessageAddFileRequest",
-    "ChatMessageAddFileResponse",
-    "ChatMessageAddRequest",
-    "ChatMessageAddResponse",
-    "ChatMessageDeleteRequest",
-    "ChatMessageDeleteResponse",
-    "ChatMessageEditRequest",
-    "ChatMessageEditResponse",
-    "ChatMessageGetRequest",
-    "ChatMessageGetResponse",
-    "ChatMessageMarkReadRequest",
-    "ChatMessageMarkReadResponse",
-    "ChatMessageMarkSentRequest",
-    "ChatMessageMarkSentResponse",
-    "ChatMessageSearchRequest",
-    "ChatMessageSearchResponse",
-    "ChatMessageSuggestRequest",
-    "ChatMessageSuggestResponse",
-    "ChatMessageTypeEnum",
-    "ChatMessageWritingRequest",
-    "ChatMessageWritingResponse",
+    'ChatMessage',
+    'ChatMessageAction',
+    'ChatMessageAdd',
+    'ChatMessageAddFileResult',
+    'ChatMessageAddFileResultRegosObjectResult',
+    'ChatMessageCallback',
+    'ChatMessageDelete',
+    'ChatMessageEdit',
+    'ChatMessageFile',
+    'ChatMessageFileKind',
+    'ChatMessageFileRegosOffsettedArrayResult',
+    'ChatMessageGet',
+    'ChatMessageGetAround',
+    'ChatMessageGetFiles',
+    'ChatMessageGetPinned',
+    'ChatMessageGetReactions',
+    'ChatMessageGetReadUsers',
+    'ChatMessageMarkRead',
+    'ChatMessageMarkSent',
+    'ChatMessageReaction',
+    'ChatMessageReactionUser',
+    'ChatMessageReactionUserRegosOffsettedArrayResult',
+    'ChatMessageReadUser',
+    'ChatMessageReadUserRegosOffsettedArrayResult',
+    'ChatMessageRegosArrayResult',
+    'ChatMessageRegosOffsettedArrayResult',
+    'ChatMessageSearch',
+    'ChatMessageSetPinned',
+    'ChatMessageSetReaction',
+    'ChatMessageSuggest',
+    'ChatMessageTypeEnum',
+    'ChatMessageWriting',
+    'ChatMessageAddFileRequest',
+    'ChatMessageGetRequest',
+    'ChatMessageGetResponse',
+    'ChatMessageGetFilesRequest',
+    'ChatMessageGetFilesResponse',
+    'ChatMessageAddRequest',
+    'ChatMessageAddResponse',
+    'ChatMessageAddFileResponse',
+    'ChatMessageEditRequest',
+    'ChatMessageEditResponse',
+    'ChatMessageDeleteRequest',
+    'ChatMessageDeleteResponse',
+    'ChatMessageMarkReadRequest',
+    'ChatMessageMarkReadResponse',
+    'ChatMessageMarkSentRequest',
+    'ChatMessageMarkSentResponse',
+    'ChatMessageWritingRequest',
+    'ChatMessageWritingResponse',
+    'ChatMessageSuggestRequest',
+    'ChatMessageSuggestResponse',
+    'ChatMessageSearchRequest',
+    'ChatMessageSearchResponse',
+    'ChatMessageSetPinnedRequest',
+    'ChatMessageSetPinnedResponse',
+    'ChatMessageGetPinnedRequest',
+    'ChatMessageGetPinnedResponse',
+    'ChatMessageGetAroundRequest',
+    'ChatMessageGetAroundResponse',
+    'ChatMessageSetReactionRequest',
+    'ChatMessageSetReactionResponse',
+    'ChatMessageCallbackRequest',
+    'ChatMessageCallbackResponse',
+    'ChatMessageGetReactionsRequest',
+    'ChatMessageGetReactionsResponse',
+    'ChatMessageGetReadUsersRequest',
+    'ChatMessageGetReadUsersResponse'
 ]

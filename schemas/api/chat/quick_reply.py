@@ -1,85 +1,76 @@
-"""Schemas for chat quick reply endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, ArrayResult, BaseSchema
-
-
-class QuickReply(BaseSchema):
-    """Quick reply read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="Quick reply id.")
-    text: Optional[str] = PydField(default=None, description="Quick reply text.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update unix time.")
+from schemas.api.common.base import RegosModel
 
 
-class QuickReplyGetRequest(BaseSchema):
-    """Request for QuickReply/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(default=None, description="Quick reply ids.")
-    search: Optional[str] = PydField(default=None, description="Text search.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class QuickReply(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    text: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class QuickReplyAddRequest(BaseSchema):
-    """Request for QuickReply/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    text: str = PydField(..., min_length=1, max_length=400, description="Reply text.")
-
-    @field_validator("text", mode="before")
-    @classmethod
-    def _normalize_text(cls, value: str) -> str:
-        return str(value or "").strip()
+class QuickReplyAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    text: str | None = PydField(default=None)
 
 
-class QuickReplyDeleteRequest(BaseSchema):
-    """Request for QuickReply/Delete."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Quick reply id.")
+class QuickReplyDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class QuickReplyGetResponse(APIBaseResponse[List[QuickReply]]):
-    """Response for QuickReply/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class QuickReplyAddResponse(APIBaseResponse[AddResult]):
-    """Response for QuickReply/Add."""
-
-    model_config = ConfigDict(extra="ignore")
+class QuickReplyGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
 
 
-class QuickReplyDeleteResponse(APIBaseResponse[ArrayResult]):
-    """Response for QuickReply/Delete."""
+class QuickReplyRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[QuickReply] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, InsertResult, UpdateResult
+
+
+QuickReplyAddRequest: TypeAlias = QuickReplyAdd
+QuickReplyAddResponse: TypeAlias = InsertResult
+QuickReplyDeleteRequest: TypeAlias = QuickReplyDelete
+QuickReplyDeleteResponse: TypeAlias = UpdateResult
+QuickReplyGetRequest: TypeAlias = QuickReplyGet
+QuickReplyGetResponse: TypeAlias = QuickReplyRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['QuickReply', 'QuickReplyAdd', 'QuickReplyDelete', 'QuickReplyGet', 'QuickReplyRegosOffsettedArrayResult']
 
 
 __all__ = [
-    "QuickReply",
-    "QuickReplyAddRequest",
-    "QuickReplyAddResponse",
-    "QuickReplyDeleteRequest",
-    "QuickReplyDeleteResponse",
-    "QuickReplyGetRequest",
-    "QuickReplyGetResponse",
+    'QuickReply',
+    'QuickReplyAdd',
+    'QuickReplyDelete',
+    'QuickReplyGet',
+    'QuickReplyRegosOffsettedArrayResult',
+    'QuickReplyGetRequest',
+    'QuickReplyGetResponse',
+    'QuickReplyAddRequest',
+    'QuickReplyAddResponse',
+    'QuickReplyDeleteRequest',
+    'QuickReplyDeleteResponse'
 ]

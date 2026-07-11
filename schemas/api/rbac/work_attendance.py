@@ -1,71 +1,160 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from typing import Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-
-
-class WorkAttendanceStatusRequest(BaseSchema):
-    """Параметры запроса текущего статуса посещаемости сотрудника."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    user_id: int = PydField(..., ge=1, description="ID пользователя (сотрудника).")
+from schemas.api.common.base import RegosModel
 
 
-class WorkUserAvailability(BaseSchema):
-    """Доступность сотрудника по данным учёта рабочего времени (WorkAttendance/Status).
-
-    Признак "на смене и доступен" определяется булевыми флагами is_checked_in /
-    is_in_shift / is_on_break. Целочисленный ``status`` оставлен как есть, потому что
-    публичный Swagger не раскрывает его именованные значения.
-    """
-
-    model_config = ConfigDict(extra="ignore")
-
-    # Optional on purpose: the response body is undocumented in the public Swagger,
-    # so a present-but-partial 200 must still parse and fall through to the boolean
-    # availability check rather than raising and being swallowed as "available".
-    user_id: Optional[int] = PydField(default=None, ge=1, description="ID пользователя.")
-    status: Optional[int] = PydField(
-        default=None, description="Код статуса доступности (значения не документированы)."
-    )
-    is_in_shift: Optional[bool] = PydField(
-        default=None, description="Сотрудник находится в пределах рабочей смены."
-    )
-    is_checked_in: Optional[bool] = PydField(
-        default=None, description="Сотрудник отметился о приходе (открыта смена)."
-    )
-    is_on_break: Optional[bool] = PydField(
-        default=None, description="Сотрудник сейчас на перерыве."
-    )
-    active_session_id: Optional[int] = PydField(
-        default=None, description="ID активной сессии посещаемости."
-    )
-    active_break_id: Optional[int] = PydField(
-        default=None, description="ID активного перерыва."
-    )
-    next_shift_start_date: Optional[int] = PydField(
-        default=None, description="Начало ближайшей смены (unixtime, сек)."
-    )
-    next_shift_end_date: Optional[int] = PydField(
-        default=None, description="Окончание ближайшей смены (unixtime, сек)."
-    )
-    last_update: Optional[int] = PydField(
-        default=None, description="Метка последнего обновления (unixtime, сек)."
-    )
+class WorkAttendanceBreakEnd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    comment: str | None = PydField(default=None)
 
 
-class WorkAttendanceStatusResponse(APIBaseResponse[WorkUserAvailability]):
-    """Ответ WorkAttendance/Status."""
+class WorkAttendanceBreakStart(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    break_type: WorkBreakTypeEnum | None = PydField(default=None)
+    comment: str | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+class WorkAttendanceCheckIn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    comment: str | None = PydField(default=None)
+
+
+class WorkAttendanceCheckOut(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    comment: str | None = PydField(default=None)
+
+
+class WorkAttendanceCurrentSession(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+
+
+class WorkAttendanceStatus(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+
+
+class WorkAvailabilityStatusEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+
+
+class WorkBreakTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+class WorkSession(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+    schedule_id: int | None = PydField(default=None)
+    planned_shift_start: int | None = PydField(default=None)
+    planned_shift_end: int | None = PydField(default=None)
+    check_in_date: int | None = PydField(default=None)
+    check_out_date: int | None = PydField(default=None)
+    check_in_source: WorkSessionSourceEnum | None = PydField(default=None)
+    check_out_source: WorkSessionSourceEnum | None = PydField(default=None)
+    check_in_comment: str | None = PydField(default=None)
+    check_out_comment: str | None = PydField(default=None)
+    worked_sec: int | None = PydField(default=None)
+    deleted: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class WorkSessionRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: WorkSession | Error | None = PydField(default=None)
+
+
+class WorkSessionSourceEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+
+
+class WorkUserAvailability(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+    status: WorkAvailabilityStatusEnum | None = PydField(default=None)
+    is_in_shift: bool | None = PydField(default=None)
+    is_checked_in: bool | None = PydField(default=None)
+    is_on_break: bool | None = PydField(default=None)
+    active_session_id: int | None = PydField(default=None)
+    active_break_id: int | None = PydField(default=None)
+    next_shift_start_date: int | None = PydField(default=None)
+    next_shift_end_date: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class WorkUserAvailabilityRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: WorkUserAvailability | Error | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, InsertResult, UpdateResult
+
+
+WorkAttendanceBreakEndRequest: TypeAlias = WorkAttendanceBreakEnd
+WorkAttendanceBreakEndResponse: TypeAlias = UpdateResult
+WorkAttendanceBreakStartRequest: TypeAlias = WorkAttendanceBreakStart
+WorkAttendanceBreakStartResponse: TypeAlias = InsertResult
+WorkAttendanceCheckInRequest: TypeAlias = WorkAttendanceCheckIn
+WorkAttendanceCheckInResponse: TypeAlias = InsertResult
+WorkAttendanceCheckOutRequest: TypeAlias = WorkAttendanceCheckOut
+WorkAttendanceCheckOutResponse: TypeAlias = UpdateResult
+WorkAttendanceCurrentSessionRequest: TypeAlias = WorkAttendanceCurrentSession
+WorkAttendanceCurrentSessionResponse: TypeAlias = WorkSessionRegosObjectResult
+WorkAttendanceStatusRequest: TypeAlias = WorkAttendanceStatus
+WorkAttendanceStatusResponse: TypeAlias = WorkUserAvailabilityRegosObjectResult
+
+
+_MODEL_NAMES = ['WorkAttendanceBreakEnd', 'WorkAttendanceBreakStart', 'WorkAttendanceCheckIn', 'WorkAttendanceCheckOut', 'WorkAttendanceCurrentSession', 'WorkAttendanceStatus', 'WorkSession', 'WorkSessionRegosObjectResult', 'WorkUserAvailability', 'WorkUserAvailabilityRegosObjectResult']
 
 
 __all__ = [
-    "WorkAttendanceStatusRequest",
-    "WorkUserAvailability",
-    "WorkAttendanceStatusResponse",
+    'WorkAttendanceBreakEnd',
+    'WorkAttendanceBreakStart',
+    'WorkAttendanceCheckIn',
+    'WorkAttendanceCheckOut',
+    'WorkAttendanceCurrentSession',
+    'WorkAttendanceStatus',
+    'WorkAvailabilityStatusEnum',
+    'WorkBreakTypeEnum',
+    'WorkSession',
+    'WorkSessionRegosObjectResult',
+    'WorkSessionSourceEnum',
+    'WorkUserAvailability',
+    'WorkUserAvailabilityRegosObjectResult',
+    'WorkAttendanceStatusRequest',
+    'WorkAttendanceStatusResponse',
+    'WorkAttendanceCheckInRequest',
+    'WorkAttendanceCheckInResponse',
+    'WorkAttendanceCheckOutRequest',
+    'WorkAttendanceCheckOutResponse',
+    'WorkAttendanceBreakStartRequest',
+    'WorkAttendanceBreakStartResponse',
+    'WorkAttendanceBreakEndRequest',
+    'WorkAttendanceBreakEndResponse',
+    'WorkAttendanceCurrentSessionRequest',
+    'WorkAttendanceCurrentSessionResponse'
 ]

@@ -1,83 +1,147 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, ArrayResult, BaseSchema
+from schemas.api.common.base import RegosModel
+
+
+class InvoiceOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    item: Item | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    total: _Decimal | None = PydField(default=None)
+    vat_value: _Decimal | None = PydField(default=None)
+    vat_amount: _Decimal | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class InvoiceOperationAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    vat_value: _Decimal | None = PydField(default=None)
+
+
+class InvoiceOperationDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class InvoiceOperationEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    vat_value: _Decimal | None = PydField(default=None)
+
+
+class InvoiceOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    item_ids: list[int] | None = PydField(default=None)
+    document_ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class InvoiceOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[InvoiceOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class InvoiceRoamingOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    icps: str | None = PydField(default=None)
+    barcode: str | None = PydField(default=None)
+    package_code: str | None = PydField(default=None)
+    package_name: str | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    labels: list[str] | None = PydField(default=None)
+    group_labels: list[str] | None = PydField(default=None)
+    transport_labels: list[str] | None = PydField(default=None)
+    origin: int | None = PydField(default=None)
+    vat_rate: int | None = PydField(default=None)
+
+
+class InvoiceRoamingOperationArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[InvoiceRoamingOperation] | Error | None = PydField(default=None)
+
+
+class InvoiceRoamingOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import DocsOperationsMovement, Error, SetPriceByPriceType_Model, UpdateResult, VatCalculationTypeEnum
 from schemas.api.references.item import Item
-from schemas.api.references.tax import VatCalculationType
 
 
-class InvoiceOperation(BaseSchema):
-    """Invoice operation read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="Operation id.")
-    document_id: int = PydField(..., ge=1, description="Invoice id.")
-    item: Optional[Item] = PydField(default=None, description="Item.")
-    quantity: Optional[Decimal] = PydField(default=None, description="Quantity.")
-    price: Optional[Decimal] = PydField(default=None, description="Price.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    total: Optional[Decimal] = PydField(default=None, description="Total.")
-    vat_value: Optional[Decimal] = PydField(default=None, description="VAT value.")
-    vat_amount: Optional[Decimal] = PydField(default=None, description="VAT amount.")
-    vat_calculation_type: Optional[VatCalculationType] = PydField(default=None, description="VAT type.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update.")
+InvoiceOperationAddRequest: TypeAlias = list[InvoiceOperationAdd]
+InvoiceOperationAddResponse: TypeAlias = UpdateResult
+InvoiceOperationDeleteRequest: TypeAlias = list[InvoiceOperationDelete]
+InvoiceOperationDeleteResponse: TypeAlias = UpdateResult
+InvoiceOperationEditRequest: TypeAlias = list[InvoiceOperationEdit]
+InvoiceOperationEditResponse: TypeAlias = UpdateResult
+InvoiceOperationGetOperationsFromRoamingRequest: TypeAlias = InvoiceRoamingOperationGet
+InvoiceOperationGetOperationsFromRoamingResponse: TypeAlias = InvoiceRoamingOperationArrayRegosObjectResult
+InvoiceOperationGetRequest: TypeAlias = InvoiceOperationGet
+InvoiceOperationGetResponse: TypeAlias = InvoiceOperationRegosOffsettedArrayResult
+InvoiceOperationMoveOperationsRequest: TypeAlias = DocsOperationsMovement
+InvoiceOperationMoveOperationsResponse: TypeAlias = UpdateResult
+InvoiceOperationSetPriceByPriceTypeRequest: TypeAlias = SetPriceByPriceType_Model
+InvoiceOperationSetPriceByPriceTypeResponse: TypeAlias = UpdateResult
 
 
-class InvoiceOperationGetRequest(BaseSchema):
-    """Request for InvoiceOperation/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(default=None, description="Operation ids.")
-    item_ids: Optional[List[int]] = PydField(default=None, description="Item ids.")
-    document_ids: List[int] = PydField(..., min_length=1, max_length=1, description="Invoice ids.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Limit.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Offset.")
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-
-class InvoiceOperationAdd(BaseSchema):
-    """Request row for InvoiceOperation/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    document_id: int = PydField(..., ge=1, description="Invoice id.")
-    item_id: int = PydField(..., ge=1, description="Item id.")
-    quantity: Optional[Decimal] = PydField(default=None, description="Quantity.")
-    price: Optional[Decimal] = PydField(default=None, description="Price.")
-    vat_value: Optional[Decimal] = PydField(default=None, description="VAT value.")
-
-
-InvoiceOperationAddRequest = List[InvoiceOperationAdd]
-
-
-class InvoiceOperationGetResponse(APIBaseResponse[List[InvoiceOperation]]):
-    """Response for InvoiceOperation/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class InvoiceOperationAddResponse(APIBaseResponse[ArrayResult]):
-    """Response for InvoiceOperation/Add."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['InvoiceOperation', 'InvoiceOperationAdd', 'InvoiceOperationDelete', 'InvoiceOperationEdit', 'InvoiceOperationGet', 'InvoiceOperationRegosOffsettedArrayResult', 'InvoiceRoamingOperation', 'InvoiceRoamingOperationArrayRegosObjectResult', 'InvoiceRoamingOperationGet']
 
 
 __all__ = [
-    "InvoiceOperation",
-    "InvoiceOperationAdd",
-    "InvoiceOperationAddRequest",
-    "InvoiceOperationAddResponse",
-    "InvoiceOperationGetRequest",
-    "InvoiceOperationGetResponse",
+    'InvoiceOperation',
+    'InvoiceOperationAdd',
+    'InvoiceOperationDelete',
+    'InvoiceOperationEdit',
+    'InvoiceOperationGet',
+    'InvoiceOperationRegosOffsettedArrayResult',
+    'InvoiceRoamingOperation',
+    'InvoiceRoamingOperationArrayRegosObjectResult',
+    'InvoiceRoamingOperationGet',
+    'InvoiceOperationGetRequest',
+    'InvoiceOperationGetResponse',
+    'InvoiceOperationAddRequest',
+    'InvoiceOperationAddResponse',
+    'InvoiceOperationEditRequest',
+    'InvoiceOperationEditResponse',
+    'InvoiceOperationDeleteRequest',
+    'InvoiceOperationDeleteResponse',
+    'InvoiceOperationSetPriceByPriceTypeRequest',
+    'InvoiceOperationSetPriceByPriceTypeResponse',
+    'InvoiceOperationMoveOperationsRequest',
+    'InvoiceOperationMoveOperationsResponse',
+    'InvoiceOperationGetOperationsFromRoamingRequest',
+    'InvoiceOperationGetOperationsFromRoamingResponse'
 ]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 import asyncio
+import hashlib
 from typing import Any, Dict, Optional, Type, TypeVar
 
 import httpx
@@ -37,9 +38,19 @@ class RegosAPI:
     _shared_lock: Optional[asyncio.Lock] = None
     _shared_idle_close_sec = 30
 
-    def __init__(self, connected_integration_id: str):
+    def __init__(
+        self,
+        connected_integration_id: str,
+        bearer_token: Optional[str] = None,
+    ):
         self.connected_integration_id = connected_integration_id
-        self._shared_key = str(connected_integration_id or "").strip()
+        self._bearer_token = str(bearer_token or "").strip()
+        base_key = str(connected_integration_id or "").strip()
+        if self._bearer_token:
+            token_hash = hashlib.sha1(self._bearer_token.encode("utf-8")).hexdigest()
+            self._shared_key = f"{base_key}:bearer:{token_hash}"
+        else:
+            self._shared_key = base_key
         self._client: Optional[APIClient] = None
         self._closed = False
         self.batch = BatchService(self)
@@ -53,6 +64,10 @@ class RegosAPI:
         self.references: "RegosAPI.References" = self.References(self)
         self.rbac: "RegosAPI.Rbac" = self.Rbac(self)
 
+        from core.api.registry import attach_generated_services
+
+        attach_generated_services(self)
+
     async def _acquire_client(self) -> APIClient:
         if self._client is not None:
             return self._client
@@ -64,7 +79,10 @@ class RegosAPI:
 
             client = self._shared_clients.get(self._shared_key)
             if client is None:
-                client = APIClient(connected_integration_id=self.connected_integration_id)
+                client = APIClient(
+                    connected_integration_id=self.connected_integration_id,
+                    bearer_token=self._bearer_token,
+                )
                 self._shared_clients[self._shared_key] = client
                 self._shared_ref_counts[self._shared_key] = 0
 

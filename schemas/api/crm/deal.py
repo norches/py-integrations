@@ -1,223 +1,205 @@
-"""Schemas for CRM deal endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, ArrayResult, BaseSchema
-from schemas.api.common.filters import Filter
+from schemas.api.common.base import RegosModel
+
+
+class Deal(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    client_id: int | None = PydField(default=None)
+    client: Client | None = PydField(default=None)
+    task_id: int | None = PydField(default=None)
+    lead_id: int | None = PydField(default=None)
+    ticket_id: int | None = PydField(default=None)
+    source_deal_id: int | None = PydField(default=None)
+    deal_type_id: int | None = PydField(default=None)
+    pipeline_id: int | None = PydField(default=None)
+    stage_id: int | None = PydField(default=None)
+    status: DealStatusEnum | None = PydField(default=None)
+    title: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMention] | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency: Currency | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    open_date: int | None = PydField(default=None)
+    close_date: int | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
+    created_user_id: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+
+
+class DealAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    source_lead_id: int | None = PydField(default=None)
+    ticket_id: int | None = PydField(default=None)
+    source_deal_id: int | None = PydField(default=None)
+    client_id: int | None = PydField(default=None)
+    task_id: int | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+    lead_id: int | None = PydField(default=None)
+    deal_type_id: int | None = PydField(default=None)
+    pipeline_id: int | None = PydField(default=None)
+    stage_id: int | None = PydField(default=None)
+    title: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
+
+
+class DealClose(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    stage_id: int | None = PydField(default=None)
+
+
+class DealDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DealEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    task_id: int | None = PydField(default=None)
+    deal_type_id: int | None = PydField(default=None)
+    pipeline_id: int | None = PydField(default=None)
+    stage_id: int | None = PydField(default=None)
+    title: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
+
+
+class DealGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    client_ids: list[int] | None = PydField(default=None)
+    task_ids: list[int] | None = PydField(default=None)
+    lead_ids: list[int] | None = PydField(default=None)
+    responsible_user_ids: list[int] | None = PydField(default=None)
+    stage_ids: list[int] | None = PydField(default=None)
+    pipeline_id: int | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    from_date: int | None = PydField(default=None)
+    to_date: int | None = PydField(default=None)
+    include_mentions: bool | None = PydField(default=None)
+    statuses: list[DealStatusEnum] | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class DealRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Deal] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class DealSetParticipants(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    replace_mode: bool | None = PydField(default=None)
+
+
+class DealSetResponsible(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+
+
+class DealSetStage(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    stage_id: int | None = PydField(default=None)
+    comment: str | None = PydField(default=None)
+
+
+class DealStatusEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import CommonMention, CommonMentionInput, CommonMentionOptions, Error, InsertResult, UpdateResult
+from schemas.api.common.filter import Filter
 from schemas.api.crm.client import Client
 from schemas.api.references.currency import Currency
-from schemas.api.references.fields import FieldValue, FieldValueAdd, FieldValueEdit
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
 
 
-class Deal(BaseSchema):
-    """Deal read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, description="Deal id.")
-    client_id: Optional[int] = PydField(default=None, description="Client id.")
-    task_id: Optional[int] = PydField(default=None, description="Task id.")
-    client: Optional[Client] = PydField(default=None, description="Client payload.")
-    lead_id: Optional[int] = PydField(default=None, description="Lead id.")
-    ticket_id: Optional[int] = PydField(default=None, description="Source ticket id.")
-    source_deal_id: Optional[int] = PydField(default=None, description="Source deal id.")
-    deal_type_id: Optional[int] = PydField(default=None, description="Deal type id.")
-    pipeline_id: Optional[int] = PydField(default=None, description="Pipeline id.")
-    stage_id: Optional[int] = PydField(default=None, description="Stage id.")
-    responsible_user_id: Optional[int] = PydField(default=None, description="Responsible user id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    title: Optional[str] = PydField(default=None, description="Deal title.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    open_date: Optional[int] = PydField(default=None, description="Open unix time.")
-    close_date: Optional[int] = PydField(default=None, description="Close unix time.")
-    created_user_id: Optional[int] = PydField(default=None, description="Created user id.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    currency: Optional[Currency] = PydField(default=None, description="Currency payload.")
-    chat_id: Optional[str] = PydField(default=None, description="Related chat UUID.")
-    fields: Optional[List[FieldValue]] = PydField(default=None, description="Custom fields.")
-
-    # Legacy name used by old integrations.
-    source_ticket_id: Optional[int] = PydField(default=None, description="Legacy source ticket id.")
+DealAddRequest: TypeAlias = DealAdd
+DealAddResponse: TypeAlias = InsertResult
+DealCloseRequest: TypeAlias = DealClose
+DealCloseResponse: TypeAlias = UpdateResult
+DealDeleteRequest: TypeAlias = DealDelete
+DealDeleteResponse: TypeAlias = UpdateResult
+DealEditRequest: TypeAlias = DealEdit
+DealEditResponse: TypeAlias = UpdateResult
+DealGetRequest: TypeAlias = DealGet
+DealGetResponse: TypeAlias = DealRegosOffsettedArrayResult
+DealSetParticipantsRequest: TypeAlias = DealSetParticipants
+DealSetParticipantsResponse: TypeAlias = UpdateResult
+DealSetResponsibleRequest: TypeAlias = DealSetResponsible
+DealSetResponsibleResponse: TypeAlias = UpdateResult
+DealSetStageRequest: TypeAlias = DealSetStage
+DealSetStageResponse: TypeAlias = UpdateResult
 
 
-class DealGetRequest(BaseSchema):
-    """Request for Deal/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(default=None, description="Deal ids.")
-    client_ids: Optional[List[int]] = PydField(default=None, description="Client ids.")
-    task_ids: Optional[List[int]] = PydField(default=None, description="Task ids.")
-    lead_ids: Optional[List[int]] = PydField(default=None, description="Lead ids.")
-    responsible_user_ids: Optional[List[int]] = PydField(default=None, description="Responsible user ids.")
-    stage_ids: Optional[List[int]] = PydField(default=None, description="Stage ids.")
-    pipeline_id: Optional[int] = PydField(default=None, ge=1, description="Pipeline id.")
-    currency_id: Optional[int] = PydField(default=None, ge=1, description="Currency id.")
-    filters: Optional[List[Filter]] = PydField(default=None, description="Additional filters.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-
-
-class DealAddRequest(BaseSchema):
-    """Request for Deal/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    source_lead_id: Optional[int] = PydField(default=None, ge=1, description="Source lead id.")
-    ticket_id: Optional[int] = PydField(default=None, ge=1, description="Source ticket id.")
-    source_deal_id: Optional[int] = PydField(default=None, ge=1, description="Source deal id.")
-    client_id: Optional[int] = PydField(default=None, ge=1, description="Client id.")
-    task_id: Optional[int] = PydField(default=None, ge=1, description="Task id.")
-    chat_id: Optional[str] = PydField(default=None, description="Existing chat UUID.")
-    lead_id: Optional[int] = PydField(default=None, ge=1, description="Lead id.")
-    deal_type_id: Optional[int] = PydField(default=None, ge=1, description="Deal type id.")
-    pipeline_id: Optional[int] = PydField(default=None, ge=1, description="Pipeline id.")
-    stage_id: Optional[int] = PydField(default=None, ge=1, description="Stage id.")
-    title: str = PydField(..., description="Deal title.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    currency_id: Optional[int] = PydField(default=None, ge=1, description="Currency id.")
-    responsible_user_id: Optional[int] = PydField(default=None, ge=1, description="Responsible user id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    fields: Optional[List[FieldValueAdd]] = PydField(default=None, description="Custom field values.")
-
-    # Legacy name used by old integrations.
-    source_ticket_id: Optional[int] = PydField(default=None, ge=1, description="Legacy source ticket id.")
-
-
-class DealEditRequest(BaseSchema):
-    """Request for Deal/Edit."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-    task_id: Optional[int] = PydField(default=None, ge=0, description="Task id (0 to unbind).")
-    deal_type_id: Optional[int] = PydField(default=None, ge=1, description="Deal type id.")
-    pipeline_id: Optional[int] = PydField(default=None, ge=1, description="Pipeline id.")
-    stage_id: Optional[int] = PydField(default=None, ge=1, description="Stage id.")
-    title: Optional[str] = PydField(default=None, description="Deal title.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    currency_id: Optional[int] = PydField(default=None, ge=1, description="Currency id.")
-    fields: Optional[List[FieldValueEdit]] = PydField(default=None, description="Custom field changes.")
-
-
-class DealDeleteRequest(BaseSchema):
-    """Request for Deal/Delete."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-
-
-class DealSetStageRequest(BaseSchema):
-    """Request for Deal/SetStage."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-    stage_id: int = PydField(..., ge=1, description="Stage id.")
-    comment: Optional[str] = PydField(default=None, description="Comment.")
-
-
-class DealSetResponsibleRequest(BaseSchema):
-    """Request for Deal/SetResponsible."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-    responsible_user_id: int = PydField(..., ge=1, description="Responsible user id.")
-
-
-class DealSetParticipantsRequest(BaseSchema):
-    """Request for Deal/SetParticipants."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    replace_mode: Optional[bool] = PydField(default=None, description="Replace mode.")
-
-
-class DealCloseRequest(BaseSchema):
-    """Request for Deal/Close."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Deal id.")
-    stage_id: int = PydField(..., ge=1, description="Terminal stage id.")
-
-
-class DealGetResponse(APIBaseResponse[List[Deal]]):
-    """Response for Deal/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealAddResponse(APIBaseResponse[AddResult]):
-    """Response for Deal/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealEditResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/Edit."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealDeleteResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/Delete."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealSetStageResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/SetStage."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealSetResponsibleResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/SetResponsible."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealSetParticipantsResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/SetParticipants."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DealCloseResponse(APIBaseResponse[ArrayResult]):
-    """Response for Deal/Close."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['Deal', 'DealAdd', 'DealClose', 'DealDelete', 'DealEdit', 'DealGet', 'DealRegosOffsettedArrayResult', 'DealSetParticipants', 'DealSetResponsible', 'DealSetStage']
 
 
 __all__ = [
-    "Deal",
-    "DealAddRequest",
-    "DealAddResponse",
-    "DealCloseRequest",
-    "DealCloseResponse",
-    "DealDeleteRequest",
-    "DealDeleteResponse",
-    "DealEditRequest",
-    "DealEditResponse",
-    "DealGetRequest",
-    "DealGetResponse",
-    "DealSetParticipantsRequest",
-    "DealSetParticipantsResponse",
-    "DealSetResponsibleRequest",
-    "DealSetResponsibleResponse",
-    "DealSetStageRequest",
-    "DealSetStageResponse",
+    'Deal',
+    'DealAdd',
+    'DealClose',
+    'DealDelete',
+    'DealEdit',
+    'DealGet',
+    'DealRegosOffsettedArrayResult',
+    'DealSetParticipants',
+    'DealSetResponsible',
+    'DealSetStage',
+    'DealStatusEnum',
+    'DealGetRequest',
+    'DealGetResponse',
+    'DealAddRequest',
+    'DealAddResponse',
+    'DealEditRequest',
+    'DealEditResponse',
+    'DealSetStageRequest',
+    'DealSetStageResponse',
+    'DealSetResponsibleRequest',
+    'DealSetResponsibleResponse',
+    'DealSetParticipantsRequest',
+    'DealSetParticipantsResponse',
+    'DealCloseRequest',
+    'DealCloseResponse',
+    'DealDeleteRequest',
+    'DealDeleteResponse'
 ]

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{safe_title}</title>
+  {style_block}
+</head>
+<body>
+  <main class="assistant-shell" data-mode="{safe_mode}">
+    <aside class="workspace-panel">
+      <header class="brand-row">
+        <div class="brand-mark">R</div>
+        <div>
+          <h1>REGOS Assistant</h1>
+          <div class="status-line" data-status-line>{safe_status}</div>
+        </div>
+      </header>
+
+      <section class="status-grid" aria-label="Status">
+        <div>
+          <span>Model</span>
+          <strong>{safe_model}</strong>
+        </div>
+        <div>
+          <span>Tools</span>
+          <strong>{safe_tools_count}</strong>
+        </div>
+        <div>
+          <span>Confirm TTL</span>
+          <strong>{safe_confirmation_ttl}s</strong>
+        </div>
+      </section>
+
+      <section class="connection-block">
+        <label>Connected integration</label>
+        <div class="mono-line">{safe_ci}</div>
+      </section>
+
+      <div class="error-line" data-error>{safe_error}</div>
+    </aside>
+
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div>
+          <h2>Chat</h2>
+          <span>REGOS workspace</span>
+        </div>
+        <div class="mode-badge" data-mode-badge>{safe_status}</div>
+      </header>
+
+      <div class="message-list" data-messages>
+        <article class="message assistant">
+          <div class="bubble">{safe_initial_message}</div>
+        </article>
+      </div>
+
+      <form class="composer" data-chat-form>
+        <textarea name="message" rows="2" placeholder="Напишите задачу для REGOS" {chat_disabled}></textarea>
+        <button class="send-button" type="submit" {chat_disabled}>Send</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="{safe_embed_sdk_url}"></script>
+  <script>
+    window.__REGOS_CHATGPT_ASSISTANT__ = {app_config_json};
+
+    (function () {{
+      const cfg = window.__REGOS_CHATGPT_ASSISTANT__;
+      const form = document.querySelector("[data-chat-form]");
+      const textarea = form ? form.querySelector("textarea") : null;
+      const messages = document.querySelector("[data-messages]");
+      const errorLine = document.querySelector("[data-error]");
+      const statusLine = document.querySelector("[data-status-line]");
+      const modeBadge = document.querySelector("[data-mode-badge]");
+      let embedSessionToken = "";
+      let embedAuthenticated = !cfg.embedAuthEnabled;
+
+      function appendMessage(role, text, extra) {{
+        const item = document.createElement("article");
+        item.className = "message " + role;
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.textContent = text || "";
+        item.appendChild(bubble);
+        if (extra) item.appendChild(extra);
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+        return item;
+      }}
+
+      function setBusy(isBusy) {{
+        if (!textarea) return;
+        const available = Boolean(cfg.chatEnabled && embedAuthenticated);
+        textarea.disabled = isBusy || !available;
+        const button = form.querySelector("button[type='submit']");
+        if (button) button.disabled = isBusy || !available;
+      }}
+
+      function setStatus(text) {{
+        if (statusLine) statusLine.textContent = text;
+        if (modeBadge) modeBadge.textContent = text;
+      }}
+
+      async function callIntegration(action, data) {{
+        const payloadData = Object.assign({{}}, data || {{}});
+        if (embedSessionToken) payloadData.embed_session_token = embedSessionToken;
+        const response = await fetch(cfg.apiUrl, {{
+          method: "POST",
+          headers: {{"Content-Type": "application/json"}},
+          body: JSON.stringify({{
+            action: action,
+            connected_integration_id: cfg.connectedIntegrationId,
+            data: payloadData
+          }})
+        }});
+        const payload = await response.json();
+        if (!response.ok || payload.ok === false) {{
+          const detail = payload.result && payload.result.description
+            ? payload.result.description
+            : "Request failed";
+          throw new Error(String(detail));
+        }}
+        return payload.result;
+      }}
+
+      function initEmbedAuth() {{
+        if (!cfg.embedAuthEnabled) {{
+          embedAuthenticated = true;
+          setBusy(false);
+          return;
+        }}
+        setStatus("Authorizing in REGOS");
+        if (errorLine && !errorLine.textContent.trim()) {{
+          errorLine.textContent = "Authorizing through REGOS iframe...";
+        }}
+        setBusy(false);
+
+        if (!window.RegosEmbedSDK || typeof window.RegosEmbedSDK.init !== "function") {{
+          embedAuthenticated = false;
+          setStatus("REGOS auth unavailable");
+          if (errorLine) errorLine.textContent = "REGOS Embed SDK is unavailable.";
+          setBusy(false);
+          return;
+        }}
+
+        try {{
+          window.RegosEmbedSDK.init({{
+            connectedIntegrationId: cfg.connectedIntegrationId,
+            clientId: cfg.oauthClientId,
+            backendUrl: cfg.embedBackendUrl,
+            parentOrigin: cfg.embedParentOrigin || undefined,
+            debug: false,
+            onSuccess: function (data) {{
+              const token = data && (data.embed_session_token || data.embedSessionToken);
+              if (!token) {{
+                embedAuthenticated = false;
+                setStatus("REGOS auth failed");
+                if (errorLine) errorLine.textContent = "REGOS authorization did not return a session.";
+                setBusy(false);
+                return;
+              }}
+              embedSessionToken = String(token);
+              embedAuthenticated = true;
+              setStatus("REGOS user authorized");
+              if (errorLine && cfg.chatEnabled) errorLine.textContent = "";
+              appendMessage("assistant", "Вход через REGOS выполнен. Можно писать задачу.");
+              setBusy(false);
+              if (textarea) textarea.focus();
+            }},
+            onError: function (error) {{
+              embedAuthenticated = false;
+              setStatus("REGOS auth failed");
+              if (errorLine) {{
+                errorLine.textContent = error && error.message
+                  ? error.message
+                  : "Could not authorize the iframe in REGOS.";
+              }}
+              setBusy(false);
+            }}
+          }});
+        }} catch (error) {{
+          embedAuthenticated = false;
+          setStatus("REGOS auth failed");
+          if (errorLine) errorLine.textContent = error.message || "Could not start REGOS Embed SDK.";
+          setBusy(false);
+        }}
+      }}
+
+      function confirmationControls(pending) {{
+        const controls = document.createElement("div");
+        controls.className = "confirm-row";
+        const approve = document.createElement("button");
+        approve.type = "button";
+        approve.className = "button primary";
+        approve.textContent = "Confirm";
+        const cancel = document.createElement("button");
+        cancel.type = "button";
+        cancel.className = "button secondary";
+        cancel.textContent = "Cancel";
+        controls.appendChild(approve);
+        controls.appendChild(cancel);
+
+        async function submit(approved) {{
+          approve.disabled = true;
+          cancel.disabled = true;
+          try {{
+            const result = await callIntegration("confirm_action", {{
+              confirmation_id: pending.confirmation_id,
+              approved: approved
+            }});
+            appendMessage("assistant", approved ? JSON.stringify(result.result || result, null, 2) : "Action cancelled.");
+          }} catch (error) {{
+            appendMessage("assistant", error.message || "Confirmation failed.");
+          }}
+        }}
+
+        approve.addEventListener("click", () => submit(true));
+        cancel.addEventListener("click", () => submit(false));
+        return controls;
+      }}
+
+      if (form) {{
+        form.addEventListener("submit", async function (event) {{
+          event.preventDefault();
+          const text = textarea.value.trim();
+          if (!text) return;
+          textarea.value = "";
+          appendMessage("user", text);
+          setBusy(true);
+          try {{
+            const result = await callIntegration("chat", {{message: text}});
+            if (result.status === "requires_confirmation" && result.pending_action) {{
+              appendMessage(
+                "assistant",
+                result.reply || "Confirmation required.",
+                confirmationControls(result.pending_action)
+              );
+            }} else {{
+              appendMessage("assistant", result.reply || JSON.stringify(result, null, 2));
+            }}
+          }} catch (error) {{
+            appendMessage("assistant", error.message || "Request failed.");
+          }} finally {{
+            setBusy(false);
+            textarea.focus();
+          }}
+        }});
+      }}
+
+      if (!cfg.chatEnabled && errorLine && !errorLine.textContent.trim()) {{
+        errorLine.textContent = "Server chat is disabled. Add an OpenAI API key in integration settings.";
+      }}
+      setBusy(false);
+      initEmbedAuth();
+    }})();
+  </script>
+</body>
+</html>

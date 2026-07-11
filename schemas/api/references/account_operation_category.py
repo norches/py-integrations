@@ -1,0 +1,115 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
+from __future__ import annotations
+
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
+
+from pydantic import ConfigDict, Field as PydField, RootModel
+
+from schemas.api.common.base import RegosModel
+
+
+class AccountOperationCategory(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    child_count: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    positive: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class AccountOperationCategoryAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    parent_id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    positive: bool | None = PydField(default=None)
+
+
+class AccountOperationCategoryDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class AccountOperationCategoryEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+
+
+class AccountOperationCategoryGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    parent_ids: list[int] | None = PydField(default=None)
+    child_count: int | None = PydField(default=None)
+    positive: bool | None = PydField(default=None)
+    sort_orders: list[AccountOperationCategory_SortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class AccountOperationCategoryRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[AccountOperationCategory] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class AccountOperationCategory_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: AccountOperationCategory_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class AccountOperationCategory_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+AccountOperationCategoryAddRequest: TypeAlias = AccountOperationCategoryAdd
+AccountOperationCategoryAddResponse: TypeAlias = InsertResult
+AccountOperationCategoryDeleteRequest: TypeAlias = AccountOperationCategoryDelete
+AccountOperationCategoryDeleteResponse: TypeAlias = UpdateResult
+AccountOperationCategoryEditRequest: TypeAlias = AccountOperationCategoryEdit
+AccountOperationCategoryEditResponse: TypeAlias = UpdateResult
+AccountOperationCategoryGetRequest: TypeAlias = AccountOperationCategoryGet
+AccountOperationCategoryGetResponse: TypeAlias = AccountOperationCategoryRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['AccountOperationCategory', 'AccountOperationCategoryAdd', 'AccountOperationCategoryDelete', 'AccountOperationCategoryEdit', 'AccountOperationCategoryGet', 'AccountOperationCategoryRegosOffsettedArrayResult', 'AccountOperationCategory_SortOrder']
+
+
+__all__ = [
+    'AccountOperationCategory',
+    'AccountOperationCategoryAdd',
+    'AccountOperationCategoryDelete',
+    'AccountOperationCategoryEdit',
+    'AccountOperationCategoryGet',
+    'AccountOperationCategoryRegosOffsettedArrayResult',
+    'AccountOperationCategory_SortOrder',
+    'AccountOperationCategory_SortOrderColumn',
+    'AccountOperationCategoryGetRequest',
+    'AccountOperationCategoryGetResponse',
+    'AccountOperationCategoryAddRequest',
+    'AccountOperationCategoryAddResponse',
+    'AccountOperationCategoryEditRequest',
+    'AccountOperationCategoryEditResponse',
+    'AccountOperationCategoryDeleteRequest',
+    'AccountOperationCategoryDeleteResponse'
+]

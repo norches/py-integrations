@@ -1,192 +1,209 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator, model_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
+from schemas.api.common.base import RegosModel
+
+
+class DocContract(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    partner: Partner | None = PydField(default=None)
+    firm: Firm | None = PydField(default=None)
+    direction: ContractDirection | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency: Currency | None = PydField(default=None)
+    details: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    attached_user: User | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class DocContractAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    direction: ContractDirection | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    details: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+
+
+class DocContractColumn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: DocContractColumns | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class DocContractColumns(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+
+
+class DocContractDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DocContractDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DocContractEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    direction: ContractDirection | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    details: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+
+
+class DocContractGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    direction: ContractDirection | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None)
+    firm_ids: list[int] | None = PydField(default=None)
+    partner_ids: list[int] | None = PydField(default=None)
+    attached_user_ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    sort_orders: list[DocContractColumn] | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class DocContractRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[DocContract] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class DocContractShort(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    partner_name: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    direction: ContractDirection | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    details: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class DocContractShortRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[DocContractShort] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, ContractDirection, Error, InsertResult, UpdateResult
 from schemas.api.rbac.user import User
 from schemas.api.references.currency import Currency
 from schemas.api.references.firm import Firm
 from schemas.api.references.partner import Partner
 
 
-class ContractDirection(str, Enum):
-    """Contract direction."""
-
-    All = "All"
-    Income = "Income"
-    Outcome = "Outcome"
-
-
-def _normalize_contract_direction(value):
-    if isinstance(value, ContractDirection) or value is None:
-        return value
-    if isinstance(value, int):
-        return {0: ContractDirection.All, 1: ContractDirection.Income, 2: ContractDirection.Outcome}.get(value, value)
-    if isinstance(value, str):
-        normalized = value.strip()
-        for item in ContractDirection:
-            if item.value.lower() == normalized.lower():
-                return item
-    return value
+ContractDirection: TypeAlias = ContractDirection
+DocContractAddRequest: TypeAlias = DocContractAdd
+DocContractAddResponse: TypeAlias = InsertResult
+DocContractDeleteMarkRequest: TypeAlias = DocContractDeleteMark
+DocContractDeleteMarkResponse: TypeAlias = UpdateResult
+DocContractDeleteRequest: TypeAlias = DocContractDelete
+DocContractDeleteResponse: TypeAlias = UpdateResult
+DocContractEditRequest: TypeAlias = DocContractEdit
+DocContractEditResponse: TypeAlias = UpdateResult
+DocContractGetRequest: TypeAlias = DocContractGet
+DocContractGetResponse: TypeAlias = DocContractRegosOffsettedArrayResult
+DocContractGetShortRequest: TypeAlias = DocContractGet
+DocContractGetShortResponse: TypeAlias = DocContractShortRegosOffsettedArrayResult
 
 
-class DocContract(BaseSchema):
-    """Contract read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="Contract id.")
-    code: Optional[str] = PydField(default=None, description="Contract code.")
-    name: Optional[str] = PydField(default=None, description="Contract name.")
-    date: Optional[int] = PydField(default=None, ge=0, description="Contract date.")
-    start_date: Optional[int] = PydField(default=None, ge=0, description="Start date.")
-    end_date: Optional[int] = PydField(default=None, ge=0, description="End date.")
-    partner: Optional[Partner] = PydField(default=None, description="Partner.")
-    firm: Optional[Firm] = PydField(default=None, description="Firm.")
-    direction: Optional[ContractDirection] = PydField(default=None, description="Direction.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    currency: Optional[Currency] = PydField(default=None, description="Currency.")
-    details: Optional[str] = PydField(default=None, description="Details.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    attached_user: Optional[User] = PydField(default=None, description="Attached user.")
-    active: Optional[bool] = PydField(default=None, description="Active flag.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update.")
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_direction(cls, value):
-        return _normalize_contract_direction(value)
-
-
-class DocContractShort(BaseSchema):
-    """Short contract read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="Contract id.")
-    code: Optional[str] = PydField(default=None, description="Contract code.")
-    name: Optional[str] = PydField(default=None, description="Contract name.")
-    date: Optional[int] = PydField(default=None, ge=0, description="Contract date.")
-    start_date: Optional[int] = PydField(default=None, ge=0, description="Start date.")
-    end_date: Optional[int] = PydField(default=None, ge=0, description="End date.")
-    partner_id: Optional[int] = PydField(default=None, ge=1, description="Partner id.")
-    partner_name: Optional[str] = PydField(default=None, description="Partner name.")
-    firm_id: Optional[int] = PydField(default=None, ge=1, description="Firm id.")
-    direction: Optional[ContractDirection] = PydField(default=None, description="Direction.")
-    currency_id: Optional[int] = PydField(default=None, ge=1, description="Currency id.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    details: Optional[str] = PydField(default=None, description="Details.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    attached_user_id: Optional[int] = PydField(default=None, ge=1, description="Attached user id.")
-    active: Optional[bool] = PydField(default=None, description="Active flag.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update.")
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_direction(cls, value):
-        return _normalize_contract_direction(value)
-
-
-class DocContractGetRequest(BaseSchema):
-    """Request for DocContract/Get and DocContract/GetShort."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    direction: Optional[ContractDirection] = PydField(default=None, description="Direction.")
-    start_date: Optional[int] = PydField(default=None, ge=0, description="Start date.")
-    end_date: Optional[int] = PydField(default=None, ge=0, description="End date.")
-    ids: Optional[List[int]] = PydField(default=None, description="Contract ids.")
-    firm_ids: Optional[List[int]] = PydField(default=None, description="Firm ids.")
-    partner_ids: Optional[List[int]] = PydField(default=None, description="Partner ids.")
-    attached_user_ids: Optional[List[int]] = PydField(default=None, description="Attached user ids.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    sort_orders: Optional[SortOrders] = PydField(default=None, description="Sort orders.")
-    active: Optional[bool] = PydField(default=None, description="Active flag.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    limit: Optional[int] = PydField(default=None, ge=1, le=10000, description="Limit.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Offset.")
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_direction(cls, value):
-        return _normalize_contract_direction(value)
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-    @model_validator(mode="after")
-    def _validate_dates(self):
-        if self.start_date and self.end_date and self.end_date < self.start_date:
-            raise ValueError("end_date cannot be less than start_date")
-        return self
-
-
-class DocContractAddRequest(BaseSchema):
-    """Request for DocContract/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    code: str = PydField(..., min_length=1, description="Contract code.")
-    date: int = PydField(..., ge=0, description="Contract date.")
-    direction: ContractDirection = PydField(..., description="Direction.")
-    name: str = PydField(..., min_length=1, description="Contract name.")
-    firm_id: int = PydField(..., ge=1, description="Firm id.")
-    partner_id: int = PydField(..., ge=1, description="Partner id.")
-    amount: Decimal = PydField(..., description="Amount.")
-    currency_id: int = PydField(..., ge=1, description="Currency id.")
-    start_date: int = PydField(..., ge=0, description="Start date.")
-    end_date: int = PydField(..., ge=0, description="End date.")
-    details: str = PydField(..., min_length=1, description="Details.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    attached_user_id: Optional[int] = PydField(default=None, ge=1, description="Attached user id.")
-    active: Optional[bool] = PydField(default=None, description="Active flag.")
-
-    @field_validator("direction", mode="before")
-    @classmethod
-    def _normalize_direction(cls, value):
-        return _normalize_contract_direction(value)
-
-    @model_validator(mode="after")
-    def _validate_dates(self):
-        if self.end_date < self.start_date:
-            raise ValueError("end_date cannot be less than start_date")
-        return self
-
-
-class DocContractGetResponse(APIBaseResponse[List[DocContract]]):
-    """Response for DocContract/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DocContractGetShortResponse(APIBaseResponse[List[DocContractShort]]):
-    """Response for DocContract/GetShort."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DocContractAddResponse(APIBaseResponse[AddResult]):
-    """Response for DocContract/Add."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['DocContract', 'DocContractAdd', 'DocContractColumn', 'DocContractDelete', 'DocContractDeleteMark', 'DocContractEdit', 'DocContractGet', 'DocContractRegosOffsettedArrayResult', 'DocContractShort', 'DocContractShortRegosOffsettedArrayResult']
 
 
 __all__ = [
-    "ContractDirection",
-    "DocContract",
-    "DocContractAddRequest",
-    "DocContractAddResponse",
-    "DocContractGetRequest",
-    "DocContractGetResponse",
-    "DocContractGetShortResponse",
-    "DocContractShort",
+    'DocContract',
+    'DocContractAdd',
+    'DocContractColumn',
+    'DocContractColumns',
+    'DocContractDelete',
+    'DocContractDeleteMark',
+    'DocContractEdit',
+    'DocContractGet',
+    'DocContractRegosOffsettedArrayResult',
+    'DocContractShort',
+    'DocContractShortRegosOffsettedArrayResult',
+    'DocContractGetRequest',
+    'DocContractGetResponse',
+    'DocContractGetShortRequest',
+    'DocContractGetShortResponse',
+    'DocContractAddRequest',
+    'DocContractAddResponse',
+    'DocContractEditRequest',
+    'DocContractEditResponse',
+    'DocContractDeleteMarkRequest',
+    'DocContractDeleteMarkResponse',
+    'DocContractDeleteRequest',
+    'DocContractDeleteResponse',
+    'ContractDirection'
 ]

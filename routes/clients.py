@@ -32,6 +32,7 @@ from clients.instagram_crm_channel.main import InstagramCrmChannelIntegration
 from clients.meta_leadgen_crm_channel.main import MetaLeadgenCrmChannelIntegration
 from clients.external_chat_crm_channel.main import ExternalChatCrmChannelIntegration
 from clients.gpt_crm_chat_assistant.main import GptCrmChatAssistantIntegration
+from clients.chatgpt_regos_assistant.main import ChatGptRegosAssistantIntegration
 from clients.tsd.main import TsdIntegration
 from clients.marketplace_yandex_eats.main import YandexEatsIntegration
 from clients.marketplace_uzum_tezkor.main import UzumTezkorIntegration
@@ -61,6 +62,7 @@ INTEGRATION_CLASSES = {
     "meta_leadgen_crm_channel": MetaLeadgenCrmChannelIntegration,
     "external_chat_crm_channel": ExternalChatCrmChannelIntegration,
     "gpt_crm_chat_assistant": GptCrmChatAssistantIntegration,
+    "chatgpt_regos_assistant": ChatGptRegosAssistantIntegration,
     "tsd": TsdIntegration,
     "marketplace_yandex_eats": YandexEatsIntegration,
     "marketplace_uzum_tezkor": UzumTezkorIntegration,

@@ -1,16 +1,121 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
-from typing import Optional
-from pydantic import BaseModel
+
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
+
+from pydantic import ConfigDict, Field as PydField, RootModel
+
+from schemas.api.common.base import RegosModel
 
 
-class Unit(BaseModel):
-    """
-    Модель, описывающая единицы измерения.
-    """
+class Unit(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    type: UnitType | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    kkm_code: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
-    id: int  # ID единицы измерения
-    name: Optional[str] = None  # Наименование единицы измерения
-    type: Optional[str] = None  # Тип единицы измерения
-    description: Optional[str] = None  # Описание единицы измерения
-    kkm_code: Optional[int] = None  # ККМ код единицы измерения
-    last_update: int  # Дата последнего изменения (unixtime, сек)
+
+class UnitAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    type: UnitType | None = PydField(default=None)
+    kkm_code: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class UnitDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class UnitEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    type: UnitType | None = PydField(default=None)
+    kkm_code: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class UnitGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    type: UnitType | None = PydField(default=None)
+    sort_orders: list[UnitSortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class UnitRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Unit] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class UnitSortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: UnitSortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class UnitSortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+
+
+class UnitType(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+UnitAddRequest: TypeAlias = UnitAdd
+UnitAddResponse: TypeAlias = InsertResult
+UnitDeleteRequest: TypeAlias = UnitDelete
+UnitDeleteResponse: TypeAlias = UpdateResult
+UnitEditRequest: TypeAlias = UnitEdit
+UnitEditResponse: TypeAlias = UpdateResult
+UnitGetRequest: TypeAlias = UnitGet
+UnitGetResponse: TypeAlias = UnitRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['Unit', 'UnitAdd', 'UnitDelete', 'UnitEdit', 'UnitGet', 'UnitRegosOffsettedArrayResult', 'UnitSortOrder']
+
+
+__all__ = [
+    'Unit',
+    'UnitAdd',
+    'UnitDelete',
+    'UnitEdit',
+    'UnitGet',
+    'UnitRegosOffsettedArrayResult',
+    'UnitSortOrder',
+    'UnitSortOrderColumn',
+    'UnitType',
+    'UnitGetRequest',
+    'UnitGetResponse',
+    'UnitAddRequest',
+    'UnitAddResponse',
+    'UnitEditRequest',
+    'UnitEditResponse',
+    'UnitDeleteRequest',
+    'UnitDeleteResponse'
+]

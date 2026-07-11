@@ -1,97 +1,103 @@
-"""Схемы справочника брендов."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class Brand(BaseSchema):
-    """Рид-модель бренда."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID бренда.")
-    name: Optional[str] = PydField(default=None, description="Наименование бренда.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime)."
-    )
+from schemas.api.common.base import RegosModel
 
 
-class BrandGetRequest(BaseSchema):
-    """Параметры выборки брендов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по списку идентификаторов брендов."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Правила сортировки результата."
-    )
-    search: Optional[str] = PydField(
-        default=None, description="Поиск по названию бренда."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выборке (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class Brand(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class BrandAddRequest(BaseSchema):
-    """Создание нового бренда."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    name: str = PydField(..., min_length=1, description="Наименование бренда.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class BrandAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
 
 
-class BrandEditRequest(BaseSchema):
-    """Обновление существующего бренда."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID бренда.")
-    name: str = PydField(..., min_length=1, description="Новое название бренда.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class BrandDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class BrandDeleteRequest(BaseSchema):
-    """Удаление бренда."""
+class BrandEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    id: int = PydField(..., ge=1, description="ID бренда.")
+class BrandGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    sort_orders: list[BrandSortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class BrandRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Brand] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class BrandSortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: BrandSortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class BrandSortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+BrandAddRequest: TypeAlias = BrandAdd
+BrandAddResponse: TypeAlias = InsertResult
+BrandDeleteRequest: TypeAlias = BrandDelete
+BrandDeleteResponse: TypeAlias = UpdateResult
+BrandEditRequest: TypeAlias = BrandEdit
+BrandEditResponse: TypeAlias = UpdateResult
+BrandGetRequest: TypeAlias = BrandGet
+BrandGetResponse: TypeAlias = BrandRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['Brand', 'BrandAdd', 'BrandDelete', 'BrandEdit', 'BrandGet', 'BrandRegosOffsettedArrayResult', 'BrandSortOrder']
 
 
 __all__ = [
-    "Brand",
-    "BrandAddRequest",
-    "BrandDeleteRequest",
-    "BrandEditRequest",
-    "BrandGetRequest",
+    'Brand',
+    'BrandAdd',
+    'BrandDelete',
+    'BrandEdit',
+    'BrandGet',
+    'BrandRegosOffsettedArrayResult',
+    'BrandSortOrder',
+    'BrandSortOrderColumn',
+    'BrandGetRequest',
+    'BrandGetResponse',
+    'BrandAddRequest',
+    'BrandAddResponse',
+    'BrandEditRequest',
+    'BrandEditResponse',
+    'BrandDeleteRequest',
+    'BrandDeleteResponse'
 ]

@@ -1,237 +1,259 @@
-"""Schemas for CRM ticket endpoints."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, ArrayResult, BaseSchema
-from schemas.api.common.filters import Filter
+from schemas.api.common.base import RegosModel
+
+
+class Ticket(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    client_id: int | None = PydField(default=None)
+    client: Client | None = PydField(default=None)
+    channel_id: int | None = PydField(default=None)
+    direction: TicketDirectionEnum | None = PydField(default=None)
+    external_dialog_id: str | None = PydField(default=None)
+    subject: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMention] | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    status: TicketStatusEnum | None = PydField(default=None)
+    first_response_date: int | None = PydField(default=None)
+    first_response_due_date: int | None = PydField(default=None)
+    resolve_due_date: int | None = PydField(default=None)
+    sla_breached: bool | None = PydField(default=None)
+    sla_breached_date: int | None = PydField(default=None)
+    resolved_date: int | None = PydField(default=None)
+    missed: bool | None = PydField(default=None)
+    rating: int | None = PydField(default=None)
+    rating_comment: str | None = PydField(default=None)
+    client_sentiment_score: int | None = PydField(default=None)
+    client_sentiment_comment: str | None = PydField(default=None)
+    client_sentiment_user_id: int | None = PydField(default=None)
+    client_sentiment_date: int | None = PydField(default=None)
+    chat_id: str | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
+    created_user_id: int | None = PydField(default=None)
+    created_date: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class TicketAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    client_id: int | None = PydField(default=None)
+    channel_id: int | None = PydField(default=None)
+    direction: TicketDirectionEnum | None = PydField(default=None)
+    external_dialog_id: str | None = PydField(default=None)
+    subject: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
+
+
+class TicketClose(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    resolved_date: int | None = PydField(default=None)
+
+
+class TicketDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class TicketDirectionEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+
+
+class TicketEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    direction: TicketDirectionEnum | None = PydField(default=None)
+    subject: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
+    mention_options: CommonMentionOptions | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
+
+
+class TicketGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    client_ids: list[int] | None = PydField(default=None)
+    channel_ids: list[int] | None = PydField(default=None)
+    external_dialog_id: str | None = PydField(default=None)
+    responsible_user_ids: list[int] | None = PydField(default=None)
+    statuses: list[TicketStatusEnum] | None = PydField(default=None)
+    direction: TicketDirectionEnum | None = PydField(default=None)
+    from_date: int | None = PydField(default=None)
+    to_date: int | None = PydField(default=None)
+    include_mentions: bool | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    sort_orders: list[TicketSortColumn] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class TicketRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Ticket] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class TicketSetClientSentiment(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    sentiment_score: int | None = PydField(default=None)
+    sentiment_comment: str | None = PydField(default=None)
+
+
+class TicketSetParticipants(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    participant_user_ids: list[int] | None = PydField(default=None)
+    replace_mode: bool | None = PydField(default=None)
+
+
+class TicketSetRating(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    rating: int | None = PydField(default=None)
+    rating_comment: str | None = PydField(default=None)
+
+
+class TicketSetResponsible(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    responsible_user_id: int | None = PydField(default=None)
+
+
+class TicketSetStatus(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    status: TicketStatusEnum | None = PydField(default=None)
+
+
+class TicketSortColumn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: TicketSortOrderColumnsEnum | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class TicketSortOrderColumnsEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+    VALUE_12 = 12
+    VALUE_13 = 13
+    VALUE_14 = 14
+    VALUE_15 = 15
+    VALUE_16 = 16
+    VALUE_17 = 17
+    VALUE_18 = 18
+    VALUE_19 = 19
+
+
+class TicketStatusEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, CommonMention, CommonMentionInput, CommonMentionOptions, Error, InsertResult, UpdateResult
+from schemas.api.common.filter import Filter
 from schemas.api.crm.client import Client
-from schemas.api.references.fields import FieldValue, FieldValueAdd, FieldValueEdit
-
-
-class TicketDirectionEnum(str, Enum):
-    Inbound = "Inbound"
-    Outbound = "Outbound"
-
-
-class TicketStatusEnum(str, Enum):
-    Open = "Open"
-    Closed = "Closed"
-    WaitingClient = "WaitingClient"
-    WaitingStaff = "WaitingStaff"
-
-
-class Ticket(BaseSchema):
-    """CRM ticket read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, description="Ticket id.")
-    client_id: Optional[int] = PydField(default=None, description="Client id.")
-    client: Optional[Client] = PydField(default=None, description="Client payload.")
-    channel_id: Optional[int] = PydField(default=None, description="Channel id.")
-    direction: Optional[TicketDirectionEnum] = PydField(default=None, description="Ticket direction.")
-    external_dialog_id: Optional[str] = PydField(default=None, description="External dialog id.")
-    subject: Optional[str] = PydField(default=None, description="Subject.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    responsible_user_id: Optional[int] = PydField(default=None, description="Responsible user id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    status: Optional[TicketStatusEnum] = PydField(default=None, description="Status.")
-    first_response_date: Optional[int] = PydField(default=None, description="First response unix time.")
-    first_response_due_date: Optional[int] = PydField(default=None, description="First response due unix time.")
-    resolve_due_date: Optional[int] = PydField(default=None, description="Resolve due unix time.")
-    sla_breached: Optional[bool] = PydField(default=None, description="SLA breached.")
-    sla_breached_date: Optional[int] = PydField(default=None, description="SLA breached unix time.")
-    resolved_date: Optional[int] = PydField(default=None, description="Resolved unix time.")
-    rating: Optional[int] = PydField(default=None, description="Rating.")
-    rating_comment: Optional[str] = PydField(default=None, description="Rating comment.")
-    chat_id: Optional[str] = PydField(default=None, description="Related chat UUID.")
-    fields: Optional[List[FieldValue]] = PydField(default=None, description="Custom fields.")
-    created_user_id: Optional[int] = PydField(default=None, description="Created user id.")
-    created_date: Optional[int] = PydField(default=None, description="Created unix time.")
-    last_update: Optional[int] = PydField(default=None, description="Last update unix time.")
-
-
-class TicketGetRequest(BaseSchema):
-    """Request for Ticket/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(default=None, description="Ticket ids.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    client_ids: Optional[List[int]] = PydField(default=None, description="Client ids.")
-    channel_ids: Optional[List[int]] = PydField(default=None, description="Channel ids.")
-    external_dialog_id: Optional[str] = PydField(default=None, description="External dialog id.")
-    responsible_user_ids: Optional[List[int]] = PydField(default=None, description="Responsible user ids.")
-    statuses: Optional[List[TicketStatusEnum]] = PydField(default=None, description="Ticket statuses.")
-    from_date: Optional[int] = PydField(default=None, description="From unix time.")
-    to_date: Optional[int] = PydField(default=None, description="To unix time.")
-    filters: Optional[List[Filter]] = PydField(default=None, description="Additional filters.")
-    limit: Optional[int] = PydField(default=None, ge=1, description="Page size.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Page offset.")
-
-
-class TicketAddRequest(BaseSchema):
-    """Request for Ticket/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    client_id: int = PydField(..., ge=1, description="Client id.")
-    channel_id: int = PydField(..., ge=1, description="Channel id.")
-    direction: Optional[TicketDirectionEnum] = PydField(default=None, description="Ticket direction.")
-    external_dialog_id: Optional[str] = PydField(default=None, description="External dialog id.")
-    subject: Optional[str] = PydField(default=None, description="Subject.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    responsible_user_id: Optional[int] = PydField(default=None, ge=1, description="Responsible user id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    fields: Optional[List[FieldValueAdd]] = PydField(default=None, description="Custom field values.")
-
-
-class TicketEditRequest(BaseSchema):
-    """Request for Ticket/Edit."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    direction: Optional[TicketDirectionEnum] = PydField(default=None, description="Ticket direction.")
-    subject: Optional[str] = PydField(default=None, description="Subject.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    fields: Optional[List[FieldValueEdit]] = PydField(default=None, description="Custom field changes.")
-
-
-class TicketDeleteRequest(BaseSchema):
-    """Request for Ticket/Delete."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-
-
-class TicketSetResponsibleRequest(BaseSchema):
-    """Request for Ticket/SetResponsible."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    responsible_user_id: int = PydField(..., ge=1, description="Responsible user id.")
-
-
-class TicketSetParticipantsRequest(BaseSchema):
-    """Request for Ticket/SetParticipants."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    participant_user_ids: Optional[List[int]] = PydField(default=None, description="Participant user ids.")
-    replace_mode: Optional[bool] = PydField(default=None, description="Replace mode.")
-
-
-class TicketSetStatusRequest(BaseSchema):
-    """Request for Ticket/SetStatus."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    status: TicketStatusEnum = PydField(..., description="Ticket status.")
-
-
-class TicketSetRatingRequest(BaseSchema):
-    """Request for Ticket/SetRating."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    rating: int = PydField(..., ge=1, le=5, description="Ticket rating.")
-    rating_comment: Optional[str] = PydField(default=None, description="Ticket rating comment.")
-
-
-class TicketCloseRequest(BaseSchema):
-    """Request for Ticket/Close."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="Ticket id.")
-    resolved_date: Optional[int] = PydField(default=None, description="Resolved unix time.")
-
-
-class TicketGetResponse(APIBaseResponse[List[Ticket]]):
-    """Response for Ticket/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketAddResponse(APIBaseResponse[AddResult]):
-    """Response for Ticket/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketEditResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/Edit."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketDeleteResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/Delete."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketSetResponsibleResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/SetResponsible."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketSetParticipantsResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/SetParticipants."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketSetStatusResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/SetStatus."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketSetRatingResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/SetRating."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class TicketCloseResponse(APIBaseResponse[ArrayResult]):
-    """Response for Ticket/Close."""
-
-    model_config = ConfigDict(extra="ignore")
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
+
+
+TicketAddRequest: TypeAlias = TicketAdd
+TicketAddResponse: TypeAlias = InsertResult
+TicketCloseRequest: TypeAlias = TicketClose
+TicketCloseResponse: TypeAlias = UpdateResult
+TicketDeleteRequest: TypeAlias = TicketDelete
+TicketDeleteResponse: TypeAlias = UpdateResult
+TicketEditRequest: TypeAlias = TicketEdit
+TicketEditResponse: TypeAlias = UpdateResult
+TicketGetRequest: TypeAlias = TicketGet
+TicketGetResponse: TypeAlias = TicketRegosOffsettedArrayResult
+TicketSetClientSentimentRequest: TypeAlias = TicketSetClientSentiment
+TicketSetClientSentimentResponse: TypeAlias = UpdateResult
+TicketSetParticipantsRequest: TypeAlias = TicketSetParticipants
+TicketSetParticipantsResponse: TypeAlias = UpdateResult
+TicketSetRatingRequest: TypeAlias = TicketSetRating
+TicketSetRatingResponse: TypeAlias = UpdateResult
+TicketSetResponsibleRequest: TypeAlias = TicketSetResponsible
+TicketSetResponsibleResponse: TypeAlias = UpdateResult
+TicketSetStatusRequest: TypeAlias = TicketSetStatus
+TicketSetStatusResponse: TypeAlias = UpdateResult
+
+
+_MODEL_NAMES = ['Ticket', 'TicketAdd', 'TicketClose', 'TicketDelete', 'TicketEdit', 'TicketGet', 'TicketRegosOffsettedArrayResult', 'TicketSetClientSentiment', 'TicketSetParticipants', 'TicketSetRating', 'TicketSetResponsible', 'TicketSetStatus', 'TicketSortColumn']
 
 
 __all__ = [
-    "Ticket",
-    "TicketAddRequest",
-    "TicketAddResponse",
-    "TicketCloseRequest",
-    "TicketCloseResponse",
-    "TicketDeleteRequest",
-    "TicketDeleteResponse",
-    "TicketDirectionEnum",
-    "TicketEditRequest",
-    "TicketEditResponse",
-    "TicketGetRequest",
-    "TicketGetResponse",
-    "TicketSetParticipantsRequest",
-    "TicketSetParticipantsResponse",
-    "TicketSetRatingRequest",
-    "TicketSetRatingResponse",
-    "TicketSetResponsibleRequest",
-    "TicketSetResponsibleResponse",
-    "TicketSetStatusRequest",
-    "TicketSetStatusResponse",
-    "TicketStatusEnum",
+    'Ticket',
+    'TicketAdd',
+    'TicketClose',
+    'TicketDelete',
+    'TicketDirectionEnum',
+    'TicketEdit',
+    'TicketGet',
+    'TicketRegosOffsettedArrayResult',
+    'TicketSetClientSentiment',
+    'TicketSetParticipants',
+    'TicketSetRating',
+    'TicketSetResponsible',
+    'TicketSetStatus',
+    'TicketSortColumn',
+    'TicketSortOrderColumnsEnum',
+    'TicketStatusEnum',
+    'TicketGetRequest',
+    'TicketGetResponse',
+    'TicketAddRequest',
+    'TicketAddResponse',
+    'TicketEditRequest',
+    'TicketEditResponse',
+    'TicketSetResponsibleRequest',
+    'TicketSetResponsibleResponse',
+    'TicketSetParticipantsRequest',
+    'TicketSetParticipantsResponse',
+    'TicketSetStatusRequest',
+    'TicketSetStatusResponse',
+    'TicketSetRatingRequest',
+    'TicketSetRatingResponse',
+    'TicketSetClientSentimentRequest',
+    'TicketSetClientSentimentResponse',
+    'TicketCloseRequest',
+    'TicketCloseResponse',
+    'TicketDeleteRequest',
+    'TicketDeleteResponse'
 ]

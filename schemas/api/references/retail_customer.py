@@ -1,323 +1,336 @@
-# schemas/api/references/retail_customer.py
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import Any, List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import Field as PydField, EmailStr, field_validator
-from pydantic.config import ConfigDict
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, BaseSchema
-from schemas.api.common.filters import Filters
-from schemas.api.common.sort_orders import SortOrders
-from schemas.api.references.fields import FieldValueAdds, FieldValueEdits, FieldValues
+from schemas.api.common.base import RegosModel
+
+
+class RetailCustomer(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    refer_id: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    region: Region | None = PydField(default=None)
+    group: RetailCustomerGroup | None = PydField(default=None)
+    full_name: str | None = PydField(default=None)
+    last_purchase: int | None = PydField(default=None)
+    debt: _Decimal | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class RetailCustomerAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    refer_id: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    region_id: int | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
+
+
+class RetailCustomerDebtAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    uuid: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    paid: _Decimal | None = PydField(default=None)
+
+
+class RetailCustomerDebtPayment(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    payment_uuid: str | None = PydField(default=None)
+    debt_uuid: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class RetailCustomerDebtPaymentAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    debt_uuid: str | None = PydField(default=None)
+    payment_uuid: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+
+
+class RetailCustomerDebtPaymentRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCustomerDebtPayment] | Error | None = PydField(default=None)
+
+
+class RetailCustomerDebtPaymentsdGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None)
+
+
+class RetailCustomerDebtRecord(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    uuid: str | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    payments_amount: _Decimal | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class RetailCustomerDebtRecordGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None)
+    uuids: list[str] | None = PydField(default=None)
+    is_debts: bool | None = PydField(default=None)
+
+
+class RetailCustomerDebtRecordRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCustomerDebtRecord] | Error | None = PydField(default=None)
+
+
+class RetailCustomerDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class RetailCustomerDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class RetailCustomerEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    refer_id: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    region_id: int | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
+
+
+class RetailCustomerGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    region_ids: list[int] | None = PydField(default=None)
+    refer_ids: list[int] | None = PydField(default=None)
+    gender: SexEnum | None = PydField(default=None)
+    sort_orders: list[RetailCustomer_SortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class RetailCustomerItemPurchases(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    item: Item | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    amount2: _Decimal | None = PydField(default=None)
+
+
+class RetailCustomerItemPurchasesArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCustomerItemPurchases] | Error | None = PydField(default=None)
+
+
+class RetailCustomerPurchaseInfo(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    favoritePurchases: list[RetailCustomerItemPurchases] | None = PydField(default=None)
+    avgChequeAmount: _Decimal | None = PydField(default=None)
+    chequeQuantity: int | None = PydField(default=None)
+    lastPurchaseDate: int | None = PydField(default=None)
+    saleChequeQuantity: int | None = PydField(default=None)
+    returnChequeQuantity: int | None = PydField(default=None)
+
+
+class RetailCustomerPurchaseInfoRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: RetailCustomerPurchaseInfo | Error | None = PydField(default=None)
+
+
+class RetailCustomerPurchaseInfoRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    stock_id: int | None = PydField(default=None)
+
+
+class RetailCustomerPurchaseRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    operating_cash_id: int | None = PydField(default=None)
+    price_type_id: int | None = PydField(default=None)
+
+
+class RetailCustomerRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCustomer] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class RetailCustomer_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: RetailCustomer_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class RetailCustomer_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+    VALUE_12 = 12
+    VALUE_13 = 13
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, DecimalRegosObjectResult, Error, InsertResult, Int64RegosObjectResult, SexEnum, UpdateResult
+from schemas.api.common.filter import Filter
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
+from schemas.api.references.item import Item
 from schemas.api.references.region import Region
 from schemas.api.references.retail_customer_group import RetailCustomerGroup
 
 
-# ---------- Вспомогательные модели ----------
-
-
-class Sex(str, Enum):
-    """
-    Пол покупателя:
-      - non    — Не указан
-      - male   — Мужской
-      - female — Женский
-    """
-
-    non = "non"
-    male = "male"
-    female = "female"
-
-
-# ---------- Основная модель ----------
-
-
-class RetailCustomer(BaseSchema):
-    """
-    Покупатель (физ. лицо розницы).
-    """
-
-    # Настраиваем приём лишних полей на чтении мягко (если нужно — можно запретить)
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID покупателя.")
-    region: Optional[Region] = PydField(None, description="Регион проживания (Region).")
-    group: RetailCustomerGroup = PydField(
-        ..., description="Группа покупателя (RetailCustomerGroup)."
-    )
-
-    last_purchase: Optional[int] = PydField(
-        None, description="ID последней покупки (если ведётся)."
-    )
-    debt: Optional[Decimal] = PydField(None, description="Долг покупателя.")
-
-    # Персональные данные
-    first_name: Optional[str] = PydField(None, description="Имя.")
-    last_name: Optional[str] = PydField(None, description="Фамилия.")
-    middle_name: Optional[str] = PydField(None, description="Отчество.")
-    full_name: Optional[str] = PydField(None, description="Полное ФИО.")
-    sex: Sex = PydField(Sex.non, description="Пол: non|male|female.")
-    date_of_birth: Optional[str] = PydField(
-        None, description="Дата рождения (строка, напр. YYYY-MM-DD)."
-    )
-
-    # Контакты и адрес
-    address: Optional[str] = PydField(None, description="Адрес.")
-    main_phone: Optional[str] = PydField(None, description="Основной телефон.")
-    phones: Optional[str] = PydField(
-        None, description="Доп. телефоны (свободный формат)."
-    )
-    email: Optional[str] = PydField(None, description="E-mail.")
-
-    # Реферальная информация
-    refer_id: Optional[int] = PydField(None, description="ID реферального покупателя.")
-
-    # Доп. поля и заметки
-    fields: Optional[FieldValues] = PydField(
-        None, description="Массив значений доп. полей (FieldValue[])."
-    )
-    description: Optional[str] = PydField(None, description="Примечание/заметка.")
-
-    # Служебные флаги и метаданные
-    deleted_mark: bool = PydField(..., description="Метка удаления: true/false.")
-    last_update: int = PydField(
-        ..., description="Unix time (сек) последнего изменения."
-    )
-
-    # легкая нормализация пробелов на чтении
-    @field_validator(
-        "first_name",
-        "last_name",
-        "middle_name",
-        "full_name",
-        "address",
-        "main_phone",
-        "phones",
-        "email",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-    @field_validator("sex", mode="before")
-    @classmethod
-    def _normalize_sex(cls, v):
-        if v is None or isinstance(v, Sex):
-            return v
-        if isinstance(v, str):
-            s = v.strip().lower()
-            if s == "none":
-                return Sex.non
-            if s in {"male", "female"}:
-                return Sex(s)
-        raise ValueError("sex должен быть одним из: none | male | female")
-
-
-# ---------- Get ----------
-
-
-class RetailCustomerGetRequest(BaseSchema):
-    # запретим опечатки во входе
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = None
-    group_ids: Optional[List[int]] = None
-    region_ids: Optional[List[int]] = None
-    refer_ids: Optional[List[int]] = None
-
-    sex: Optional[Sex] = None
-
-    sort_orders: Optional[SortOrders] = None
-    filters: Optional[Filters] = None
-
-    search: Optional[str] = None
-    main_phone: Optional[str] = None
-    limit: Optional[int] = None
-    offset: Optional[int] = None
-
-
-class RetailCustomerGetResponse(
-    APIBaseResponse[List[RetailCustomer] | dict[str, Any]]
-):
-    """Response model for RetailCustomer/Get."""
-
-
-# ---------- Add Response ----------
-
-
-class RetailCustomerAddResponse(APIBaseResponse[AddResult | dict[str, Any]]):
-    """Response model for RetailCustomer/Add."""
-
-
-# ---------- Add ----------
-
-
-class RetailCustomerAddRequest(BaseSchema):
-    """
-    Параметры для /v1/RetailCustomer/Add
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    group_id: int = PydField(..., ge=1, description="ID группы покупателя.")
-    region_id: Optional[int] = PydField(
-        None, ge=1, description="ID региона (опционально)."
-    )
-
-    first_name: str = PydField(..., description="Имя.")
-    last_name: Optional[str] = PydField(None, description="Фамилия.")
-    middle_name: Optional[str] = PydField(None, description="Отчество.")
-    full_name: Optional[str] = PydField(None, description="Полное ФИО.")
-
-    # только non|male|female
-    sex: Optional[Sex] = PydField(None, description="Пол: non|male|female.")
-    date_of_birth: Optional[str] = PydField(
-        None, description="Дата рождения (строка, напр. YYYY-MM-DD)."
-    )
-
-    address: Optional[str] = PydField(None, description="Адрес.")
-    main_phone: Optional[str] = PydField(None, description="Основной телефон.")
-    phones: Optional[str] = PydField(None, description="Доп. телефоны.")
-    # Строже на вход в Add/Edit, при чтении в модели — обычная строка
-    email: Optional[EmailStr] = PydField(None, description="E-mail.")
-
-    refer_id: Optional[int] = PydField(None, ge=1, description="ID реферала.")
-    description: Optional[str] = PydField(None, description="Примечание.")
-
-    fields: Optional[FieldValueAdds] = PydField(
-        None, description="Массив FieldValueAdd[]."
-    )
-
-    @field_validator(
-        "first_name",
-        "last_name",
-        "middle_name",
-        "full_name",
-        "address",
-        "main_phone",
-        "phones",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-    @field_validator("sex", mode="before")
-    @classmethod
-    def _normalize_sex(cls, v):
-        if v is None or isinstance(v, Sex):
-            return v
-        if isinstance(v, str):
-            s = v.strip().lower()
-            if s == "none":
-                return Sex.non
-            if s in {"male", "female"}:
-                return Sex(s)
-        raise ValueError("sex должен быть одним из: none | male | female")
-
-
-# ---------- Edit ----------
-
-
-class RetailCustomerEditRequest(BaseSchema):
-    """
-    Параметры для /v1/RetailCustomer/Edit
-    """
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID покупателя.")
-
-    group_id: Optional[int] = PydField(None, ge=1, description="ID группы.")
-    region_id: Optional[int] = PydField(None, ge=1, description="ID региона.")
-
-    first_name: Optional[str] = PydField(None, description="Имя.")
-    last_name: Optional[str] = PydField(None, description="Фамилия.")
-    middle_name: Optional[str] = PydField(None, description="Отчество.")
-    full_name: Optional[str] = PydField(None, description="Полное ФИО.")
-
-    # только non|male|female
-    sex: Optional[Sex] = PydField(None, description="Пол: non|male|female.")
-    date_of_birth: Optional[str] = PydField(
-        None, description="Дата рождения (строка, напр. YYYY-MM-DD)."
-    )
-
-    address: Optional[str] = PydField(None, description="Адрес.")
-    main_phone: Optional[str] = PydField(None, description="Основной телефон.")
-    phones: Optional[str] = PydField(None, description="Доп. телефоны.")
-    email: Optional[EmailStr] = PydField(None, description="E-mail.")
-
-    refer_id: Optional[int] = PydField(None, ge=1, description="ID реферала.")
-    description: Optional[str] = PydField(None, description="Примечание.")
-
-    fields: Optional[FieldValueEdits] = PydField(
-        None, description="Массив FieldValueEdit[]."
-    )
-
-    @field_validator(
-        "first_name",
-        "last_name",
-        "middle_name",
-        "full_name",
-        "address",
-        "main_phone",
-        "phones",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, v):
-        return v.strip() if isinstance(v, str) else v
-
-    @field_validator("sex", mode="before")
-    @classmethod
-    def _normalize_sex(cls, v):
-        if v is None or isinstance(v, Sex):
-            return v
-        if isinstance(v, str):
-            s = v.strip().lower()
-            if s == "none":
-                return Sex.non
-            if s in {"male", "female"}:
-                return Sex(s)
-        raise ValueError("sex должен быть одним из: none | male | female")
-
-
-# ---------- DeleteMark ----------
-
-
-class RetailCustomerDeleteMarkRequest(BaseSchema):
-    """
-    Параметры для /v1/RetailCustomer/DeleteMark
-    """
-
-    model_config = ConfigDict(extra="forbid")
-    id: int = PydField(..., ge=1, description="ID покупателя.")
-
-
-# ---------- Delete ----------
-
-
-class RetailCustomerDeleteRequest(BaseSchema):
-    """
-    Параметры для /v1/RetailCustomer/Delete
-    """
-
-    model_config = ConfigDict(extra="forbid")
-    id: int = PydField(..., ge=1, description="ID покупателя.")
+RetailCustomerAddDebtPaymentRequest: TypeAlias = RetailCustomerDebtPaymentAdd
+RetailCustomerAddDebtPaymentResponse: TypeAlias = InsertResult
+RetailCustomerAddDebtRequest: TypeAlias = RetailCustomerDebtAdd
+RetailCustomerAddDebtResponse: TypeAlias = InsertResult
+RetailCustomerAddRequest: TypeAlias = RetailCustomerAdd
+RetailCustomerAddResponse: TypeAlias = InsertResult
+RetailCustomerDeleteMarkRequest: TypeAlias = RetailCustomerDeleteMark
+RetailCustomerDeleteMarkResponse: TypeAlias = UpdateResult
+RetailCustomerDeleteRequest: TypeAlias = RetailCustomerDelete
+RetailCustomerDeleteResponse: TypeAlias = UpdateResult
+RetailCustomerEditRequest: TypeAlias = RetailCustomerEdit
+RetailCustomerEditResponse: TypeAlias = UpdateResult
+RetailCustomerGetAvgChequeAmountRequest: TypeAlias = RetailCustomerPurchaseRequest
+RetailCustomerGetAvgChequeAmountResponse: TypeAlias = DecimalRegosObjectResult
+RetailCustomerGetChequeCountRequest: TypeAlias = RetailCustomerPurchaseRequest
+RetailCustomerGetChequeCountResponse: TypeAlias = Int64RegosObjectResult
+RetailCustomerGetDebtsPaymentHistoryRequest: TypeAlias = RetailCustomerDebtPaymentsdGet
+RetailCustomerGetDebtsPaymentHistoryResponse: TypeAlias = RetailCustomerDebtPaymentRegosArrayResult
+RetailCustomerGetDebtsRequest: TypeAlias = RetailCustomerDebtRecordGet
+RetailCustomerGetDebtsResponse: TypeAlias = RetailCustomerDebtRecordRegosArrayResult
+RetailCustomerGetFavoritePurchasesRequest: TypeAlias = RetailCustomerPurchaseRequest
+RetailCustomerGetFavoritePurchasesResponse: TypeAlias = RetailCustomerItemPurchasesArrayRegosObjectResult
+RetailCustomerGetLastPurchaseDateRequest: TypeAlias = RetailCustomerPurchaseRequest
+RetailCustomerGetLastPurchaseDateResponse: TypeAlias = Int64RegosObjectResult
+RetailCustomerGetPurchaseInfoRequest: TypeAlias = RetailCustomerPurchaseInfoRequest
+RetailCustomerGetPurchaseInfoResponse: TypeAlias = RetailCustomerPurchaseInfoRegosObjectResult
+RetailCustomerGetRequest: TypeAlias = RetailCustomerGet
+RetailCustomerGetResponse: TypeAlias = RetailCustomerRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['RetailCustomer', 'RetailCustomerAdd', 'RetailCustomerDebtAdd', 'RetailCustomerDebtPayment', 'RetailCustomerDebtPaymentAdd', 'RetailCustomerDebtPaymentRegosArrayResult', 'RetailCustomerDebtPaymentsdGet', 'RetailCustomerDebtRecord', 'RetailCustomerDebtRecordGet', 'RetailCustomerDebtRecordRegosArrayResult', 'RetailCustomerDelete', 'RetailCustomerDeleteMark', 'RetailCustomerEdit', 'RetailCustomerGet', 'RetailCustomerItemPurchases', 'RetailCustomerItemPurchasesArrayRegosObjectResult', 'RetailCustomerPurchaseInfo', 'RetailCustomerPurchaseInfoRegosObjectResult', 'RetailCustomerPurchaseInfoRequest', 'RetailCustomerPurchaseRequest', 'RetailCustomerRegosOffsettedArrayResult', 'RetailCustomer_SortOrder']
 
 
 __all__ = [
-    "Sex",
-    "RetailCustomer",
-    "RetailCustomerGetRequest",
-    "RetailCustomerGetResponse",
-    "RetailCustomerAddResponse",
-    "RetailCustomerAddRequest",
-    "RetailCustomerEditRequest",
-    "RetailCustomerDeleteMarkRequest",
-    "RetailCustomerDeleteRequest",
+    'RetailCustomer',
+    'RetailCustomerAdd',
+    'RetailCustomerDebtAdd',
+    'RetailCustomerDebtPayment',
+    'RetailCustomerDebtPaymentAdd',
+    'RetailCustomerDebtPaymentRegosArrayResult',
+    'RetailCustomerDebtPaymentsdGet',
+    'RetailCustomerDebtRecord',
+    'RetailCustomerDebtRecordGet',
+    'RetailCustomerDebtRecordRegosArrayResult',
+    'RetailCustomerDelete',
+    'RetailCustomerDeleteMark',
+    'RetailCustomerEdit',
+    'RetailCustomerGet',
+    'RetailCustomerItemPurchases',
+    'RetailCustomerItemPurchasesArrayRegosObjectResult',
+    'RetailCustomerPurchaseInfo',
+    'RetailCustomerPurchaseInfoRegosObjectResult',
+    'RetailCustomerPurchaseInfoRequest',
+    'RetailCustomerPurchaseRequest',
+    'RetailCustomerRegosOffsettedArrayResult',
+    'RetailCustomer_SortOrder',
+    'RetailCustomer_SortOrderColumn',
+    'RetailCustomerGetRequest',
+    'RetailCustomerGetResponse',
+    'RetailCustomerAddRequest',
+    'RetailCustomerAddResponse',
+    'RetailCustomerEditRequest',
+    'RetailCustomerEditResponse',
+    'RetailCustomerDeleteMarkRequest',
+    'RetailCustomerDeleteMarkResponse',
+    'RetailCustomerDeleteRequest',
+    'RetailCustomerDeleteResponse',
+    'RetailCustomerGetFavoritePurchasesRequest',
+    'RetailCustomerGetFavoritePurchasesResponse',
+    'RetailCustomerGetAvgChequeAmountRequest',
+    'RetailCustomerGetAvgChequeAmountResponse',
+    'RetailCustomerGetLastPurchaseDateRequest',
+    'RetailCustomerGetLastPurchaseDateResponse',
+    'RetailCustomerGetChequeCountRequest',
+    'RetailCustomerGetChequeCountResponse',
+    'RetailCustomerGetPurchaseInfoRequest',
+    'RetailCustomerGetPurchaseInfoResponse',
+    'RetailCustomerGetDebtsRequest',
+    'RetailCustomerGetDebtsResponse',
+    'RetailCustomerGetDebtsPaymentHistoryRequest',
+    'RetailCustomerGetDebtsPaymentHistoryResponse',
+    'RetailCustomerAddDebtRequest',
+    'RetailCustomerAddDebtResponse',
+    'RetailCustomerAddDebtPaymentRequest',
+    'RetailCustomerAddDebtPaymentResponse'
 ]

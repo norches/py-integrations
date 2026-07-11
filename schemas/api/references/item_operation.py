@@ -1,119 +1,77 @@
-"""Схемы справочника операций по номенклатуре."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from schemas.api.common.sort_orders import SortOrder, SortOrders
+from schemas.api.common.base import RegosModel
+
+
+class ItemOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    date: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    document_type: DocumentType | None = PydField(default=None)
+    document_type_name: str | None = PydField(default=None)
+    document_code: str | None = PydField(default=None)
+    doc_type_name: str | None = PydField(default=None)
+    doc_code: str | None = PydField(default=None)
+    stock: Stock | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    cost: _Decimal | None = PydField(default=None)
+    additional_expenses_amount: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    price2: _Decimal | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+    positive: bool | None = PydField(default=None)
+    vat_value: _Decimal | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+
+
+class ItemOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    item_id: int | None = PydField(default=None)
+    stock_ids: list[int] | None = PydField(default=None)
+    firm_ids: list[int] | None = PydField(default=None)
+    sort_orders: list[ItemOprOrder] | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class ItemOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ItemOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, VatCalculationTypeEnum
+from schemas.api.docs.document_type import DocumentType
+from schemas.api.references.item import ItemOprOrder
 from schemas.api.references.stock import Stock
 
 
-class ItemOperationDocumentType(BaseSchema):
-    """Описание типа документа, инициировавшего операцию."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(None, description="ID типа документа.")
-    name: Optional[str] = PydField(None, description="Наименование типа документа.")
-    last_update: Optional[int] = PydField(
-        None, ge=0, description="Метка последнего обновления (unixtime, сек)."
-    )
+ItemOperationGetRequest: TypeAlias = ItemOperationGet
+ItemOperationGetResponse: TypeAlias = ItemOperationRegosOffsettedArrayResult
 
 
-class ItemOperation(BaseSchema):
-    """История движения номенклатуры."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    date: Optional[int] = PydField(
-        None, ge=0, description="Дата операции (unixtime, сек)."
-    )
-    document_id: Optional[int] = PydField(
-        None, ge=1, description="ID документа, породившего операцию."
-    )
-    document_type: Optional[ItemOperationDocumentType] = PydField(
-        None, description="Тип документа операции."
-    )
-    document_type_name: Optional[str] = PydField(
-        None, description="Наименование типа документа."
-    )
-    document_code: Optional[str] = PydField(
-        None, description="Код документа."
-    )
-    doc_type_name: Optional[str] = PydField(
-        None, description="Устаревшее поле. Используйте document_type_name."
-    )
-    doc_code: Optional[str] = PydField(
-        None, description="Устаревшее поле. Используйте document_code."
-    )
-    stock: Optional[Stock] = PydField(
-        None, description="Склад, по которому прошла операция."
-    )
-    quantity: Optional[Decimal] = PydField(
-        None, description="Количество номенклатуры в операции."
-    )
-    cost: Optional[Decimal] = PydField(None, description="Себестоимость в операции.")
-    additional_expenses_amount: Optional[Decimal] = PydField(
-        None, description="Сумма дополнительных расходов."
-    )
-    price: Optional[Decimal] = PydField(None, description="Цена по документу.")
-    price2: Optional[Decimal] = PydField(
-        None, description="Дополнительная цена (если есть)."
-    )
-    exchange_rate: Optional[Decimal] = PydField(
-        None, description="Использованный курс валюты."
-    )
-    positive: Optional[bool] = PydField(
-        None, description="Признак прихода (True) или расхода (False)."
-    )
-    vat_value: Optional[Decimal] = PydField(None, description="Сумма НДС.")
-    vat_calculation_type: Optional[str] = PydField(
-        None,
-        description="Способ расчёта НДС (напр. Include / Exclude).",
-    )
-
-
-class ItemOperationGetRequest(BaseSchema):
-    """Параметры запроса /v1/ItemOperation/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    item_id: int = PydField(..., ge=1, description="ID номенклатуры.")
-    stock_ids: Optional[List[int]] = PydField(
-        None, description="Массив ID складов для фильтрации."
-    )
-    firm_ids: Optional[List[int]] = PydField(
-        None, description="Массив ID предприятий для фильтрации."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default_factory=lambda: [SortOrder(column="date", direction="desc")],
-        description="Правила сортировки выборки.",
-    )
-    start_date: Optional[int] = PydField(
-        None, ge=0, description="Начало периода (unixtime, сек)."
-    )
-    end_date: Optional[int] = PydField(
-        None, ge=0, description="Окончание периода (unixtime, сек)."
-    )
-    limit: Optional[int] = PydField(
-        None, ge=1, description="Количество записей в ответе."
-    )
-    offset: Optional[int] = PydField(None, ge=0, description="Смещение для пагинации.")
-
-
-class ItemOperationGetResponse(APIBaseResponse[List[ItemOperation]]):
-    """Ответ на запрос /v1/ItemOperation/Get."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['ItemOperation', 'ItemOperationGet', 'ItemOperationRegosOffsettedArrayResult']
 
 
 __all__ = [
-    "ItemOperationDocumentType",
-    "ItemOperation",
-    "ItemOperationGetRequest",
-    "ItemOperationGetResponse",
+    'ItemOperation',
+    'ItemOperationGet',
+    'ItemOperationRegosOffsettedArrayResult',
+    'ItemOperationGetRequest',
+    'ItemOperationGetResponse'
 ]

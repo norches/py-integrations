@@ -1,83 +1,111 @@
-# schemas/api/docs/Movement_operation.py
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import BaseModel
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, ArrayResult, BaseSchema
+from schemas.api.common.base import RegosModel
+
+
+class MovementOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    item: Item | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    order: int | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    last_purchase_cost: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class MovementOperationAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    order: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class MovementOperationDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class MovementOperationEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    quantity: _Decimal | None = PydField(default=None)
+    order: int | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+
+
+class MovementOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    item_ids: list[int] | None = PydField(default=None)
+    document_ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class MovementOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[MovementOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import DocsOperationsMovement, Error, SetPriceByPriceType_Model, UpdateResult
 from schemas.api.references.item import Item
-from schemas.api.references.tax import VatCalculationType
 
 
-# ---------- Core model ----------
+MovementOperationAddRequest: TypeAlias = list[MovementOperationAdd]
+MovementOperationAddResponse: TypeAlias = UpdateResult
+MovementOperationDeleteRequest: TypeAlias = list[MovementOperationDelete]
+MovementOperationDeleteResponse: TypeAlias = UpdateResult
+MovementOperationEditRequest: TypeAlias = list[MovementOperationEdit]
+MovementOperationEditResponse: TypeAlias = UpdateResult
+MovementOperationGetRequest: TypeAlias = MovementOperationGet
+MovementOperationGetResponse: TypeAlias = MovementOperationRegosOffsettedArrayResult
+MovementOperationMoveOperationsRequest: TypeAlias = DocsOperationsMovement
+MovementOperationMoveOperationsResponse: TypeAlias = UpdateResult
+MovementOperationSetPriceByPriceTypeRequest: TypeAlias = SetPriceByPriceType_Model
+MovementOperationSetPriceByPriceTypeResponse: TypeAlias = UpdateResult
 
 
-class MovementOperation(BaseModel):
-    """Модель операции перемещения."""
-
-    id: Optional[int] = None
-    document_id: Optional[int] = None
-    item: Optional[Item] = None
-    quantity: Optional[Decimal] = None
-    price: Optional[Decimal] = None
-    last_purchase_cost: Optional[Decimal] = None
-    description: Optional[str] = None
-    last_update: Optional[int] = None  # unixtime (sec)
+_MODEL_NAMES = ['MovementOperation', 'MovementOperationAdd', 'MovementOperationDelete', 'MovementOperationEdit', 'MovementOperationGet', 'MovementOperationRegosOffsettedArrayResult']
 
 
-# ---------- Get ----------
-
-
-class MovementOperationGetRequest(BaseSchema):
-    """
-    Параметры для /v1/MovementOperation/Get
-    """
-
-    ids: Optional[List[int]] = None
-    item_ids: Optional[List[int]] = None
-    document_ids: Optional[List[int]] = None
-
-
-# ---------- Add ----------
-
-
-class MovementOperationAddRequest(BaseSchema):
-    """
-    Один элемент массива для /v1/MovementOperation/Add
-    Все элементы массива должны иметь одинаковый document_id.
-    """
-
-    document_id: int
-    item_id: int
-    quantity: Decimal
-    description: Optional[str] = None
-
-
-# ---------- Edit ----------
-
-
-class MovementOperationEditItem(BaseSchema):
-    """
-    Один элемент массива для /v1/MovementOperation/Edit
-    """
-
-    id: int
-    quantity: Optional[Decimal] = None
-    description: Optional[str] = None
-
-
-# ---------- Delete ----------
-
-
-class MovementOperationDeleteItem(BaseSchema):
-    """
-    Один элемент массива для /v1/MovementOperation/Delete
-    """
-
-    id: int
-
-
-class MovementOperationActionResponse(APIBaseResponse):
-    result: Optional[ArrayResult] = []
+__all__ = [
+    'MovementOperation',
+    'MovementOperationAdd',
+    'MovementOperationDelete',
+    'MovementOperationEdit',
+    'MovementOperationGet',
+    'MovementOperationRegosOffsettedArrayResult',
+    'MovementOperationGetRequest',
+    'MovementOperationGetResponse',
+    'MovementOperationAddRequest',
+    'MovementOperationAddResponse',
+    'MovementOperationEditRequest',
+    'MovementOperationEditResponse',
+    'MovementOperationDeleteRequest',
+    'MovementOperationDeleteResponse',
+    'MovementOperationMoveOperationsRequest',
+    'MovementOperationMoveOperationsResponse',
+    'MovementOperationSetPriceByPriceTypeRequest',
+    'MovementOperationSetPriceByPriceTypeResponse'
+]

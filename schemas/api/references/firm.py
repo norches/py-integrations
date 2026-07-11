@@ -1,92 +1,258 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import AliasChoices, ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-from .firm_group import FirmGroup
-
-
-class Firm(BaseSchema):
-    """Firm read model returned by RegosAPI."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="Firm id.")
-    group: Optional[FirmGroup] = PydField(default=None, description="Firm group.")
-    name: Optional[str] = PydField(default=None, description="Firm name.")
-    full_name: Optional[str] = PydField(
-        default=None,
-        validation_alias=AliasChoices("full_name", "fullname", "fullName"),
-        description="Firm full name.",
-    )
-    boss_name: Optional[str] = PydField(default=None, description="Manager name.")
-    address: Optional[str] = PydField(default=None, description="Address.")
-    phones: Optional[str] = PydField(default=None, description="Phones.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    inn: Optional[str] = PydField(default=None, description="Taxpayer id.")
-    bank_name: Optional[str] = PydField(default=None, description="Bank name.")
-    mfo: Optional[str] = PydField(default=None, description="Bank MFO.")
-    rs: Optional[str] = PydField(default=None, description="Bank account.")
-    oked: Optional[str] = PydField(default=None, description="OKED.")
-    vat_index: Optional[str] = PydField(default=None, description="VAT index.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update.")
-
-    @property
-    def fullname(self) -> Optional[str]:
-        return self.full_name
-
-    @field_validator(
-        "name",
-        "full_name",
-        "boss_name",
-        "address",
-        "phones",
-        "description",
-        "inn",
-        "bank_name",
-        "mfo",
-        "rs",
-        "oked",
-        "vat_index",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+from schemas.api.common.base import RegosModel
 
 
-class FirmGetRequest(BaseSchema):
-    """Request for Firm/Get."""
+class Firm(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    boss_name: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    inn: str | None = PydField(default=None)
+    bank_name: str | None = PydField(default=None)
+    mfo: str | None = PydField(default=None)
+    rs: str | None = PydField(default=None)
+    oked: str | None = PydField(default=None)
+    vat_index: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group: FirmGroup | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    ids: Optional[List[int]] = PydField(default=None, description="Firm ids.")
-    group_ids: Optional[List[int]] = PydField(default=None, description="Firm group ids.")
-    sort_orders: Optional[SortOrders] = PydField(default=None, description="Sort orders.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    limit: Optional[int] = PydField(default=None, ge=1, le=10000, description="Limit.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Offset.")
+class FirmAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    boss_name: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    inn: str | None = PydField(default=None)
+    bank_name: str | None = PydField(default=None)
+    mfo: str | None = PydField(default=None)
+    rs: str | None = PydField(default=None)
+    oked: str | None = PydField(default=None)
+    vat_index: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
 
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+
+class FirmDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class FirmGetResponse(APIBaseResponse[List[Firm]]):
-    """Response for Firm/Get."""
+class FirmDeleteConfirm(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    confirm_code: str | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+class FirmDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class FirmEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+    fullname: str | None = PydField(default=None)
+    boss_name: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    inn: str | None = PydField(default=None)
+    bank_name: str | None = PydField(default=None)
+    mfo: str | None = PydField(default=None)
+    rs: str | None = PydField(default=None)
+    oked: str | None = PydField(default=None)
+    vat_index: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+
+
+class FirmGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    sort_orders: list[FirmSortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class FirmImage(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    width: int | None = PydField(default=None)
+    height: int | None = PydField(default=None)
+    size: int | None = PydField(default=None)
+    file: str | None = PydField(default=None)
+    url: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+class FirmImageDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class FirmImageGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    include_data: bool | None = PydField(default=None)
+    compress_data: bool | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+class FirmImageRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[FirmImage] | Error | None = PydField(default=None)
+
+
+class FirmRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Firm] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class FirmSetting(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    key: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+    name_var: str | None = PydField(default=None)
+    dataType: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class FirmSettingArrayRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[FirmSetting] | Error | None = PydField(default=None)
+
+
+class FirmSortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: FirmSortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class FirmSortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+    VALUE_12 = 12
+    VALUE_13 = 13
+
+
+class Firm_SettingEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+
+
+class Firm_SettingGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    firm_id: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ApiResult, ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+from schemas.api.references.firm_group import FirmGroup
+
+
+FirmAddImageResponse: TypeAlias = UpdateResult
+FirmAddRequest: TypeAlias = FirmAdd
+FirmAddResponse: TypeAlias = InsertResult
+FirmDeleteConfirmRequest: TypeAlias = FirmDeleteConfirm
+FirmDeleteConfirmResponse: TypeAlias = ApiResult
+FirmDeleteImageRequest: TypeAlias = FirmImageDelete
+FirmDeleteImageResponse: TypeAlias = UpdateResult
+FirmDeleteMarkRequest: TypeAlias = FirmDeleteMark
+FirmDeleteMarkResponse: TypeAlias = UpdateResult
+FirmDeleteRequest: TypeAlias = FirmDelete
+FirmDeleteResponse: TypeAlias = ApiResult
+FirmEditRequest: TypeAlias = FirmEdit
+FirmEditResponse: TypeAlias = UpdateResult
+FirmEditSettingsRequest: TypeAlias = list[Firm_SettingEdit]
+FirmEditSettingsResponse: TypeAlias = UpdateResult
+FirmGetImageRequest: TypeAlias = FirmImageGet
+FirmGetImageResponse: TypeAlias = FirmImageRegosArrayResult
+FirmGetRequest: TypeAlias = FirmGet
+FirmGetResponse: TypeAlias = FirmRegosOffsettedArrayResult
+FirmGetSettingsRequest: TypeAlias = Firm_SettingGet
+FirmGetSettingsResponse: TypeAlias = FirmSettingArrayRegosObjectResult
+
+
+_MODEL_NAMES = ['Firm', 'FirmAdd', 'FirmDelete', 'FirmDeleteConfirm', 'FirmDeleteMark', 'FirmEdit', 'FirmGet', 'FirmImage', 'FirmImageDelete', 'FirmImageGet', 'FirmImageRegosArrayResult', 'FirmRegosOffsettedArrayResult', 'FirmSetting', 'FirmSettingArrayRegosObjectResult', 'FirmSortOrder', 'Firm_SettingEdit', 'Firm_SettingGet']
 
 
 __all__ = [
-    "Firm",
-    "FirmGetRequest",
-    "FirmGetResponse",
+    'Firm',
+    'FirmAdd',
+    'FirmDelete',
+    'FirmDeleteConfirm',
+    'FirmDeleteMark',
+    'FirmEdit',
+    'FirmGet',
+    'FirmImage',
+    'FirmImageDelete',
+    'FirmImageGet',
+    'FirmImageRegosArrayResult',
+    'FirmRegosOffsettedArrayResult',
+    'FirmSetting',
+    'FirmSettingArrayRegosObjectResult',
+    'FirmSortOrder',
+    'FirmSortOrderColumn',
+    'Firm_SettingEdit',
+    'Firm_SettingGet',
+    'FirmGetRequest',
+    'FirmGetResponse',
+    'FirmAddRequest',
+    'FirmAddResponse',
+    'FirmEditRequest',
+    'FirmEditResponse',
+    'FirmDeleteMarkRequest',
+    'FirmDeleteMarkResponse',
+    'FirmDeleteRequest',
+    'FirmDeleteResponse',
+    'FirmDeleteConfirmRequest',
+    'FirmDeleteConfirmResponse',
+    'FirmGetImageRequest',
+    'FirmGetImageResponse',
+    'FirmAddImageResponse',
+    'FirmDeleteImageRequest',
+    'FirmDeleteImageResponse',
+    'FirmGetSettingsRequest',
+    'FirmGetSettingsResponse',
+    'FirmEditSettingsRequest',
+    'FirmEditSettingsResponse'
 ]

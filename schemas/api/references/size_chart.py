@@ -1,0 +1,103 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
+from __future__ import annotations
+
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
+
+from pydantic import ConfigDict, Field as PydField, RootModel
+
+from schemas.api.common.base import RegosModel
+
+
+class SizeChart(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class SizeChartAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    name: str | None = PydField(default=None)
+
+
+class SizeChartDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class SizeChartEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+
+
+class SizeChartGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    sort_orders: list[SizeChartSortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class SizeChartRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[SizeChart] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class SizeChartSortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: SizeChartSortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class SizeChartSortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+SizeChartAddRequest: TypeAlias = SizeChartAdd
+SizeChartAddResponse: TypeAlias = InsertResult
+SizeChartDeleteRequest: TypeAlias = SizeChartDelete
+SizeChartDeleteResponse: TypeAlias = UpdateResult
+SizeChartEditRequest: TypeAlias = SizeChartEdit
+SizeChartEditResponse: TypeAlias = UpdateResult
+SizeChartGetRequest: TypeAlias = SizeChartGet
+SizeChartGetResponse: TypeAlias = SizeChartRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['SizeChart', 'SizeChartAdd', 'SizeChartDelete', 'SizeChartEdit', 'SizeChartGet', 'SizeChartRegosOffsettedArrayResult', 'SizeChartSortOrder']
+
+
+__all__ = [
+    'SizeChart',
+    'SizeChartAdd',
+    'SizeChartDelete',
+    'SizeChartEdit',
+    'SizeChartGet',
+    'SizeChartRegosOffsettedArrayResult',
+    'SizeChartSortOrder',
+    'SizeChartSortOrderColumn',
+    'SizeChartGetRequest',
+    'SizeChartGetResponse',
+    'SizeChartAddRequest',
+    'SizeChartAddResponse',
+    'SizeChartEditRequest',
+    'SizeChartEditResponse',
+    'SizeChartDeleteRequest',
+    'SizeChartDeleteResponse'
+]

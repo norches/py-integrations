@@ -1,127 +1,243 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class RetailCardGroup(BaseSchema):
-    """Группа карт покупателей."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="ID группы карт.")
-    name: Optional[str] = PydField(
-        default=None, description="Наименование группы карт."
-    )
+from schemas.api.common.base import RegosModel
 
 
-class RetailCustomer(BaseSchema):
-    """Покупатель (сокращенная модель)."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="ID покупателя.")
-    full_name: Optional[str] = PydField(
-        default=None, description="ФИО покупателя."
-    )
-
-
-class BarcodeType(BaseSchema):
-    """Тип штрих-кода."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="ID типа штрих-кода.")
-    name: Optional[str] = PydField(
-        default=None, description="Наименование типа штрих-кода."
-    )
+class RetailCard(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    group: RetailCardGroup | None = PydField(default=None)
+    customer: RetailCustomer | None = PydField(default=None)
+    barcode_value: str | None = PydField(default=None)
+    barcode_type: BarcodeType | None = PydField(default=None)
+    promo: PromoProgram | None = PydField(default=None)
+    bonus_amount: _Decimal | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    unlimited: bool | None = PydField(default=None)
+    expiry_date: str | None = PydField(default=None)
+    last_purchase: int | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class PromoProgram(BaseSchema):
-    """Промоакция."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="ID промоакции.")
-    name: Optional[str] = PydField(
-        default=None, description="Наименование промоакции."
-    )
-
-
-class RetailCard(BaseSchema):
-    """Карта покупателя."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="ID карты покупателя.")
-    group: Optional[RetailCardGroup] = PydField(
-        default=None, description="Группа карт покупателей."
-    )
-    customer: Optional[RetailCustomer] = PydField(
-        default=None, description="Покупатель."
-    )
-    barcode_value: str = PydField(..., description="Штрих-код карты.")
-    barcode_type: Optional[BarcodeType] = PydField(
-        default=None, description="Тип штрих-кода."
-    )
-    promo: Optional[PromoProgram] = PydField(
-        default=None, description="Промоакция."
-    )
-    bonus_amount: Decimal = PydField(
-        ..., description="Сумма бонусов."
-    )
-    date: int = PydField(..., ge=0, description="Дата создания (unix time, сек).")
-    unlimited: bool = PydField(..., description="Срок действия неограничен.")
-    expiry_date: Optional[str] = PydField(
-        default=None, description="Дата истечения срока действия."
-    )
-    last_purchase: Optional[int] = PydField(
-        default=None, description="Дата последней покупки (unix time, сек)."
-    )
-    enabled: bool = PydField(..., description="Карта активна.")
-    last_update: int = PydField(
-        ..., ge=0, description="Дата последнего изменения (unix time, сек)."
-    )
+class RetailCardAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    group_id: int | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None)
+    barcode_value: str | None = PydField(default=None)
+    barcode_type_id: int | None = PydField(default=None)
+    promo_id: int | None = PydField(default=None)
+    unlimited: bool | None = PydField(default=None)
+    expiry_date: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
 
 
-class RetailCardGetRequest(BaseSchema):
-    """Запрос на получение карт покупателей."""
+class RetailCardAddWithCustomer(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    customer_id: int | None = PydField(default=None)
+    first_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    barcode_value: str | None = PydField(default=None)
+    barcode_type_id: int | None = PydField(default=None)
+    unlimited: bool | None = PydField(default=None)
+    expiry_date: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    ids: Optional[List[int]] = PydField(default=None, description="ID карт.")
-    group_ids: Optional[List[int]] = PydField(
-        default=None, description="ID групп карт."
-    )
-    customer_ids: Optional[List[int]] = PydField(
-        default=None, description="ID покупателей."
-    )
-    promo_ids: Optional[List[int]] = PydField(
-        default=None, description="ID промоакций."
-    )
-    barcode_value: Optional[str] = PydField(
-        default=None, description="Штрих-код карты."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Сортировка выходных данных."
-    )
-    search: Optional[str] = PydField(
-        default=None, description="Строка поиска."
-    )
-    limit: Optional[int] = PydField(default=None, ge=1, description="Лимит.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Смещение.")
+class RetailCardDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class RetailCardEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None)
+    barcode_value: str | None = PydField(default=None)
+    barcode_type_id: int | None = PydField(default=None)
+    promo_id: int | None = PydField(default=None)
+    unlimited: bool | None = PydField(default=None)
+    expiry_date: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
+
+
+class RetailCardGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    customer_ids: list[int] | None = PydField(default=None)
+    promo_ids: list[int] | None = PydField(default=None)
+    barcode_value: str | None = PydField(default=None)
+    sort_orders: list[RetailCard_SortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class RetailCardOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    uuid: str | None = PydField(default=None)
+    type: PromoBonusType | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    value: _Decimal | None = PydField(default=None)
+    used_value: _Decimal | None = PydField(default=None)
+    is_payment: bool | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    exp_date: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class RetailCardOperationColumn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: RetailCardOperationColumns | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class RetailCardOperationColumns(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+class RetailCardOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    uuids: list[str] | None = PydField(default=None)
+    card_id: int | None = PydField(default=None)
+    promo_id: int | None = PydField(default=None)
+    type: PromoBonusType | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    sort_orders: list[RetailCardOperationColumn] | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class RetailCardOperationRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: RetailCardOperation | Error | None = PydField(default=None)
+
+
+class RetailCardOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCardOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class RetailCardRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: RetailCard | Error | None = PydField(default=None)
+
+
+class RetailCardRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[RetailCard] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class RetailCard_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: RetailCard_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class RetailCard_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, SexEnum, UpdateResult
+from schemas.api.references.barcode_type import BarcodeType
+from schemas.api.references.promo_bonus import PromoBonusType, PromoBonusesRemainderGet, PromoBonusesRemainderRegosObjectResult
+from schemas.api.references.promo_program import PromoProgram
+from schemas.api.references.retail_card_group import RetailCardGroup
+from schemas.api.references.retail_card_migration import RetailCardMigrationHistoryGet, RetailCardMigrationHistoryRegosArrayResult
+from schemas.api.references.retail_customer import RetailCustomer
+
+
+RetailCardAddRequest: TypeAlias = RetailCardAdd
+RetailCardAddResponse: TypeAlias = InsertResult
+RetailCardAddWithCustomerRequest: TypeAlias = RetailCardAddWithCustomer
+RetailCardAddWithCustomerResponse: TypeAlias = RetailCardRegosObjectResult
+RetailCardDeleteRequest: TypeAlias = RetailCardDelete
+RetailCardDeleteResponse: TypeAlias = UpdateResult
+RetailCardEditRequest: TypeAlias = RetailCardEdit
+RetailCardEditResponse: TypeAlias = UpdateResult
+RetailCardGetBalanceRequest: TypeAlias = PromoBonusesRemainderGet
+RetailCardGetBalanceResponse: TypeAlias = PromoBonusesRemainderRegosObjectResult
+RetailCardGetMigrationHistoryRequest: TypeAlias = RetailCardMigrationHistoryGet
+RetailCardGetMigrationHistoryResponse: TypeAlias = RetailCardMigrationHistoryRegosArrayResult
+RetailCardGetOperationsRequest: TypeAlias = RetailCardOperationGet
+RetailCardGetOperationsResponse: TypeAlias = RetailCardOperationRegosOffsettedArrayResult
+RetailCardGetRequest: TypeAlias = RetailCardGet
+RetailCardGetResponse: TypeAlias = RetailCardRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['RetailCard', 'RetailCardAdd', 'RetailCardAddWithCustomer', 'RetailCardDelete', 'RetailCardEdit', 'RetailCardGet', 'RetailCardOperation', 'RetailCardOperationColumn', 'RetailCardOperationGet', 'RetailCardOperationRegosObjectResult', 'RetailCardOperationRegosOffsettedArrayResult', 'RetailCardRegosObjectResult', 'RetailCardRegosOffsettedArrayResult', 'RetailCard_SortOrder']
 
 
 __all__ = [
-    "BarcodeType",
-    "PromoProgram",
-    "RetailCard",
-    "RetailCardGetRequest",
-    "RetailCardGroup",
-    "RetailCustomer",
+    'RetailCard',
+    'RetailCardAdd',
+    'RetailCardAddWithCustomer',
+    'RetailCardDelete',
+    'RetailCardEdit',
+    'RetailCardGet',
+    'RetailCardOperation',
+    'RetailCardOperationColumn',
+    'RetailCardOperationColumns',
+    'RetailCardOperationGet',
+    'RetailCardOperationRegosObjectResult',
+    'RetailCardOperationRegosOffsettedArrayResult',
+    'RetailCardRegosObjectResult',
+    'RetailCardRegosOffsettedArrayResult',
+    'RetailCard_SortOrder',
+    'RetailCard_SortOrderColumn',
+    'RetailCardGetRequest',
+    'RetailCardGetResponse',
+    'RetailCardAddRequest',
+    'RetailCardAddResponse',
+    'RetailCardEditRequest',
+    'RetailCardEditResponse',
+    'RetailCardDeleteRequest',
+    'RetailCardDeleteResponse',
+    'RetailCardAddWithCustomerRequest',
+    'RetailCardAddWithCustomerResponse',
+    'RetailCardGetBalanceRequest',
+    'RetailCardGetBalanceResponse',
+    'RetailCardGetOperationsRequest',
+    'RetailCardGetOperationsResponse',
+    'RetailCardGetMigrationHistoryRequest',
+    'RetailCardGetMigrationHistoryResponse'
 ]

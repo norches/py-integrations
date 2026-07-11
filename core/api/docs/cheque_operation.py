@@ -1,34 +1,54 @@
-from typing import List, Iterable
-from core.logger import setup_logger
-from schemas.api.base import APIBaseResponse
-from schemas.api.docs.cheque_operation import (
-    DocChequeOperationGetRequest,
-    DocChequeOperation,
-)
+"""REGOS API service for ChequeOperation."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
-logger = setup_logger("docs.ChequeOperation")
+from __future__ import annotations
+
+from typing import Any
+
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class DocChequeOperationService:
-    PATH_GET = "DocChequeOperation/Get"
+class ChequeOperationService(RegosAPIService):
+    PATH_GET = "pos/ChequeItemOperation/get"
+    PATH_ADD = "pos/ChequeItemOperation/add"
+    PATH_ADD_BY_BARCODE = "pos/ChequeItemOperation/AddByBarcode"
+    PATH_EDIT = "pos/ChequeItemOperation/Edit"
+    PATH_STORNO = "pos/ChequeItemOperation/Storno"
+    PATH_SET_PERCENT_DISCOUNT = "pos/ChequeItemOperation/SetPercentDiscount"
+    REQUEST_MODELS = {
+        'add': models.ChequePositionAdd,
+        'add_by_barcode': models.ChequePosition_AddByBarcode,
+        'edit': models.ChequePostion_Edit,
+        'get': models.ChequePositionGet,
+        'set_percent_discount': models.Cheque_SetRowPercentDiscount,
+        'storno': models.ChequePosition_Storno,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.ChequePositionGet | dict[str, Any]) -> models.ChequePositionArrayRegosObjectResult:
+        """POST pos/ChequeItemOperation/get."""
+        return await self._call(self.PATH_GET, req, models.ChequePositionArrayRegosObjectResult)
 
-    async def get(
-        self, req: DocChequeOperationGetRequest
-    ) -> APIBaseResponse[List[DocChequeOperation]]:
-        resp = await self.api.call(
-            self.PATH_GET, req, APIBaseResponse[List[DocChequeOperation]]
-        )
-        return resp
+    async def add(self, req: models.ChequePositionAdd | dict[str, Any]) -> models.Insert_uuid_Result:
+        """POST pos/ChequeItemOperation/add."""
+        return await self._call(self.PATH_ADD, req, models.Insert_uuid_Result)
 
-    async def get_by_uuids(
-        self, uuids: Iterable
-    ) -> APIBaseResponse[List[DocChequeOperation]]:
-        return await self.get(DocChequeOperationGetRequest(uuids=list(uuids)))
+    async def add_by_barcode(self, req: models.ChequePosition_AddByBarcode | dict[str, Any]) -> models.Insert_uuid_Result:
+        """POST pos/ChequeItemOperation/AddByBarcode."""
+        return await self._call(self.PATH_ADD_BY_BARCODE, req, models.Insert_uuid_Result)
 
-    async def get_by_doc_sale_uuid(
-        self, doc_sale_uuid: str
-    ) -> APIBaseResponse[List[DocChequeOperation]]:
-        return await self.get(DocChequeOperationGetRequest(doc_sale_uuid=doc_sale_uuid))
+    async def edit(self, req: models.ChequePostion_Edit | dict[str, Any]) -> models.UpdateResult:
+        """POST pos/ChequeItemOperation/Edit."""
+        return await self._call(self.PATH_EDIT, req, models.UpdateResult)
+
+    async def storno(self, req: models.ChequePosition_Storno | dict[str, Any]) -> models.UpdateResult:
+        """POST pos/ChequeItemOperation/Storno."""
+        return await self._call(self.PATH_STORNO, req, models.UpdateResult)
+
+    async def set_percent_discount(self, req: models.Cheque_SetRowPercentDiscount | dict[str, Any]) -> models.UpdateResult:
+        """POST pos/ChequeItemOperation/SetPercentDiscount."""
+        return await self._call(self.PATH_SET_PERCENT_DISCOUNT, req, models.UpdateResult)
+
+DocChequeOperationService = ChequeOperationService
+
+__all__ = ['ChequeOperationService', 'DocChequeOperationService']

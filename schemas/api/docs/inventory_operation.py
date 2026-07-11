@@ -1,140 +1,125 @@
-"""Схемы операций документа инвентаризации."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import BaseModel, ConfigDict, Field as PydField
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
+from schemas.api.common.base import RegosModel
+
+
+class InventoryOperation(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    datetime: int | None = PydField(default=None)
+    item: Item | None = PydField(default=None)
+    actual_quantity: _Decimal | None = PydField(default=None)
+    registered_quantity: _Decimal | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+    last_purchase_cost: _Decimal | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class InventoryOperationAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None)
+    actual_quantity: _Decimal | None = PydField(default=None)
+    datetime: int | None = PydField(default=None)
+    update_actual_quantity: bool | None = PydField(default=None)
+
+
+class InventoryOperationAddBulk(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    department_ids: list[int] | None = PydField(default=None)
+    actual_quantity: _Decimal | None = PydField(default=None)
+    update_actual_quantity: bool | None = PydField(default=None)
+
+
+class InventoryOperationDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class InventoryOperationEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    actual_quantity: _Decimal | None = PydField(default=None)
+    update_actual_quantity: bool | None = PydField(default=None)
+    price: _Decimal | None = PydField(default=None)
+
+
+class InventoryOperationGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    item_ids: list[int] | None = PydField(default=None)
+    document_ids: list[int] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    only_deviation: bool | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class InventoryOperationRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[InventoryOperation] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import DocsOperationsMovement, Error, SetPriceByPriceType_Model, UpdateResult
 from schemas.api.references.item import Item
 
 
-class InventoryOperation(BaseModel):
-    """Модель операции инвентаризации."""
-
-    id: Optional[int] = None
-    document_id: Optional[int] = None
-    datetime: Optional[int] = None
-    item: Optional[Item] = None
-    actual_quantity: Optional[Decimal] = None
-    registered_quantity: Optional[Decimal] = None
-    price: Optional[Decimal] = None
-    last_purchase_cost: Optional[Decimal] = None
-    last_update: Optional[int] = None
-
-
-class InventoryOperationGetRequest(BaseSchema):
-    """Фильтры получения операций инвентаризации."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Список ID операций инвентаризации."
-    )
-    document_ids: Optional[List[int]] = PydField(
-        default=None, description="Список ID документов инвентаризации."
-    )
-    search: Optional[str] = PydField(
-        default=None,
-        description=(
-            "Поиск по наименованию, артикулу или коду номенклатуры документа."
-        ),
-    )
-    only_deviation: Optional[bool] = PydField(
-        default=None, description="Показывать только операции с отклонениями."
-    )
-    limit: Optional[int] = PydField(
-        default=None, ge=1, description="Количество записей в выдаче."
-    )
-    offset: Optional[int] = PydField(
-        default=None, ge=0, description="Смещение для пагинации."
-    )
+InventoryOperationAddBulkRequest: TypeAlias = InventoryOperationAddBulk
+InventoryOperationAddBulkResponse: TypeAlias = UpdateResult
+InventoryOperationAddRequest: TypeAlias = list[InventoryOperationAdd]
+InventoryOperationAddResponse: TypeAlias = UpdateResult
+InventoryOperationDeleteRequest: TypeAlias = list[InventoryOperationDelete]
+InventoryOperationDeleteResponse: TypeAlias = UpdateResult
+InventoryOperationEditRequest: TypeAlias = list[InventoryOperationEdit]
+InventoryOperationEditResponse: TypeAlias = UpdateResult
+InventoryOperationGetRequest: TypeAlias = InventoryOperationGet
+InventoryOperationGetResponse: TypeAlias = InventoryOperationRegosOffsettedArrayResult
+InventoryOperationMoveOperationsRequest: TypeAlias = DocsOperationsMovement
+InventoryOperationMoveOperationsResponse: TypeAlias = UpdateResult
+InventoryOperationSetPriceByPriceTypeRequest: TypeAlias = SetPriceByPriceType_Model
+InventoryOperationSetPriceByPriceTypeResponse: TypeAlias = UpdateResult
 
 
-class InventoryOperationAddRequest(BaseSchema):
-    """Параметры создания операции инвентаризации."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    document_id: int = PydField(..., ge=1, description="ID документа инвентаризации.")
-    item_id: int = PydField(..., ge=1, description="ID номенклатуры.")
-    actual_quantity: Decimal = PydField(
-        ..., description="Актуальное количество номенклатуры."
-    )
-    datetime: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Дата, на которую берутся данные по количеству (Unix).",
-    )
-    update_actual_quantity: bool = PydField(
-        default=True,
-        description="Обновлять фактическое количество, а не суммировать.",
-    )
-
-
-class InventoryOperationEditItem(BaseSchema):
-    """Параметры изменения операции инвентаризации."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID операции инвентаризации.")
-    actual_quantity: Optional[Decimal] = PydField(
-        default=None, description="Новое фактическое количество."
-    )
-    update_actual_quantity: bool = PydField(
-        default=True,
-        description="Всегда обновлять фактическое количество.",
-    )
-    price: Optional[Decimal] = PydField(
-        default=None, description="Новая цена номенклатуры."
-    )
-
-
-class InventoryOperationDeleteItem(BaseSchema):
-    """Параметры удаления операции инвентаризации."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID операции для удаления.")
-
-
-class InventoryOperationMutationResult(BaseSchema):
-    """Результат модификации операций инвентаризации."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    row_affected: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        alias="row_affected",
-        description="Количество обработанных операций.",
-    )
-    raw_affected: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        alias="raw_affected",
-        description="Количество обработанных операций (опечатка API).",
-    )
-
-    @property
-    def affected(self) -> int:
-        return self.row_affected or self.raw_affected or 0
-
-
-class InventoryOperationGetResponse(APIBaseResponse[List[InventoryOperation]]):
-    """Ответ на запрос /v1/InventoryOperation/Get."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['InventoryOperation', 'InventoryOperationAdd', 'InventoryOperationAddBulk', 'InventoryOperationDelete', 'InventoryOperationEdit', 'InventoryOperationGet', 'InventoryOperationRegosOffsettedArrayResult']
 
 
 __all__ = [
-    "InventoryOperation",
-    "InventoryOperationAddRequest",
-    "InventoryOperationDeleteItem",
-    "InventoryOperationEditItem",
-    "InventoryOperationGetRequest",
-    "InventoryOperationGetResponse",
-    "InventoryOperationMutationResult",
+    'InventoryOperation',
+    'InventoryOperationAdd',
+    'InventoryOperationAddBulk',
+    'InventoryOperationDelete',
+    'InventoryOperationEdit',
+    'InventoryOperationGet',
+    'InventoryOperationRegosOffsettedArrayResult',
+    'InventoryOperationGetRequest',
+    'InventoryOperationGetResponse',
+    'InventoryOperationAddRequest',
+    'InventoryOperationAddResponse',
+    'InventoryOperationAddBulkRequest',
+    'InventoryOperationAddBulkResponse',
+    'InventoryOperationEditRequest',
+    'InventoryOperationEditResponse',
+    'InventoryOperationDeleteRequest',
+    'InventoryOperationDeleteResponse',
+    'InventoryOperationMoveOperationsRequest',
+    'InventoryOperationMoveOperationsResponse',
+    'InventoryOperationSetPriceByPriceTypeRequest',
+    'InventoryOperationSetPriceByPriceTypeResponse'
 ]

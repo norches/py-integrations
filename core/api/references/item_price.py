@@ -1,31 +1,28 @@
+"""REGOS API service for ItemPrice."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from core.logger import setup_logger
-from schemas.api.references.item_price import (
-    ItemPriceGetPreCostRequest,
-    ItemPriceGetPreCostResponse,
-    ItemPriceGetRequest,
-    ItemPriceGetResponse,
-)
+from typing import Any
 
-logger = setup_logger("references.ItemPrice")
+from core.api.service import RegosAPIService
+from schemas.api import models
 
 
-class ItemPriceService:
+class ItemPriceService(RegosAPIService):
     PATH_GET = "ItemPrice/Get"
     PATH_GET_PRE_COST = "ItemPrice/GetPreCost"
+    REQUEST_MODELS = {
+        'get': models.ItemPriceGet,
+        'get_pre_cost': models.ItemPreCostGet,
+    }
 
-    def __init__(self, api):
-        self.api = api
+    async def get(self, req: models.ItemPriceGet | dict[str, Any]) -> models.ItemPriceRegosArrayResult:
+        """POST ItemPrice/Get."""
+        return await self._call(self.PATH_GET, req, models.ItemPriceRegosArrayResult)
 
-    async def get(self, req: ItemPriceGetRequest) -> ItemPriceGetResponse:
-        return await self.api.call(self.PATH_GET, req, ItemPriceGetResponse)
+    async def get_pre_cost(self, req: models.ItemPreCostGet | dict[str, Any]) -> models.ItemPreCostArrayRegosObjectResult:
+        """POST ItemPrice/GetPreCost."""
+        return await self._call(self.PATH_GET_PRE_COST, req, models.ItemPreCostArrayRegosObjectResult)
 
-    async def get_pre_cost(
-        self, req: ItemPriceGetPreCostRequest
-    ) -> ItemPriceGetPreCostResponse:
-        return await self.api.call(
-            self.PATH_GET_PRE_COST,
-            req,
-            ItemPriceGetPreCostResponse,
-        )
+__all__ = ['ItemPriceService']

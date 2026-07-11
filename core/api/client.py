@@ -65,9 +65,15 @@ class APIClient:
     REQ_PREVIEW_LIMIT = 2_048    # bytes
     RESP_PREVIEW_LIMIT = 2_048   # chars
 
-    def __init__(self, connected_integration_id: str, timeout: int = 90) -> None:
+    def __init__(
+        self,
+        connected_integration_id: str,
+        timeout: int = 90,
+        bearer_token: Optional[str] = None,
+    ) -> None:
         self.integration_id = connected_integration_id
         self._timeout = timeout
+        self._bearer_token = str(bearer_token or "").strip()
         self.client = self._build_http_client()
 
         self._limiter = get_shared_limiter(
@@ -137,14 +143,14 @@ class APIClient:
     @staticmethod
     def _serialize_payload(data: Any) -> Any:
         if isinstance(data, BaseModel):
-            return data.model_dump(mode="json", exclude_none=True)
+            return data.model_dump(mode="json", exclude_none=True, by_alias=True)
         if isinstance(data, list):
-            return [
-                x.model_dump(mode="json", exclude_none=True) if isinstance(x, BaseModel) else x
-                for x in data
-            ]
+            return [APIClient._serialize_payload(item) for item in data]
         if isinstance(data, dict):
-            return data
+            return {
+                key: APIClient._serialize_payload(value)
+                for key, value in data.items()
+            }
         raise TypeError(f"Unsupported data type for POST: {type(data)}")
 
     async def _auth_headers(
@@ -154,7 +160,11 @@ class APIClient:
         force_refresh: bool = False,
         with_json_content_type: bool = True,
     ) -> Dict[str, str]:
-        token = await self._oauth.get_access_token(force_refresh=force_refresh)
+        token = (
+            self._bearer_token
+            if self._bearer_token
+            else await self._oauth.get_access_token(force_refresh=force_refresh)
+        )
         headers = {
             "Accept": "application/json",
             "Accept-Encoding": "gzip",
@@ -375,7 +385,7 @@ class APIClient:
         )
 
         # Повтор при 401
-        if resp.status_code == 401:
+        if resp.status_code == 401 and not self._bearer_token:
             logger.warning("[trace:%s] 401 Unauthorized. Refreshing token and retrying...", trace_id)
             resp = await self._send_with_rate_limit_retry(
                 trace_id=trace_id,
@@ -504,7 +514,7 @@ class APIClient:
             url=url,
             send_once=lambda: send_once(force_refresh=False),
         )
-        if resp.status_code == 401:
+        if resp.status_code == 401 and not self._bearer_token:
             logger.warning(
                 "[trace:%s] 401 Unauthorized. Refreshing token and retrying...", trace_id
             )

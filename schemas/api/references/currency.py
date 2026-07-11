@@ -1,104 +1,126 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class Currency(BaseSchema):
-    """Рид-модель валюты."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="ID валюты.")
-    code_num: Optional[int] = PydField(
-        default=None, description="Числовой код валюты (ISO 4217)."
-    )
-    code_chr: Optional[str] = PydField(
-        default=None, description="Символьный код валюты (ISO 4217)."
-    )
-    name: Optional[str] = PydField(default=None, description="Наименование валюты.")
-    exchange_rate: Decimal = PydField(
-        ..., description="Текущий курс валюты по отношению к базовой."
-    )
-    is_base: bool = PydField(..., description="Флаг базовой валюты.")
-    deleted: bool = PydField(..., description="Флаг удаления валюты.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime, сек)."
-    )
-
-    @field_validator("code_chr", mode="before")
-    @classmethod
-    def _normalize_code_chr(cls, value: Optional[str]) -> Optional[str]:
-        if isinstance(value, str):
-            trimmed = value.strip().upper()
-            return trimmed or None
-        return value
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+from schemas.api.common.base import RegosModel
 
 
-class CurrencyGetRequest(BaseSchema):
-    """Параметры выборки валют."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по списку идентификаторов валют."
-    )
-    code_chr_list: Optional[List[str]] = PydField(
-        default=None, description="Фильтр по символьным кодам валют."
-    )
-    code_num_list: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по числовым кодам валют."
-    )
-    deleted: Optional[bool] = PydField(
-        default=None, description="Фильтр по признаку удаления."
-    )
-    is_base: Optional[bool] = PydField(
-        default=None, description="Только базовая / только небазовая валюта."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Набор правил сортировки результата."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выдаче (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("code_chr_list", mode="before")
-    @classmethod
-    def _normalize_code_list(cls, value: Optional[List[str]]) -> Optional[List[str]]:
-        if value is None:
-            return None
-        normalized = []
-        for item in value:
-            if isinstance(item, str) and item.strip():
-                normalized.append(item.strip().upper())
-        return normalized or None
+class Currency(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    code_num: int | None = PydField(default=None)
+    code_chr: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+    is_base: bool | None = PydField(default=None)
+    deleted: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class CurrencyGetResponse(APIBaseResponse[List[Currency]]):
-    """Ответ на запрос списка валют."""
+class CurrencyAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code_num: int | None = PydField(default=None)
+    code_chr: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+class CurrencyDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class CurrencyEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    code_num: int | None = PydField(default=None)
+    code_chr: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+
+
+class CurrencyEditExchangeRate(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+
+
+class CurrencyGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    sort_orders: list[CurrencySortOrder] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class CurrencyRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[Currency] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class CurrencySortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: CurrencySortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class CurrencySortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, UpdateResult
+
+
+CurrencyAddRequest: TypeAlias = CurrencyAdd
+CurrencyAddResponse: TypeAlias = InsertResult
+CurrencyDeleteRequest: TypeAlias = CurrencyDelete
+CurrencyDeleteResponse: TypeAlias = UpdateResult
+CurrencyEditExchangeRateRequest: TypeAlias = CurrencyEditExchangeRate
+CurrencyEditExchangeRateResponse: TypeAlias = UpdateResult
+CurrencyEditRequest: TypeAlias = CurrencyEdit
+CurrencyEditResponse: TypeAlias = UpdateResult
+CurrencyGetRequest: TypeAlias = CurrencyGet
+CurrencyGetResponse: TypeAlias = CurrencyRegosOffsettedArrayResult
+
+
+_MODEL_NAMES = ['Currency', 'CurrencyAdd', 'CurrencyDelete', 'CurrencyEdit', 'CurrencyEditExchangeRate', 'CurrencyGet', 'CurrencyRegosOffsettedArrayResult', 'CurrencySortOrder']
 
 
 __all__ = [
-    "Currency",
-    "CurrencyGetRequest",
-    "CurrencyGetResponse",
+    'Currency',
+    'CurrencyAdd',
+    'CurrencyDelete',
+    'CurrencyEdit',
+    'CurrencyEditExchangeRate',
+    'CurrencyGet',
+    'CurrencyRegosOffsettedArrayResult',
+    'CurrencySortOrder',
+    'CurrencySortOrderColumn',
+    'CurrencyGetRequest',
+    'CurrencyGetResponse',
+    'CurrencyAddRequest',
+    'CurrencyAddResponse',
+    'CurrencyEditRequest',
+    'CurrencyEditResponse',
+    'CurrencyDeleteRequest',
+    'CurrencyDeleteResponse',
+    'CurrencyEditExchangeRateRequest',
+    'CurrencyEditExchangeRateResponse'
 ]

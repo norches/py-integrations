@@ -1,160 +1,312 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class UserGroup(BaseSchema):
-    """Группа пользователей RBAC."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID группы.")
-    parent_id: Optional[int] = PydField(
-        default=None, description="ID родительской группы."
-    )
-    name: str = PydField(..., description="Наименование группы.")
-    child_count: int = PydField(..., ge=0, description="Количество дочерних групп.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime, сек)."
-    )
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+from schemas.api.common.base import RegosModel
 
 
-class User(BaseSchema):
-    """Сотрудник (пользователь RBAC)."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="ID пользователя.")
-    full_name: Optional[str] = PydField(default=None, description="Полное имя.")
-    main_phone: Optional[str] = PydField(default=None, description="Основной телефон.")
-    internal_phone: Optional[str] = PydField(
-        default=None, description="Internal extension."
-    )
-    user_group: Optional[UserGroup] = PydField(
-        default=None, description="Группа пользователя."
-    )
-    enable_hints: Optional[bool] = PydField(
-        default=None, description="Разрешены ли подсказки в интерфейсе."
-    )
-    system: Optional[bool] = PydField(
-        default=None, description="Системная запись (не редактируется)."
-    )
-    seller_barcode: Optional[str] = PydField(
-        default=None, description="Штрихкод продавца (если настроен)."
-    )
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime, сек)."
-    )
-
-    first_name: Optional[str] = PydField(default=None, description="Имя.")
-    last_name: Optional[str] = PydField(default=None, description="Фамилия.")
-    middle_name: Optional[str] = PydField(default=None, description="Отчество.")
-    sex: Optional[str] = PydField(default="none", description="Пол пользователя.")
-    date_of_birth: Optional[str] = PydField(
-        default=None, description="Дата рождения в формате YYYY-MM-DD."
-    )
-
-    address: Optional[str] = PydField(default=None, description="Адрес проживания.")
-    phones: Optional[str] = PydField(
-        default=None, description="Дополнительные телефоны."
-    )
-    email: Optional[str] = PydField(default=None, description="Email пользователя.")
-    description: Optional[str] = PydField(default=None, description="Комментарий.")
-    login: Optional[str] = PydField(default=None, description="Логин для авторизации.")
-    can_authorize: Optional[bool] = PydField(
-        default=None, description="Может ли пользователь авторизоваться."
-    )
-    active: Optional[bool] = PydField(
-        default=None, description="Активен ли пользователь."
-    )
-    language_code: Optional[str] = PydField(
-        default=None, description="Язык интерфейса пользователя."
-    )
-
-    @field_validator(
-        "full_name",
-        "first_name",
-        "last_name",
-        "middle_name",
-        "main_phone",
-        "internal_phone",
-        "address",
-        "phones",
-        "email",
-        "description",
-        "login",
-        "language_code",
-        "seller_barcode",
-        mode="before",
-    )
-    @classmethod
-    def _strip_strings(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class User(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    login: str | None = PydField(default=None)
+    can_authorize: bool | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    language_code: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    full_name: str | None = PydField(default=None)
+    main_phone: str | None = PydField(default=None)
+    internal_phone: str | None = PydField(default=None)
+    user_group: UserGroup | None = PydField(default=None)
+    enable_hints: bool | None = PydField(default=None)
+    system: bool | None = PydField(default=None)
+    sub: str | None = PydField(default=None)
+    photo_url: str | None = PydField(default=None)
+    fields: list[FieldValue] | None = PydField(default=None)
+    seller_barcode: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class UserGetRequest(BaseSchema):
-    """Параметры выборки пользователей."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по списку идентификаторов пользователей."
-    )
-    group_ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по группам пользователей."
-    )
-    active: Optional[bool] = PydField(
-        default=None, description="Возвращать только активных/неактивных пользователей."
-    )
-    can_authorize: Optional[bool] = PydField(
-        default=None, description="Фильтр по возможности авторизации."
-    )
-    search: Optional[str] = PydField(
-        default=None,
-        description="Поиск по ФИО, логину, телефону или email.",
-    )
-    internal_phone: Optional[str] = PydField(
-        default=None, description="Internal extension filter."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Набор правил сортировки результата."
-    )
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выдаче (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", "internal_phone", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class UserAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    login: str | None = PydField(default=None)
+    can_authorize: bool | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    language_code: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    new_password: str | None = PydField(default=None)
+    new_password_confirm: str | None = PydField(default=None)
+    fields: list[FieldValueAdd] | None = PydField(default=None)
 
 
-class UserGetResponse(APIBaseResponse[List[User] | Dict[str, Any]]):
-    """Ответ на запрос списка пользователей."""
+class UserAddGlobal(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    phone: str | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="ignore")
+
+class UserAddGlobalResposne(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    send_registration: bool | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+
+
+class UserAddGlobalResposneRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: UserAddGlobalResposne | Error | None = PydField(default=None)
+
+
+class UserCheckLoginIn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    login: str | None = PydField(default=None)
+
+
+class UserCheckLoginOut(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    enable: bool | None = PydField(default=None)
+
+
+class UserCheckLoginOutRegosObjectResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: UserCheckLoginOut | Error | None = PydField(default=None)
+
+
+class UserDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class UserEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    first_name: str | None = PydField(default=None)
+    last_name: str | None = PydField(default=None)
+    middle_name: str | None = PydField(default=None)
+    sex: SexEnum | None = PydField(default=None)
+    date_of_birth: str | None = PydField(default=None)
+    address: str | None = PydField(default=None)
+    phones: str | None = PydField(default=None)
+    email: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    login: str | None = PydField(default=None)
+    can_authorize: bool | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    language_code: str | None = PydField(default=None)
+    id: int | None = PydField(default=None)
+    group_id: int | None = PydField(default=None)
+    internal_phone: str | None = PydField(default=None)
+    fields: list[FieldValueEdit] | None = PydField(default=None)
+
+
+class UserGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    group_ids: list[int] | None = PydField(default=None)
+    gender: SexEnum | None = PydField(default=None)
+    can_authorize: bool | None = PydField(default=None)
+    active: bool | None = PydField(default=None)
+    language_code: str | None = PydField(default=None)
+    sub: str | None = PydField(default=None)
+    sort_orders: list[User_SortOrder] | None = PydField(default=None)
+    filters: list[Filter] | None = PydField(default=None)
+    seller_barcode: str | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    internal_phone: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class UserImage(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    width: int | None = PydField(default=None)
+    height: int | None = PydField(default=None)
+    size: int | None = PydField(default=None)
+    file: str | None = PydField(default=None)
+    url: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+
+
+class UserImageDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class UserImageGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    include_data: bool | None = PydField(default=None)
+    compress_data: bool | None = PydField(default=None)
+    user_id: int | None = PydField(default=None)
+
+
+class UserImageRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[UserImage] | Error | None = PydField(default=None)
+
+
+class UserPasswordChange(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    user_id: int | None = PydField(default=None)
+    new_password: str | None = PydField(default=None)
+    new_password_confirm: str | None = PydField(default=None)
+
+
+class UserPhoneChangeConfirmRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    phone: str | None = PydField(default=None)
+    confirm_code: str | None = PydField(default=None)
+
+
+class UserPhoneChangeRequest(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    phone: str | None = PydField(default=None)
+
+
+class UserRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[User] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class User_SortOrder(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: User_SortOrderColumn | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class User_SortOrderColumn(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+    VALUE_12 = 12
+    VALUE_13 = 13
+    VALUE_14 = 14
+    VALUE_15 = 15
+    VALUE_16 = 16
+    VALUE_17 = 17
+    VALUE_18 = 18
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ApiResult, ColumnSortOrderDirection, Error, InsertResult, SexEnum, UpdateResult
+from schemas.api.common.filter import Filter
+from schemas.api.rbac.user_group import UserGroup
+from schemas.api.rbac.user_permission import UserPermissionGet, UserPermissionShortRegosArrayResult
+from schemas.api.references.field import FieldValue, FieldValueAdd, FieldValueEdit
+
+
+UserAddGlobalRequest: TypeAlias = UserAddGlobal
+UserAddGlobalResponse: TypeAlias = UserAddGlobalResposneRegosObjectResult
+UserAddImageResponse: TypeAlias = UpdateResult
+UserAddRequest: TypeAlias = UserAdd
+UserAddResponse: TypeAlias = InsertResult
+UserCheckLoginRequest: TypeAlias = UserCheckLoginIn
+UserCheckLoginResponse: TypeAlias = UserCheckLoginOutRegosObjectResult
+UserDeleteImageRequest: TypeAlias = UserImageDelete
+UserDeleteImageResponse: TypeAlias = UpdateResult
+UserDeleteRequest: TypeAlias = UserDelete
+UserDeleteResponse: TypeAlias = UpdateResult
+UserEditRequest: TypeAlias = UserEdit
+UserEditResponse: TypeAlias = UpdateResult
+UserGetImageRequest: TypeAlias = UserImageGet
+UserGetImageResponse: TypeAlias = UserImageRegosArrayResult
+UserGetPermissionsRequest: TypeAlias = UserPermissionGet
+UserGetPermissionsResponse: TypeAlias = UserPermissionShortRegosArrayResult
+UserGetRequest: TypeAlias = UserGet
+UserGetResponse: TypeAlias = UserRegosOffsettedArrayResult
+UserPasswordChangeRequest: TypeAlias = UserPasswordChange
+UserPasswordChangeResponse: TypeAlias = UpdateResult
+UserPhoneChangeConfirmResponse: TypeAlias = ApiResult
+UserPhoneChangeResponse: TypeAlias = ApiResult
+
+
+_MODEL_NAMES = ['User', 'UserAdd', 'UserAddGlobal', 'UserAddGlobalResposne', 'UserAddGlobalResposneRegosObjectResult', 'UserCheckLoginIn', 'UserCheckLoginOut', 'UserCheckLoginOutRegosObjectResult', 'UserDelete', 'UserEdit', 'UserGet', 'UserImage', 'UserImageDelete', 'UserImageGet', 'UserImageRegosArrayResult', 'UserPasswordChange', 'UserPhoneChangeConfirmRequest', 'UserPhoneChangeRequest', 'UserRegosOffsettedArrayResult', 'User_SortOrder']
 
 
 __all__ = [
-    "UserGroup",
-    "User",
-    "UserGetRequest",
-    "UserGetResponse",
+    'User',
+    'UserAdd',
+    'UserAddGlobal',
+    'UserAddGlobalResposne',
+    'UserAddGlobalResposneRegosObjectResult',
+    'UserCheckLoginIn',
+    'UserCheckLoginOut',
+    'UserCheckLoginOutRegosObjectResult',
+    'UserDelete',
+    'UserEdit',
+    'UserGet',
+    'UserImage',
+    'UserImageDelete',
+    'UserImageGet',
+    'UserImageRegosArrayResult',
+    'UserPasswordChange',
+    'UserPhoneChangeConfirmRequest',
+    'UserPhoneChangeRequest',
+    'UserRegosOffsettedArrayResult',
+    'User_SortOrder',
+    'User_SortOrderColumn',
+    'UserGetPermissionsRequest',
+    'UserGetPermissionsResponse',
+    'UserGetRequest',
+    'UserGetResponse',
+    'UserAddGlobalRequest',
+    'UserAddGlobalResponse',
+    'UserAddRequest',
+    'UserAddResponse',
+    'UserEditRequest',
+    'UserEditResponse',
+    'UserDeleteRequest',
+    'UserDeleteResponse',
+    'UserCheckLoginRequest',
+    'UserCheckLoginResponse',
+    'UserPasswordChangeRequest',
+    'UserPasswordChangeResponse',
+    'UserGetImageRequest',
+    'UserGetImageResponse',
+    'UserAddImageResponse',
+    'UserDeleteImageRequest',
+    'UserDeleteImageResponse',
+    'UserPhoneChangeResponse',
+    'UserPhoneChangeConfirmResponse'
 ]

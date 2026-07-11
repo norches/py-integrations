@@ -1,104 +1,79 @@
-"""Schemas for connected integration settings."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, RootModel, model_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-
-
-class ConnectedIntegrationSetting(BaseSchema):
-    """Read model for an integration setting."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    key: Optional[str] = PydField(default=None, description="Setting key.")
-    value: Optional[str] = PydField(default=None, description="Setting value.")
-    last_update: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Last update timestamp (unix time).",
-    )
+from schemas.api.common.base import RegosModel
 
 
-class ConnectedIntegrationSettingRequest(BaseSchema):
-    """Request for ConnectedIntegrationSetting/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    integration_key: Optional[str] = PydField(
-        default=None,
-        min_length=1,
-        description="Legacy integration key.",
-    )
-    connected_integration_id: Optional[str] = PydField(
-        default=None,
-        min_length=1,
-        description="Connected integration ID.",
-    )
-    firm_id: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Firm ID filter.",
-    )
-
-    @model_validator(mode="after")
-    def _ensure_scope(self) -> "ConnectedIntegrationSettingRequest":
-        has_integration_key = bool((self.integration_key or "").strip())
-        has_connected_id = bool((self.connected_integration_id or "").strip())
-        if not (has_integration_key or has_connected_id):
-            raise ValueError(
-                "One of integration_key or connected_integration_id must be provided"
-            )
-        return self
+class ConnectedIntegrationSetting(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class ConnectedIntegrationSettingEditItem(BaseSchema):
-    """Single item for ConnectedIntegrationSetting/Edit."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: Optional[int] = PydField(default=None, ge=1, description="Setting ID.")
-    key: Optional[str] = PydField(default=None, description="Setting key.")
-    value: Optional[str] = PydField(default=None, description="New setting value.")
-    integration_key: Optional[str] = PydField(
-        default=None,
-        min_length=1,
-        description="Legacy integration key.",
-    )
-    connected_integration_id: Optional[str] = PydField(
-        default=None,
-        min_length=1,
-        description="Connected integration ID.",
-    )
-    firm_id: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Firm ID filter.",
-    )
-
-    @model_validator(mode="after")
-    def _ensure_scope(self) -> "ConnectedIntegrationSettingEditItem":
-        has_integration_key = bool((self.integration_key or "").strip())
-        has_connected_id = bool((self.connected_integration_id or "").strip())
-        if not (has_integration_key or has_connected_id):
-            raise ValueError(
-                "One of integration_key or connected_integration_id must be provided"
-            )
-        return self
+class ConnectedIntegrationSettingEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    key: str | None = PydField(default=None)
+    value: str | None = PydField(default=None)
+    integration_key: str | None = PydField(default=None)
+    connected_integration_id: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
 
 
-class ConnectedIntegrationSettingEditRequest(
-    RootModel[List[ConnectedIntegrationSettingEditItem]]
-):
-    """Batch edit request (root=list)."""
+class ConnectedIntegrationSettingGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    integration_key: str | None = PydField(default=None)
+    connected_integration_id: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+class ConnectedIntegrationSettingRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[ConnectedIntegrationSetting] | Error | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, SingleObjectResult
+
+
+
+
+class ConnectedIntegrationSettingEditRequest(RootModel[list[ConnectedIntegrationSettingEdit]]):
+    """Compatibility root model for ConnectedIntegrationSetting/Edit."""
+
+    pass
+
+
+ConnectedIntegrationSettingEditItem: TypeAlias = ConnectedIntegrationSettingEdit
+ConnectedIntegrationSettingEditResponse: TypeAlias = SingleObjectResult
+ConnectedIntegrationSettingGetRequest: TypeAlias = ConnectedIntegrationSettingGet
+ConnectedIntegrationSettingGetResponse: TypeAlias = ConnectedIntegrationSettingRegosArrayResult
+ConnectedIntegrationSettingRequest: TypeAlias = ConnectedIntegrationSettingGet
+
+
+_MODEL_NAMES = ['ConnectedIntegrationSetting', 'ConnectedIntegrationSettingEdit', 'ConnectedIntegrationSettingGet', 'ConnectedIntegrationSettingRegosArrayResult', 'ConnectedIntegrationSettingEditRequest']
 
 
 __all__ = [
-    "ConnectedIntegrationSetting",
-    "ConnectedIntegrationSettingEditItem",
-    "ConnectedIntegrationSettingEditRequest",
-    "ConnectedIntegrationSettingRequest",
+    'ConnectedIntegrationSetting',
+    'ConnectedIntegrationSettingEdit',
+    'ConnectedIntegrationSettingGet',
+    'ConnectedIntegrationSettingRegosArrayResult',
+    'ConnectedIntegrationSettingEditRequest',
+    'ConnectedIntegrationSettingGetRequest',
+    'ConnectedIntegrationSettingGetResponse',
+    'ConnectedIntegrationSettingEditRequest',
+    'ConnectedIntegrationSettingEditResponse',
+    'ConnectedIntegrationSettingEditItem',
+    'ConnectedIntegrationSettingRequest'
 ]

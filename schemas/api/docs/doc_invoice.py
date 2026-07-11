@@ -1,260 +1,351 @@
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
+
 from __future__ import annotations
 
-from decimal import Decimal
-from enum import Enum
-from typing import Any, Dict, List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator, model_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import APIBaseResponse, AddResult, BaseSchema
-from schemas.api.common.sort_orders import SortOrders
+from schemas.api.common.base import RegosModel
+
+
+class DocInvoice(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
+    corrected_date: int | None = PydField(default=None)
+    corrected_code: str | None = PydField(default=None)
+    contract: DocContractShort | None = PydField(default=None)
+    firm: Firm | None = PydField(default=None)
+    partner: Partner | None = PydField(default=None)
+    currency: Currency | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+    attached_user: User | None = PydField(default=None)
+    base_document_id: int | None = PydField(default=None)
+    document_type: int | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None)
+    external_code: str | None = PydField(default=None)
+    status: DocInvoiceStatusEnum | None = PydField(default=None)
+    error: str | None = PydField(default=None)
+    blocked: bool | None = PydField(default=None)
+    current_user_blocked: bool | None = PydField(default=None)
+    performed: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
+
+
+class DocInvoiceAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    code: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    corrected_date: int | None = PydField(default=None)
+    corrected_code: str | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    document_type_id: int | None = PydField(default=None)
+    contract_id: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+
+
+class DocInvoiceAddOnBase(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_type_id: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    corrected_date: int | None = PydField(default=None)
+    corrected_code: str | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+
+
+class DocInvoiceColumn(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    column: DocInvoiceColumns | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None)
+
+
+class DocInvoiceColumns(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+    VALUE_9 = 9
+    VALUE_10 = 10
+    VALUE_11 = 11
+    VALUE_12 = 12
+    VALUE_13 = 13
+    VALUE_14 = 14
+    VALUE_15 = 15
+
+
+class DocInvoiceDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DocInvoiceDeleteMark(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DocInvoiceEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    date: int | None = PydField(default=None)
+    code: str | None = PydField(default=None)
+    corrected_date: int | None = PydField(default=None)
+    corrected_code: str | None = PydField(default=None)
+    document_id: int | None = PydField(default=None)
+    document_type_id: int | None = PydField(default=None)
+    contract_id: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+    partner_id: int | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None)
+    exchange_rate: _Decimal | None = PydField(default=None)
+    description: str | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+    attached_user_id: int | None = PydField(default=None)
+
+
+class DocInvoiceFromRoaming(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    roaming_id: str | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    partner_name: str | None = PydField(default=None)
+    partner_inn: str | None = PydField(default=None)
+    contract: str | None = PydField(default=None)
+    firm: str | None = PydField(default=None)
+    date: _DateTime | None = PydField(default=None)
+    create_date: _DateTime | None = PydField(default=None)
+    update_date: _DateTime | None = PydField(default=None)
+    amount: _Decimal | None = PydField(default=None)
+
+
+class DocInvoiceFromRoamingGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    firm_id: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class DocInvoiceFromRoamingImport(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: str | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+class DocInvoiceFromRoamingRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[DocInvoiceFromRoaming] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class DocInvoiceGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    start_date: int | None = PydField(default=None)
+    end_date: int | None = PydField(default=None)
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None)
+    contract_ids: list[int] | None = PydField(default=None)
+    firm_ids: list[int] | None = PydField(default=None)
+    partner_ids: list[int] | None = PydField(default=None)
+    external_code: str | None = PydField(default=None)
+    attached_user_ids: list[int] | None = PydField(default=None)
+    performed: bool | None = PydField(default=None)
+    blocked: bool | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None)
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
+    sort_orders: list[DocInvoiceColumn] | None = PydField(default=None)
+    search: str | None = PydField(default=None)
+    limit: int | None = PydField(default=None)
+    offset: int | None = PydField(default=None)
+
+
+class DocInvoiceLockAndUnlock(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+
+
+class DocInvoicePerformAndCancel(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+
+
+class DocInvoiceRegosOffsettedArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[DocInvoice] | Error | None = PydField(default=None)
+    next_offset: int | None = PydField(default=None)
+    total: int | None = PydField(default=None)
+
+
+class DocInvoiceSend(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_ids: list[int] | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None)
+
+
+class DocInvoiceSetExternalData(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    integration_key: str | None = PydField(default=None)
+    connected_integration_id: str | None = PydField(default=None)
+    external_id: str | None = PydField(default=None)
+    roaming_id: str | None = PydField(default=None)
+
+
+class DocInvoiceSetStatus(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    document_id: int | None = PydField(default=None)
+    status: DocInvoiceStatusEnum | None = PydField(default=None)
+    error_message: str | None = PydField(default=None)
+
+
+class DocInvoiceStatusEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+    VALUE_4 = 4
+    VALUE_5 = 5
+    VALUE_6 = 6
+    VALUE_7 = 7
+    VALUE_8 = 8
+
+
+class DocInvoiceTypeEnum(IntEnum):
+    VALUE_0 = 0
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import ColumnSortOrderDirection, Error, InsertResult, SingleObjectResult, UpdateResult, VatCalculationTypeEnum
 from schemas.api.docs.doc_contract import DocContractShort
 from schemas.api.rbac.user import User
 from schemas.api.references.currency import Currency
 from schemas.api.references.firm import Firm
 from schemas.api.references.partner import Partner
-from schemas.api.references.tax import VatCalculationType
 
 
-class DocInvoiceType(str, Enum):
-    """Invoice document type."""
-
-    Default = "Default"
-    Income = "Income"
-    Outcome = "Outcome"
-    Corrective = "Corrective"
-
-
-class DocInvoiceStatus(str, Enum):
-    """Invoice exchange status."""
-
-    Default = "Default"
-    New = "New"
-    InSentProgress = "InSentProgress"
-    Sent = "Sent"
-    InReceivedProgress = "InReceivedProgress"
-    Received = "Received"
-    ErrorSent = "ErrorSent"
-    ErrorReceived = "ErrorReceived"
-    Unknown = "Unknown"
-
-
-def _normalize_invoice_type(value):
-    if isinstance(value, DocInvoiceType) or value is None:
-        return value
-    if isinstance(value, int):
-        return {
-            0: DocInvoiceType.Default,
-            1: DocInvoiceType.Income,
-            2: DocInvoiceType.Outcome,
-            3: DocInvoiceType.Corrective,
-        }.get(value, value)
-    if isinstance(value, str):
-        normalized = value.strip()
-        for item in DocInvoiceType:
-            if item.value.lower() == normalized.lower():
-                return item
-    return value
+DocInvoiceActionResponse: TypeAlias = SingleObjectResult
+DocInvoiceAddOnBaseRequest: TypeAlias = DocInvoiceAddOnBase
+DocInvoiceAddOnBaseResponse: TypeAlias = InsertResult
+DocInvoiceAddRequest: TypeAlias = DocInvoiceAdd
+DocInvoiceAddResponse: TypeAlias = InsertResult
+DocInvoiceDeleteMarkRequest: TypeAlias = DocInvoiceDeleteMark
+DocInvoiceDeleteMarkResponse: TypeAlias = UpdateResult
+DocInvoiceDeleteRequest: TypeAlias = DocInvoiceDelete
+DocInvoiceDeleteResponse: TypeAlias = UpdateResult
+DocInvoiceEditRequest: TypeAlias = DocInvoiceEdit
+DocInvoiceEditResponse: TypeAlias = UpdateResult
+DocInvoiceGetDocumentsFromRoamingRequest: TypeAlias = DocInvoiceFromRoamingGet
+DocInvoiceGetDocumentsFromRoamingResponse: TypeAlias = DocInvoiceFromRoamingRegosOffsettedArrayResult
+DocInvoiceGetRequest: TypeAlias = DocInvoiceGet
+DocInvoiceGetResponse: TypeAlias = DocInvoiceRegosOffsettedArrayResult
+DocInvoiceImportDocumentFromRoamingRequest: TypeAlias = DocInvoiceFromRoamingImport
+DocInvoiceImportDocumentFromRoamingResponse: TypeAlias = SingleObjectResult
+DocInvoiceLockRequest: TypeAlias = DocInvoiceLockAndUnlock
+DocInvoiceLockResponse: TypeAlias = UpdateResult
+DocInvoicePerformCancelRequest: TypeAlias = DocInvoicePerformAndCancel
+DocInvoicePerformCancelResponse: TypeAlias = UpdateResult
+DocInvoicePerformRequest: TypeAlias = DocInvoicePerformAndCancel
+DocInvoicePerformResponse: TypeAlias = UpdateResult
+DocInvoiceSendRequest: TypeAlias = DocInvoiceSend
+DocInvoiceSendResponse: TypeAlias = SingleObjectResult
+DocInvoiceSetExternalDataRequest: TypeAlias = DocInvoiceSetExternalData
+DocInvoiceSetExternalDataResponse: TypeAlias = SingleObjectResult
+DocInvoiceSetStatusRequest: TypeAlias = DocInvoiceSetStatus
+DocInvoiceSetStatusResponse: TypeAlias = SingleObjectResult
+DocInvoiceStatus: TypeAlias = DocInvoiceStatusEnum
+DocInvoiceType: TypeAlias = DocInvoiceTypeEnum
+DocInvoiceUnlockRequest: TypeAlias = DocInvoiceLockAndUnlock
+DocInvoiceUnlockResponse: TypeAlias = UpdateResult
 
 
-def _normalize_invoice_status(value):
-    if isinstance(value, DocInvoiceStatus) or value is None:
-        return value
-    if isinstance(value, int):
-        return {
-            0: DocInvoiceStatus.Default,
-            1: DocInvoiceStatus.New,
-            2: DocInvoiceStatus.InSentProgress,
-            3: DocInvoiceStatus.Sent,
-            4: DocInvoiceStatus.InReceivedProgress,
-            5: DocInvoiceStatus.Received,
-            6: DocInvoiceStatus.ErrorSent,
-            7: DocInvoiceStatus.ErrorReceived,
-            8: DocInvoiceStatus.Unknown,
-        }.get(value, value)
-    if isinstance(value, str):
-        normalized = value.strip()
-        for item in DocInvoiceStatus:
-            if item.value.lower() == normalized.lower():
-                return item
-    return value
-
-
-class DocInvoice(BaseSchema):
-    """Invoice read model."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., ge=1, description="Invoice id.")
-    date: Optional[int] = PydField(default=None, ge=0, description="Date.")
-    code: Optional[str] = PydField(default=None, description="Invoice code.")
-    invoice_type: Optional[DocInvoiceType] = PydField(default=None, description="Invoice type.")
-    corrected_date: Optional[int] = PydField(default=None, ge=0, description="Corrected date.")
-    corrected_code: Optional[str] = PydField(default=None, description="Corrected code.")
-    contract: Optional[DocContractShort] = PydField(default=None, description="Contract.")
-    firm: Optional[Firm] = PydField(default=None, description="Firm.")
-    partner: Optional[Partner] = PydField(default=None, description="Partner.")
-    currency: Optional[Currency] = PydField(default=None, description="Currency.")
-    exchange_rate: Optional[Decimal] = PydField(default=None, description="Exchange rate.")
-    amount: Optional[Decimal] = PydField(default=None, description="Amount.")
-    vat_calculation_type: Optional[VatCalculationType] = PydField(default=None, description="VAT type.")
-    attached_user: Optional[User] = PydField(default=None, description="Attached user.")
-    base_document_id: Optional[int] = PydField(default=None, description="Base document id.")
-    document_type: Optional[int] = PydField(default=None, description="Base document type.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    uuid: Optional[str] = PydField(default=None, description="UUID.")
-    external_code: Optional[str] = PydField(default=None, description="External code.")
-    status: Optional[DocInvoiceStatus] = PydField(default=None, description="Exchange status.")
-    error: Optional[str] = PydField(default=None, description="Exchange error.")
-    blocked: Optional[bool] = PydField(default=None, description="Blocked flag.")
-    current_user_blocked: Optional[bool] = PydField(default=None, description="Current user blocked flag.")
-    performed: Optional[bool] = PydField(default=None, description="Performed flag.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    last_update: Optional[int] = PydField(default=None, ge=0, description="Last update.")
-
-    @field_validator("invoice_type", mode="before")
-    @classmethod
-    def _normalize_invoice_type(cls, value):
-        return _normalize_invoice_type(value)
-
-    @field_validator("status", mode="before")
-    @classmethod
-    def _normalize_status(cls, value):
-        return _normalize_invoice_status(value)
-
-
-class DocInvoiceGetRequest(BaseSchema):
-    """Request for DocInvoice/Get."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    start_date: Optional[int] = PydField(default=None, ge=0, description="Start date.")
-    end_date: Optional[int] = PydField(default=None, ge=0, description="End date.")
-    invoice_type: Optional[DocInvoiceType] = PydField(default=None, description="Invoice type.")
-    ids: Optional[List[int]] = PydField(default=None, description="Invoice ids.")
-    contract_ids: Optional[List[int]] = PydField(default=None, description="Contract ids.")
-    firm_ids: Optional[List[int]] = PydField(default=None, description="Firm ids.")
-    partner_ids: Optional[List[int]] = PydField(default=None, description="Partner ids.")
-    attached_user_ids: Optional[List[int]] = PydField(default=None, description="Attached user ids.")
-    performed: Optional[bool] = PydField(default=None, description="Performed flag.")
-    blocked: Optional[bool] = PydField(default=None, description="Blocked flag.")
-    deleted_mark: Optional[bool] = PydField(default=None, description="Deleted mark.")
-    vat_calculation_type: Optional[VatCalculationType] = PydField(default=None, description="VAT type.")
-    external_code: Optional[str] = PydField(default=None, description="External code.")
-    sort_orders: Optional[SortOrders] = PydField(default=None, description="Sort orders.")
-    search: Optional[str] = PydField(default=None, description="Search string.")
-    limit: Optional[int] = PydField(default=None, ge=1, le=10000, description="Limit.")
-    offset: Optional[int] = PydField(default=None, ge=0, description="Offset.")
-
-    @field_validator("invoice_type", mode="before")
-    @classmethod
-    def _normalize_invoice_type(cls, value):
-        return _normalize_invoice_type(value)
-
-    @field_validator("external_code", "search", mode="before")
-    @classmethod
-    def _strip_strings(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-    @model_validator(mode="after")
-    def _validate_dates(self):
-        if self.start_date and self.end_date and self.end_date < self.start_date:
-            raise ValueError("end_date cannot be less than start_date")
-        return self
-
-
-class DocInvoiceAddRequest(BaseSchema):
-    """Request for DocInvoice/Add."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    code: Optional[str] = PydField(default=None, description="Invoice code.")
-    date: int = PydField(..., ge=0, description="Date.")
-    corrected_date: Optional[int] = PydField(default=None, ge=0, description="Corrected date.")
-    corrected_code: Optional[str] = PydField(default=None, description="Corrected code.")
-    document_id: Optional[int] = PydField(default=None, ge=1, description="Base document id.")
-    document_type_id: Optional[int] = PydField(default=None, ge=1, description="Base document type id.")
-    contract_id: int = PydField(..., ge=1, description="Contract id.")
-    firm_id: int = PydField(..., ge=1, description="Firm id.")
-    partner_id: int = PydField(..., ge=1, description="Partner id.")
-    currency_id: int = PydField(..., ge=1, description="Currency id.")
-    exchange_rate: Optional[Decimal] = PydField(default=None, description="Exchange rate.")
-    description: Optional[str] = PydField(default=None, description="Description.")
-    invoice_type: Optional[DocInvoiceType] = PydField(default=None, description="Invoice type.")
-    vat_calculation_type: Optional[VatCalculationType] = PydField(default=None, description="VAT type.")
-    attached_user_id: Optional[int] = PydField(default=None, ge=1, description="Attached user id.")
-
-    @field_validator("invoice_type", mode="before")
-    @classmethod
-    def _normalize_invoice_type(cls, value):
-        return _normalize_invoice_type(value)
-
-
-class DocInvoiceSetStatusRequest(BaseSchema):
-    """Request for DocInvoice/SetStatus."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    document_id: int = PydField(..., ge=1, description="Invoice id.")
-    status: DocInvoiceStatus = PydField(..., description="Exchange status.")
-    error_message: Optional[str] = PydField(default=None, description="Error message.")
-
-    @field_validator("status", mode="before")
-    @classmethod
-    def _normalize_status(cls, value):
-        return _normalize_invoice_status(value)
-
-
-class DocInvoiceSetExternalDataRequest(BaseSchema):
-    """Request for DocInvoice/SetExternalData."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    document_id: int = PydField(..., ge=1, description="Invoice id.")
-    external_id: Optional[str] = PydField(default=None, description="External id.")
-    integration_key: Optional[str] = PydField(default=None, description="Legacy integration key.")
-    connected_integration_id: Optional[str] = PydField(default=None, description="Connected integration id.")
-    roaming_id: Optional[str] = PydField(default=None, description="Roaming id.")
-
-    @field_validator("external_id", "integration_key", "connected_integration_id", "roaming_id", mode="before")
-    @classmethod
-    def _strip_strings(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
-
-    @model_validator(mode="after")
-    def _validate_integration_id(self):
-        if not self.connected_integration_id and not self.integration_key:
-            raise ValueError("connected_integration_id or integration_key is required")
-        return self
-
-
-class DocInvoiceGetResponse(APIBaseResponse[List[DocInvoice]]):
-    """Response for DocInvoice/Get."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DocInvoiceAddResponse(APIBaseResponse[AddResult]):
-    """Response for DocInvoice/Add."""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class DocInvoiceActionResponse(APIBaseResponse[Dict[str, Any]]):
-    """Response for DocInvoice state-changing endpoints."""
-
-    model_config = ConfigDict(extra="ignore")
+_MODEL_NAMES = ['DocInvoice', 'DocInvoiceAdd', 'DocInvoiceAddOnBase', 'DocInvoiceColumn', 'DocInvoiceDelete', 'DocInvoiceDeleteMark', 'DocInvoiceEdit', 'DocInvoiceFromRoaming', 'DocInvoiceFromRoamingGet', 'DocInvoiceFromRoamingImport', 'DocInvoiceFromRoamingRegosOffsettedArrayResult', 'DocInvoiceGet', 'DocInvoiceLockAndUnlock', 'DocInvoicePerformAndCancel', 'DocInvoiceRegosOffsettedArrayResult', 'DocInvoiceSend', 'DocInvoiceSetExternalData', 'DocInvoiceSetStatus']
 
 
 __all__ = [
-    "DocInvoice",
-    "DocInvoiceActionResponse",
-    "DocInvoiceAddRequest",
-    "DocInvoiceAddResponse",
-    "DocInvoiceGetRequest",
-    "DocInvoiceGetResponse",
-    "DocInvoiceSetExternalDataRequest",
-    "DocInvoiceSetStatusRequest",
-    "DocInvoiceStatus",
-    "DocInvoiceType",
+    'DocInvoice',
+    'DocInvoiceAdd',
+    'DocInvoiceAddOnBase',
+    'DocInvoiceColumn',
+    'DocInvoiceColumns',
+    'DocInvoiceDelete',
+    'DocInvoiceDeleteMark',
+    'DocInvoiceEdit',
+    'DocInvoiceFromRoaming',
+    'DocInvoiceFromRoamingGet',
+    'DocInvoiceFromRoamingImport',
+    'DocInvoiceFromRoamingRegosOffsettedArrayResult',
+    'DocInvoiceGet',
+    'DocInvoiceLockAndUnlock',
+    'DocInvoicePerformAndCancel',
+    'DocInvoiceRegosOffsettedArrayResult',
+    'DocInvoiceSend',
+    'DocInvoiceSetExternalData',
+    'DocInvoiceSetStatus',
+    'DocInvoiceStatusEnum',
+    'DocInvoiceTypeEnum',
+    'DocInvoiceGetRequest',
+    'DocInvoiceGetResponse',
+    'DocInvoiceAddRequest',
+    'DocInvoiceAddResponse',
+    'DocInvoiceAddOnBaseRequest',
+    'DocInvoiceAddOnBaseResponse',
+    'DocInvoiceEditRequest',
+    'DocInvoiceEditResponse',
+    'DocInvoiceDeleteMarkRequest',
+    'DocInvoiceDeleteMarkResponse',
+    'DocInvoiceDeleteRequest',
+    'DocInvoiceDeleteResponse',
+    'DocInvoiceLockRequest',
+    'DocInvoiceLockResponse',
+    'DocInvoiceUnlockRequest',
+    'DocInvoiceUnlockResponse',
+    'DocInvoicePerformRequest',
+    'DocInvoicePerformResponse',
+    'DocInvoicePerformCancelRequest',
+    'DocInvoicePerformCancelResponse',
+    'DocInvoiceSendRequest',
+    'DocInvoiceSendResponse',
+    'DocInvoiceImportDocumentFromRoamingRequest',
+    'DocInvoiceImportDocumentFromRoamingResponse',
+    'DocInvoiceSetStatusRequest',
+    'DocInvoiceSetStatusResponse',
+    'DocInvoiceSetExternalDataRequest',
+    'DocInvoiceSetExternalDataResponse',
+    'DocInvoiceGetDocumentsFromRoamingRequest',
+    'DocInvoiceGetDocumentsFromRoamingResponse',
+    'DocInvoiceActionResponse',
+    'DocInvoiceStatus',
+    'DocInvoiceType'
 ]

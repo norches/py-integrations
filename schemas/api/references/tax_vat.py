@@ -1,98 +1,89 @@
-"""Схемы справочника отделов."""
+"""REGOS API schemas."""
+# Generated from REGOS public Swagger by tools/generate_regos_public_api.py.
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import List, Optional
+from datetime import datetime as _DateTime
+from decimal import Decimal as _Decimal
+from enum import IntEnum
+from typing import Any, TypeAlias
 
-from pydantic import ConfigDict, Field as PydField, field_validator
+from pydantic import ConfigDict, Field as PydField, RootModel
 
-from schemas.api.base import BaseSchema
-from schemas.api.common.sort_orders import SortOrders
-
-
-class TaxVat(BaseSchema):
-    """Рид-модель ндс."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: int = PydField(..., description="ID ндс.")
-    name: Optional[str] = PydField(default=None, description="Наименование ндс.")
-    value: Decimal = PydField(..., description="Значение НДС/налога в процентах.")
-    enabled: bool = PydField(..., description="Флаг активности НДС/налога.")
-    last_update: int = PydField(
-        ..., ge=0, description="Метка последнего обновления (unixtime)."
-    )
+from schemas.api.common.base import RegosModel
 
 
-class TaxVatGetRequest(BaseSchema):
-    """Параметры выборки отделов."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    ids: Optional[List[int]] = PydField(
-        default=None, description="Фильтр по списку идентификаторов отделов."
-    )
-    sort_orders: Optional[SortOrders] = PydField(
-        default=None, description="Правила сортировки результата."
-    )
-    search: Optional[str] = PydField(default=None, description="Поиск по названию ндс.")
-    limit: Optional[int] = PydField(
-        default=None,
-        ge=1,
-        description="Количество записей в выборке (пагинация).",
-    )
-    offset: Optional[int] = PydField(
-        default=None,
-        ge=0,
-        description="Смещение для пагинации.",
-    )
-
-    @field_validator("search", mode="before")
-    @classmethod
-    def _strip_search(cls, value: Optional[str]) -> Optional[str]:
-        return value.strip() if isinstance(value, str) else value
+class TaxVat(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    value: _Decimal | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
+    last_update: int | None = PydField(default=None)
 
 
-class TaxVatAddRequest(BaseSchema):
-    """Создание нового ндс."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    name: str = PydField(..., min_length=1, description="Наименование ндс.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class TaxVatAdd(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    value: _Decimal | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
 
 
-class TaxVatEditRequest(BaseSchema):
-    """Обновление существующего ндс."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    id: int = PydField(..., ge=1, description="ID ндс.")
-    name: str = PydField(..., min_length=1, description="Новое название ндс.")
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _strip_name(cls, value: str) -> str:
-        return value.strip()
+class TaxVatDelete(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
 
 
-class TaxVatDeleteRequest(BaseSchema):
-    """Удаление ндс."""
+class TaxVatEdit(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None)
+    value: _Decimal | None = PydField(default=None)
+    name: str | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
 
-    model_config = ConfigDict(extra="forbid")
 
-    id: int = PydField(..., ge=1, description="ID ндс.")
+class TaxVatGet(RegosModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    ids: list[int] | None = PydField(default=None)
+    enabled: bool | None = PydField(default=None)
+
+
+class TaxVatRegosArrayResult(RegosModel):
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    ok: bool | None = PydField(default=None)
+    result: list[TaxVat] | Error | None = PydField(default=None)
+
+
+# Imports are intentionally placed after model definitions to avoid circular imports.
+from schemas.api.common.base import Error, InsertResult, UpdateResult
+
+
+TaxVatAddRequest: TypeAlias = TaxVatAdd
+TaxVatAddResponse: TypeAlias = InsertResult
+TaxVatDeleteRequest: TypeAlias = TaxVatDelete
+TaxVatDeleteResponse: TypeAlias = UpdateResult
+TaxVatEditRequest: TypeAlias = TaxVatEdit
+TaxVatEditResponse: TypeAlias = UpdateResult
+TaxVatGetRequest: TypeAlias = TaxVatGet
+TaxVatGetResponse: TypeAlias = TaxVatRegosArrayResult
+
+
+_MODEL_NAMES = ['TaxVat', 'TaxVatAdd', 'TaxVatDelete', 'TaxVatEdit', 'TaxVatGet', 'TaxVatRegosArrayResult']
 
 
 __all__ = [
-    "TaxVat",
-    "TaxVatAddRequest",
-    "TaxVatDeleteRequest",
-    "TaxVatEditRequest",
-    "TaxVatGetRequest",
+    'TaxVat',
+    'TaxVatAdd',
+    'TaxVatDelete',
+    'TaxVatEdit',
+    'TaxVatGet',
+    'TaxVatRegosArrayResult',
+    'TaxVatGetRequest',
+    'TaxVatGetResponse',
+    'TaxVatAddRequest',
+    'TaxVatAddResponse',
+    'TaxVatEditRequest',
+    'TaxVatEditResponse',
+    'TaxVatDeleteRequest',
+    'TaxVatDeleteResponse'
 ]
