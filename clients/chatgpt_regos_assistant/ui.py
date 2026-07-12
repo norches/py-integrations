@@ -31,7 +31,7 @@ class ChatGptRegosAssistantUiContext:
     confirmation_ttl_sec: int
     openai_api_chat_enabled: bool
     mode: str
-    chatgpt_connect_url: str = ""
+    chatgpt_connect_url: str
     error: str = ""
 
 

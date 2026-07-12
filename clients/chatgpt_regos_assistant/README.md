@@ -60,7 +60,6 @@ Integration key: `chatgpt_regos_assistant`
 
 | Ключ | Обяз. | Тип данных | Наименование (RU / UZ / EN) | Описание (RU / UZ / EN) | Placeholder (RU / UZ / EN) |
 | --- | --- | --- | --- | --- | --- |
-| `chatgpt_connect_url` | Да для UI-входа | String | Вход через ChatGPT / ChatGPT orqali kirish / ChatGPT sign-in | URL внешнего сценария входа через ChatGPT. UI открывает его по кнопке "Войти через ChatGPT" и передает `connected_integration_id` и `return_url`; сценарий должен подключить модель для этой интеграции. / ChatGPT orqali kirish tashqi URL manzili. / External ChatGPT sign-in URL opened by the UI. | `https://.../chatgpt/connect` |
 | `chatgpt_openai_api_key` | Да | String | OpenAI API ключ / OpenAI API kaliti / OpenAI API key | Ключ используется backend-сервисом для вызова OpenAI Responses API. Значение не отправляется в браузер. / Kalit OpenAI Responses API chaqiruvi uchun backend servisda ishlatiladi. Brauzerga yuborilmaydi. / Used by the backend service to call the OpenAI Responses API. The value is never sent to the browser. | `sk-...` |
 | `chatgpt_openai_model` | Нет | String | Модель OpenAI / OpenAI modeli / OpenAI model | Модель для ответов ассистента. По умолчанию используется `gpt-4.1-mini`. / Yordamchi javoblari uchun model. Standart qiymat `gpt-4.1-mini`. / Model used for assistant responses. Default is `gpt-4.1-mini`. | `gpt-4.1-mini` |
 | `chatgpt_assistant_prompt` | Нет | Text | Инструкция ассистента / Yordamchi yo'riqnomasi / Assistant instructions | Дополнительные правила поведения ассистента: тон, ограничения, внутренние регламенты и приоритеты. / Yordamchi xatti-harakati uchun qo'shimcha qoidalar: ohang, cheklovlar, ichki reglamentlar va ustuvorliklar. / Additional behavior rules for the assistant: tone, limits, internal policies, and priorities. | `Отвечай кратко и уточняй данные перед изменениями` |
@@ -72,7 +71,7 @@ Integration key: `chatgpt_regos_assistant`
 
 ## Глобальные настройки сервиса
 
-Эти параметры задаются на уровне backend-сервиса и нужны для обмена `embed_token` на пользовательский REGOS access token.
+Эти параметры задаются на уровне backend-сервиса. Они общие для всех подключений интеграции.
 
 | Ключ | Обяз. | Описание |
 | --- | --- | --- |
@@ -80,13 +79,14 @@ Integration key: `chatgpt_regos_assistant`
 | `oauth_client_id` | Да | OAuth client id приложения, зарегистрированного для работы с REGOS embed token. |
 | `oauth_secret` | Да | OAuth secret приложения. |
 | `integration_url` | Да | Публичный HTTPS URL сервиса интеграций, с которого открывается iframe UI. Используется для построения `/external/{connected_integration_id}/...`; `proxy_integration_url` не должен подменять origin для Embed OAuth. |
+| `CHATGPT_REGOS_CONNECT_URL` | Нет | Единый URL сценария входа через ChatGPT. UI открывает его по кнопке "Войти через ChatGPT" и передает `connected_integration_id` и `return_url`; сценарий должен подключить модель для конкретного подключения. По умолчанию: `https://integration.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect`. |
 
 ## Порядок настройки
 
 1. Зарегистрировать OAuth-приложение для REGOS embed token и заполнить `oauth_endpoint`, `oauth_client_id`, `oauth_secret`.
 2. Убедиться, что backend интеграций доступен по публичному HTTPS URL и он указан в `integration_url`; этот origin должен совпадать с адресом, с которого REGOS открывает iframe.
-3. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
-4. Указать `chatgpt_connect_url`, чтобы пользователь мог нажать "Войти через ChatGPT" прямо в UI. После успешного входа внешний сценарий должен заполнить `chatgpt_openai_api_key`; при необходимости также указать модель, prompt и лимиты.
+3. При необходимости переопределить `CHATGPT_REGOS_CONNECT_URL`; по умолчанию используется общий production URL входа через ChatGPT.
+4. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
 5. Открыть `/external/{connected_integration_id}/ui` во фрейме REGOS.
 6. Проверить вход пользователя через REGOS Embed SDK: после успешного входа поле ввода чата становится активным.
 7. Отправить тестовый запрос на чтение, например "Покажи остатки товара X".

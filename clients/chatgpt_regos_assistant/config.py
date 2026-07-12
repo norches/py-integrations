@@ -13,6 +13,7 @@ class ChatGptRegosAssistantConfig:
     DEFAULT_MAX_OUTPUT_TOKENS = 1200
     MAX_OPENAI_TOOLS = 120
     DEFAULT_CONFIRMATION_TTL_SEC = 15 * 60
+    CHATGPT_CONNECT_URL = app_settings.chatgpt_regos_connect_url.strip()
     EMBED_SDK_URL = "https://auth.regos.uz/widget/regos-embed-sdk.v1.1.min.js"
     EMBED_TOKEN_GRANT_TYPE = "embed_token"
     EMBED_SESSION_DEFAULT_TTL_SEC = 10 * 60

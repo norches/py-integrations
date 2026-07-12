@@ -148,6 +148,10 @@ class Settings(BaseSettings):
     meta_leadgen_redirect_uri: str = ""
     meta_leadgen_webhook_verify_token: str = ""
     meta_leadgen_graph_version: str = "v25.0"
+    chatgpt_regos_connect_url: str = Field(
+        default="https://integration.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect",
+        validation_alias="CHATGPT_REGOS_CONNECT_URL",
+    )
 
     oauth_endpoint: str = "https://auth.regos.uz/" # oath/token
     oauth_client_id: str = ""

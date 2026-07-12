@@ -615,12 +615,7 @@ class ChatGptRegosAssistantIntegration(ClientBase):
             str(settings_map.get("chatgpt_regos_parent_origin") or "").strip()
             or ChatGptRegosAssistantConfig.EMBED_PARENT_ORIGIN
         )
-        chatgpt_connect_url = (
-            settings_map.get("chatgpt_connect_url")
-            or settings_map.get("chatgpt_oauth_url")
-            or settings_map.get("chatgpt_login_url")
-            or ""
-        ).strip()
+        chatgpt_connect_url = ChatGptRegosAssistantConfig.CHATGPT_CONNECT_URL
         return ChatGptRegosAssistantUiContext(
             connected_integration_id=ci,
             api_url=f"/clients/{ChatGptRegosAssistantConfig.INTEGRATION_KEY}",
