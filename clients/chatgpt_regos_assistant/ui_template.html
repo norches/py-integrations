@@ -75,7 +75,7 @@
       const statusLine = document.querySelector("[data-status-line]");
       const modeBadge = document.querySelector("[data-mode-badge]");
       let embedSessionToken = "";
-      let embedAuthenticated = !cfg.embedAuthEnabled;
+      let embedAuthenticated = !cfg.embedAuthEnabled || !cfg.chatEnabled;
 
       function appendMessage(role, text, extra) {{
         const item = document.createElement("article");
@@ -126,11 +126,27 @@
       }}
 
       function initEmbedAuth() {{
+        if (!cfg.chatEnabled) {{
+          embedAuthenticated = false;
+          setBusy(false);
+          return;
+        }}
         if (!cfg.embedAuthEnabled) {{
           embedAuthenticated = true;
           setBusy(false);
           return;
         }}
+
+        if (window.parent === window) {{
+          embedAuthenticated = false;
+          setStatus("Open in REGOS");
+          if (errorLine && !errorLine.textContent.trim()) {{
+            errorLine.textContent = "Откройте интеграцию внутри REGOS, чтобы войти от имени пользователя.";
+          }}
+          setBusy(false);
+          return;
+        }}
+
         setStatus("Authorizing in REGOS");
         if (errorLine && !errorLine.textContent.trim()) {{
           errorLine.textContent = "Authorizing through REGOS iframe...";
@@ -250,10 +266,12 @@
       }}
 
       if (!cfg.chatEnabled && errorLine && !errorLine.textContent.trim()) {{
-        errorLine.textContent = "Server chat is disabled. Add an OpenAI API key in integration settings.";
+        errorLine.textContent = "Добавьте OpenAI API key в настройках интеграции.";
       }}
       setBusy(false);
-      initEmbedAuth();
+      if (cfg.chatEnabled) {{
+        initEmbedAuth();
+      }}
     }})();
   </script>
 </body>
