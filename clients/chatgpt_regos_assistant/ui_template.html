@@ -8,47 +8,41 @@
 </head>
 <body>
   <main class="assistant-shell" data-mode="{safe_mode}">
-    <aside class="workspace-panel">
-      <header class="brand-row">
+    <header class="topbar">
+      <div class="brand-row">
         <div class="brand-mark">R</div>
         <div>
-          <h1>REGOS Assistant</h1>
-          <div class="status-line" data-status-line>{safe_status}</div>
+          <h1>REGOS помощник</h1>
+          <p>Пишите как в обычном чате</p>
         </div>
-      </header>
+      </div>
+      <div class="status-pill" data-status-line data-mode-badge>{safe_status}</div>
+    </header>
 
-      <section class="status-grid" aria-label="Status">
-        <div>
-          <span>Model</span>
-          <strong>{safe_model}</strong>
-        </div>
-        <div>
-          <span>Tools</span>
-          <strong>{safe_tools_count}</strong>
-        </div>
-        <div>
-          <span>Confirm TTL</span>
-          <strong>{safe_confirmation_ttl}s</strong>
-        </div>
-      </section>
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <span class="eyebrow">С чего начать</span>
+        <h2>Что нужно сделать?</h2>
+        <p>Нажмите подсказку ниже или напишите сами. Можно коротко, простыми словами.</p>
+      </div>
 
-      <section class="connection-block">
-        <label>Connected integration</label>
-        <div class="mono-line">{safe_ci}</div>
-      </section>
+      <div class="step-pills" aria-label="Как пользоваться">
+        <span>1. Нажмите подсказку</span>
+        <span>2. Поправьте текст</span>
+        <span>3. Нажмите «Отправить»</span>
+      </div>
 
-      <div class="error-line" data-error>{safe_error}</div>
-    </aside>
+      <div class="prompt-pills" aria-label="Примеры вопросов">
+        <button type="button" data-prompt="Покажи остатки товара Coca-Cola">Сколько товара осталось?</button>
+        <button type="button" data-prompt="Найди клиента по телефону +998">Найди клиента</button>
+        <button type="button" data-prompt="Сколько продаж было сегодня?">Продажи за сегодня</button>
+        <button type="button" data-prompt="Какие заказы ждут оплаты?">Кто ждёт оплату?</button>
+        <button type="button" data-prompt="Создай задачу менеджеру: перезвонить клиенту">Создай задачу</button>
+        <button type="button" data-prompt="Покажи документы по складу за сегодня">Документы склада</button>
+      </div>
+    </section>
 
-    <section class="chat-panel">
-      <header class="chat-header">
-        <div>
-          <h2>Chat</h2>
-          <span>REGOS workspace</span>
-        </div>
-        <div class="mode-badge" data-mode-badge>{safe_status}</div>
-      </header>
-
+    <section class="chat-panel" aria-label="Чат">
       <div class="message-list" data-messages>
         <article class="message assistant">
           <div class="bubble">{safe_initial_message}</div>
@@ -60,9 +54,11 @@
         </article>
       </div>
 
+      <div class="notice-line" data-error>{safe_error}</div>
+
       <form class="composer" data-chat-form>
-        <textarea name="message" rows="2" placeholder="Напишите задачу для REGOS" {chat_disabled}></textarea>
-        <button class="send-button" type="submit" {chat_disabled}>Send</button>
+        <textarea name="message" rows="2" placeholder="Напишите, что нужно: найти товар, клиента, остатки, продажу..." {chat_disabled}></textarea>
+        <button class="send-button" type="submit" {chat_disabled}>Отправить</button>
       </form>
     </section>
   </main>
@@ -81,6 +77,7 @@
       const modeBadge = document.querySelector("[data-mode-badge]");
       const connectBlock = document.querySelector("[data-chatgpt-connect]");
       const connectButton = document.querySelector("[data-chatgpt-connect-button]");
+      const promptButtons = document.querySelectorAll("[data-prompt]");
       let embedSessionToken = "";
       let embedAuthenticated = !cfg.embedAuthEnabled || !cfg.chatEnabled;
       let connectWindowOpened = false;
@@ -111,6 +108,10 @@
         if (modeBadge) modeBadge.textContent = text;
       }}
 
+      function showNotice(text) {{
+        if (errorLine) errorLine.textContent = text || "";
+      }}
+
       function chatGptConnectUrl() {{
         const raw = String(cfg.chatGptConnectUrl || "").trim();
         if (!raw) return "";
@@ -129,10 +130,7 @@
       function openChatGptLogin() {{
         const url = chatGptConnectUrl();
         if (!url) {{
-          appendMessage(
-            "assistant",
-            "Вход через ChatGPT пока не настроен. Укажите chatgpt_connect_url в настройках интеграции."
-          );
+          appendMessage("assistant", "Вход через ChatGPT пока не настроен. Обратитесь к администратору.");
           return;
         }}
         connectWindowOpened = true;
@@ -155,7 +153,7 @@
         if (!response.ok || payload.ok === false) {{
           const detail = payload.result && payload.result.description
             ? payload.result.description
-            : "Request failed";
+            : "Не получилось выполнить запрос.";
           throw new Error(String(detail));
         }}
         return payload.result;
@@ -175,24 +173,20 @@
 
         if (window.parent === window) {{
           embedAuthenticated = false;
-          setStatus("Open in REGOS");
-          if (errorLine && !errorLine.textContent.trim()) {{
-            errorLine.textContent = "Откройте интеграцию внутри REGOS, чтобы войти от имени пользователя.";
-          }}
+          setStatus("Откройте из REGOS");
+          showNotice("Откройте помощника внутри REGOS.");
           setBusy(false);
           return;
         }}
 
-        setStatus("Authorizing in REGOS");
-        if (errorLine && !errorLine.textContent.trim()) {{
-          errorLine.textContent = "Authorizing through REGOS iframe...";
-        }}
+        setStatus("Входим в REGOS");
+        showNotice("");
         setBusy(false);
 
         if (!window.RegosEmbedSDK || typeof window.RegosEmbedSDK.init !== "function") {{
           embedAuthenticated = false;
-          setStatus("REGOS auth unavailable");
-          if (errorLine) errorLine.textContent = "REGOS Embed SDK is unavailable.";
+          setStatus("Не удалось войти");
+          showNotice("Обновите страницу или откройте помощника из REGOS.");
           setBusy(false);
           return;
         }}
@@ -208,34 +202,30 @@
               const token = data && (data.embed_session_token || data.embedSessionToken);
               if (!token) {{
                 embedAuthenticated = false;
-                setStatus("REGOS auth failed");
-                if (errorLine) errorLine.textContent = "REGOS authorization did not return a session.";
+                setStatus("Не удалось войти");
+                showNotice("Попробуйте обновить страницу.");
                 setBusy(false);
                 return;
               }}
               embedSessionToken = String(token);
               embedAuthenticated = true;
-              setStatus("REGOS user authorized");
-              if (errorLine && cfg.chatEnabled) errorLine.textContent = "";
-              appendMessage("assistant", "Вход через REGOS выполнен. Можно писать задачу.");
+              setStatus("Готов к работе");
+              showNotice("");
+              appendMessage("assistant", "Готово, можно писать задачу.");
               setBusy(false);
               if (textarea) textarea.focus();
             }},
-            onError: function (error) {{
+            onError: function () {{
               embedAuthenticated = false;
-              setStatus("REGOS auth failed");
-              if (errorLine) {{
-                errorLine.textContent = error && error.message
-                  ? error.message
-                  : "Could not authorize the iframe in REGOS.";
-              }}
+              setStatus("Не удалось войти");
+              showNotice("Попробуйте обновить страницу или открыть помощника заново.");
               setBusy(false);
             }}
           }});
         }} catch (error) {{
           embedAuthenticated = false;
-          setStatus("REGOS auth failed");
-          if (errorLine) errorLine.textContent = error.message || "Could not start REGOS Embed SDK.";
+          setStatus("Не удалось войти");
+          showNotice("Попробуйте обновить страницу или открыть помощника заново.");
           setBusy(false);
         }}
       }}
@@ -246,11 +236,11 @@
         const approve = document.createElement("button");
         approve.type = "button";
         approve.className = "button primary";
-        approve.textContent = "Confirm";
+        approve.textContent = "Подтвердить";
         const cancel = document.createElement("button");
         cancel.type = "button";
         cancel.className = "button secondary";
-        cancel.textContent = "Cancel";
+        cancel.textContent = "Отмена";
         controls.appendChild(approve);
         controls.appendChild(cancel);
 
@@ -262,9 +252,9 @@
               confirmation_id: pending.confirmation_id,
               approved: approved
             }});
-            appendMessage("assistant", approved ? JSON.stringify(result.result || result, null, 2) : "Action cancelled.");
+            appendMessage("assistant", approved ? JSON.stringify(result.result || result, null, 2) : "Хорошо, отменил.");
           }} catch (error) {{
-            appendMessage("assistant", error.message || "Confirmation failed.");
+            appendMessage("assistant", error.message || "Не получилось подтвердить действие.");
           }}
         }}
 
@@ -272,6 +262,25 @@
         cancel.addEventListener("click", () => submit(false));
         return controls;
       }}
+
+      promptButtons.forEach(function (button) {{
+        button.addEventListener("click", function () {{
+          const text = button.getAttribute("data-prompt") || "";
+          if (!cfg.connectedIntegrationId) {{
+            appendMessage("assistant", "Откройте помощника внутри REGOS.");
+            return;
+          }}
+          if (!cfg.chatEnabled) {{
+            appendMessage("assistant", "Сначала нажмите «Войти через ChatGPT».");
+            return;
+          }}
+          if (textarea) {{
+            textarea.value = text;
+            textarea.focus();
+            showNotice("Проверьте текст ниже и нажмите «Отправить».");
+          }}
+        }});
+      }});
 
       if (form) {{
         form.addEventListener("submit", async function (event) {{
@@ -286,14 +295,14 @@
             if (result.status === "requires_confirmation" && result.pending_action) {{
               appendMessage(
                 "assistant",
-                result.reply || "Confirmation required.",
+                result.reply || "Нужно подтверждение.",
                 confirmationControls(result.pending_action)
               );
             }} else {{
               appendMessage("assistant", result.reply || JSON.stringify(result, null, 2));
             }}
           }} catch (error) {{
-            appendMessage("assistant", error.message || "Request failed.");
+            appendMessage("assistant", error.message || "Не получилось выполнить запрос.");
           }} finally {{
             setBusy(false);
             textarea.focus();
@@ -301,7 +310,7 @@
         }});
       }}
 
-      if (!cfg.chatEnabled && connectBlock) {{
+      if (!cfg.chatEnabled && connectBlock && cfg.connectedIntegrationId) {{
         connectBlock.hidden = false;
       }}
       if (connectButton) {{
@@ -313,8 +322,8 @@
         }}
       }});
 
-      if (!cfg.chatEnabled && errorLine && !errorLine.textContent.trim()) {{
-        errorLine.textContent = "Войдите через ChatGPT, чтобы подключить модель.";
+      if (!cfg.chatEnabled) {{
+        showNotice("Нажмите «Войти через ChatGPT», чтобы начать.");
       }}
       setBusy(false);
       if (cfg.chatEnabled) {{

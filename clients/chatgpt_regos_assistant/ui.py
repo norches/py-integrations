@@ -63,10 +63,10 @@ def _json_script(value: Dict[str, Any]) -> str:
 
 def _status_label(ctx: ChatGptRegosAssistantUiContext) -> str:
     if ctx.openai_api_chat_enabled:
-        return "Ready"
+        return "Готов к работе"
     if ctx.connected_integration_id:
-        return "ChatGPT not connected"
-    return "Missing connection"
+        return "Войдите через ChatGPT"
+    return "Откройте из REGOS"
 
 
 def _chat_disabled(ctx: ChatGptRegosAssistantUiContext) -> str:
@@ -75,15 +75,15 @@ def _chat_disabled(ctx: ChatGptRegosAssistantUiContext) -> str:
 
 def _initial_message(ctx: ChatGptRegosAssistantUiContext) -> str:
     if not ctx.connected_integration_id:
-        return "Не удалось определить подключённую интеграцию. Откройте виджет из REGOS."
+        return "Откройте помощника внутри REGOS, чтобы начать работу."
     if not ctx.openai_api_chat_enabled:
         return (
-            "ChatGPT ещё не подключён. Нажмите «Войти через ChatGPT», "
-            "чтобы подключить модель к этой интеграции."
+            "Чтобы начать, нажмите «Войти через ChatGPT». Потом выберите подсказку "
+            "или напишите свою задачу простыми словами."
         )
     return (
-        "REGOS Assistant готов. Запросы на чтение выполняются сразу, "
-        "изменения и удаления ждут подтверждения."
+        "Здравствуйте! Напишите, что нужно сделать. Например: найти товар, "
+        "проверить остатки, показать продажи или создать задачу."
     )
 
 
@@ -108,15 +108,10 @@ def render_chatgpt_regos_assistant_ui(ctx: ChatGptRegosAssistantUiContext) -> st
     template = _load_template()
     return template.format(
         style_block=style_block,
-        safe_title=_escape("REGOS ChatGPT Assistant", quote=True),
+        safe_title=_escape("REGOS помощник", quote=True),
         safe_mode=_escape(ctx.mode, quote=True),
         safe_status=_escape(_status_label(ctx)),
-        safe_ci=_escape(ctx.connected_integration_id or "not connected"),
-        safe_external_url=_escape(ctx.external_url),
         safe_embed_sdk_url=_escape(ctx.embed_sdk_url, quote=True),
-        safe_model=_escape(ctx.model if ctx.openai_api_chat_enabled else "Not connected"),
-        safe_tools_count=_escape(ctx.tools_count),
-        safe_confirmation_ttl=_escape(ctx.confirmation_ttl_sec),
         safe_error=_escape(ctx.error),
         chat_disabled=_chat_disabled(ctx),
         safe_initial_message=_escape(_initial_message(ctx)),
