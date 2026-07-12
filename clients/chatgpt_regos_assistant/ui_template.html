@@ -81,6 +81,29 @@
         if (errorLine) errorLine.textContent = text || "";
       }}
 
+      function friendlyError(error, fallback) {{
+        const text = String((error && error.message) || error || "").trim();
+        if (!text) return fallback;
+        if (text === "Failed to fetch" || text.includes("NetworkError")) {{
+          return "Не получилось связаться с сервером. Проверьте интернет и попробуйте ещё раз.";
+        }}
+        if (text.includes("Unexpected end of JSON input")) {{
+          return "Сервер не вернул ответ. Попробуйте ещё раз.";
+        }}
+        return text;
+      }}
+
+      function errorTextFromPayload(payload, fallback) {{
+        if (!payload || typeof payload !== "object") return fallback;
+        const result = payload.result && typeof payload.result === "object" ? payload.result : null;
+        const source = result || payload;
+        return source.reply
+          || source.description
+          || source.error_description
+          || source.message
+          || fallback;
+      }}
+
       async function callIntegration(action, data) {{
         const payloadData = Object.assign({{}}, data || {{}});
         if (embedSessionToken) payloadData.embed_session_token = embedSessionToken;
@@ -93,14 +116,28 @@
             data: payloadData
           }})
         }});
-        const payload = await response.json();
-        if (!response.ok || payload.ok === false) {{
-          const detail = payload.result && payload.result.description
-            ? payload.result.description
-            : "Не получилось выполнить запрос.";
-          throw new Error(String(detail));
+        const raw = await response.text();
+        let payload = null;
+        if (raw && raw.trim()) {{
+          try {{
+            payload = JSON.parse(raw);
+          }} catch (error) {{
+            throw new Error("Сервер вернул непонятный ответ. Попробуйте ещё раз.");
+          }}
         }}
-        return payload.result;
+        if (!payload) {{
+          throw new Error("Сервер не вернул ответ. Попробуйте ещё раз.");
+        }}
+        if (!response.ok || payload.ok === false) {{
+          throw new Error(String(errorTextFromPayload(payload, "Не получилось выполнить запрос.")));
+        }}
+        const result = Object.prototype.hasOwnProperty.call(payload, "result")
+          ? payload.result
+          : payload;
+        if (result && typeof result === "object" && result.error && !result.reply) {{
+          throw new Error(String(errorTextFromPayload(result, "Не получилось выполнить запрос.")));
+        }}
+        return result;
       }}
 
       function initEmbedAuth() {{
@@ -191,7 +228,7 @@
             }});
             appendMessage("assistant", approved ? JSON.stringify(result.result || result, null, 2) : "Хорошо, отменил.");
           }} catch (error) {{
-            appendMessage("assistant", error.message || "Не получилось подтвердить действие.");
+            appendMessage("assistant", friendlyError(error, "Не получилось подтвердить действие."));
           }}
         }}
 
@@ -239,7 +276,7 @@
               appendMessage("assistant", result.reply || JSON.stringify(result, null, 2));
             }}
           }} catch (error) {{
-            appendMessage("assistant", error.message || "Не получилось выполнить запрос.");
+            appendMessage("assistant", friendlyError(error, "Не получилось выполнить запрос."));
           }} finally {{
             setBusy(false);
             textarea.focus();

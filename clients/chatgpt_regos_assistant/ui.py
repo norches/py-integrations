@@ -82,7 +82,7 @@ def render_chatgpt_regos_assistant_ui(ctx: ChatGptRegosAssistantUiContext) -> st
         and ctx.oauth_client_id
     )
     config = {
-        "apiUrl": ctx.api_url,
+        "apiUrl": ctx.external_url.rstrip("/") if ctx.external_url else ctx.api_url,
         "connectedIntegrationId": ctx.connected_integration_id,
         "chatEnabled": bool(ctx.openai_api_chat_enabled and ctx.connected_integration_id),
         "externalUrl": ctx.external_url,
