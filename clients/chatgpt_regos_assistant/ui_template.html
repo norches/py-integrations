@@ -30,11 +30,6 @@
       <div class="message-list" data-messages>
         <article class="message assistant">
           <div class="bubble">{safe_initial_message}</div>
-          <div class="setup-actions" data-chatgpt-connect hidden>
-            <button class="button primary" type="button" data-chatgpt-connect-button>
-              Войти через ChatGPT
-            </button>
-          </div>
         </article>
       </div>
 
@@ -57,12 +52,9 @@
       const textarea = form ? form.querySelector("textarea") : null;
       const messages = document.querySelector("[data-messages]");
       const errorLine = document.querySelector("[data-error]");
-      const connectBlock = document.querySelector("[data-chatgpt-connect]");
-      const connectButton = document.querySelector("[data-chatgpt-connect-button]");
       const promptButtons = document.querySelectorAll("[data-prompt]");
       let embedSessionToken = "";
       let embedAuthenticated = !cfg.embedAuthEnabled || !cfg.chatEnabled;
-      let connectWindowOpened = false;
 
       function appendMessage(role, text, extra) {{
         const item = document.createElement("article");
@@ -87,31 +79,6 @@
 
       function showNotice(text) {{
         if (errorLine) errorLine.textContent = text || "";
-      }}
-
-      function chatGptConnectUrl() {{
-        const raw = String(cfg.chatGptConnectUrl || "").trim();
-        if (!raw) return "";
-        try {{
-          const url = new URL(raw, window.location.href);
-          if (cfg.connectedIntegrationId) {{
-            url.searchParams.set("connected_integration_id", cfg.connectedIntegrationId);
-          }}
-          url.searchParams.set("return_url", window.location.href);
-          return url.toString();
-        }} catch (error) {{
-          return raw;
-        }}
-      }}
-
-      function openChatGptLogin() {{
-        const url = chatGptConnectUrl();
-        if (!url) {{
-          appendMessage("assistant", "Вход через ChatGPT пока не настроен. Обратитесь к администратору.");
-          return;
-        }}
-        connectWindowOpened = true;
-        window.open(url, "_blank", "noopener,noreferrer");
       }}
 
       async function callIntegration(action, data) {{
@@ -241,7 +208,7 @@
             return;
           }}
           if (!cfg.chatEnabled) {{
-            appendMessage("assistant", "Сначала нажмите «Войти через ChatGPT».");
+            appendMessage("assistant", "Чат ещё не включён. Попросите администратора подключить помощника.");
             return;
           }}
           if (textarea) {{
@@ -280,20 +247,8 @@
         }});
       }}
 
-      if (!cfg.chatEnabled && connectBlock && cfg.connectedIntegrationId) {{
-        connectBlock.hidden = false;
-      }}
-      if (connectButton) {{
-        connectButton.addEventListener("click", openChatGptLogin);
-      }}
-      window.addEventListener("focus", function () {{
-        if (connectWindowOpened && !cfg.chatEnabled) {{
-          window.location.reload();
-        }}
-      }});
-
       if (!cfg.chatEnabled) {{
-        showNotice("Нажмите «Войти через ChatGPT», чтобы начать.");
+        showNotice("Помощник пока не включён.");
       }}
       setBusy(false);
       if (cfg.chatEnabled) {{

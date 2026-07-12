@@ -3,18 +3,22 @@ from __future__ import annotations
 import json
 import secrets
 import time
-from html import escape
 from typing import Any, Dict, List, Optional
-from urllib.parse import urlparse
 
 import httpx
-from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
+from starlette.responses import HTMLResponse, JSONResponse
 
 from clients.base import ClientBase
 from config.settings import settings as app_settings
 from core.api.regos_api import RegosAPI
 from core.logger import setup_logger
 
+from .billing import (
+    BillingUnavailableError,
+    ChatUsageReservation,
+    complete_chat_request,
+    reserve_chat_request,
+)
 from .config import ChatGptRegosAssistantConfig
 from .embed_auth import (
     access_token_from_session,
@@ -31,8 +35,6 @@ from .models import (
     json_dumps,
     jsonable,
     parse_bool,
-    parse_float,
-    parse_int,
 )
 from .openai_responses import (
     build_openai_input,
@@ -139,188 +141,31 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         }
 
     @staticmethod
-    def _response_page(title: str, message: str, *, status_code: int = 200) -> HTMLResponse:
-        safe_title = escape(str(title or "REGOS Assistant"))
-        safe_message = escape(str(message or ""))
-        html = f"""<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{safe_title}</title>
-  <style>
-    body {{
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f7f8fb;
-      color: #1f2933;
-      font: 16px/1.5 Arial, sans-serif;
-    }}
-    main {{
-      width: min(520px, calc(100% - 32px));
-      padding: 28px;
-      border: 1px solid #dde4ee;
-      border-radius: 28px;
-      background: #fff;
-      box-shadow: 0 20px 60px rgba(31, 41, 51, 0.08);
-    }}
-    h1 {{ margin: 0 0 10px; font-size: 24px; }}
-    p {{ margin: 0; color: #697586; }}
-  </style>
-</head>
-<body>
-  <main>
-    <h1>{safe_title}</h1>
-    <p>{safe_message}</p>
-  </main>
-</body>
-</html>"""
-        return HTMLResponse(html, status_code=status_code)
-
-    @staticmethod
-    def _origin(value: str) -> str:
-        parsed = urlparse(str(value or "").strip())
-        if not parsed.scheme or not parsed.netloc:
-            return ""
-        return f"{parsed.scheme}://{parsed.netloc}".lower()
+    def _runtime_chat_enabled(runtime: RuntimeConfig) -> bool:
+        return bool(runtime.openai_api_key)
 
     @classmethod
-    def _safe_return_url(cls, raw_url: str) -> str:
-        value = str(raw_url or "").strip()
-        if not value:
-            return ""
-        parsed = urlparse(value)
-        if not parsed.netloc and value.startswith("/"):
-            return value
-        target_origin = cls._origin(value)
-        allowed_origins = {
-            cls._origin(str(app_settings.integration_url or "")),
-            cls._origin(str(app_settings.proxy_integration_url or "")),
-        }
-        allowed_origins.discard("")
-        return value if target_origin in allowed_origins else ""
-
-    @classmethod
-    async def _fetch_settings_map(
-        cls, connected_integration_id: str, *, force_refresh: bool = False
-    ) -> Dict[str, str]:
-        cache_key = ChatGptRegosAssistantRedisState.settings_cache_key(
-            connected_integration_id
-        )
-        if not force_refresh:
-            cached = await ChatGptRegosAssistantRedisState.get(cache_key)
-            if cached:
-                try:
-                    payload = json.loads(cached)
-                    if isinstance(payload, dict):
-                        return {
-                            str(key).lower(): str(value or "")
-                            for key, value in payload.items()
-                        }
-                except Exception:
-                    logger.debug(
-                        "Failed to parse ChatGPT assistant settings cache",
-                        exc_info=True,
-                    )
-
-        async with RegosAPI(connected_integration_id=connected_integration_id) as api:
-            response = await api.integrations.connected_integration_setting.get(
-                {"connected_integration_id": connected_integration_id}
-            )
-
-        settings_map: Dict[str, str] = {}
-        for row in getattr(response, "result", None) or []:
-            key = str(getattr(row, "key", "") or "").strip().lower()
-            if key:
-                settings_map[key] = str(getattr(row, "value", "") or "").strip()
-
-        await ChatGptRegosAssistantRedisState.set(
-            cache_key,
-            json_dumps(settings_map),
-            ChatGptRegosAssistantConfig.SETTINGS_TTL_SEC,
-        )
-        return settings_map
-
-    @classmethod
-    def _build_runtime(cls, settings_map: Dict[str, str]) -> RuntimeConfig:
-        api_key = (
-            settings_map.get("chatgpt_openai_api_key")
-            or settings_map.get("openai_api_key")
-            or settings_map.get("assistant_api_key")
-            or ""
-        ).strip()
-        model = (
-            settings_map.get("chatgpt_openai_model")
-            or settings_map.get("openai_model")
-            or ChatGptRegosAssistantConfig.DEFAULT_OPENAI_MODEL
-        ).strip()
-        prompt = (
-            settings_map.get("chatgpt_assistant_prompt")
-            or settings_map.get("assistant_prompt")
-            or ChatGptRegosAssistantConfig.DEFAULT_PROMPT
-        ).strip()
+    def _build_runtime(cls) -> RuntimeConfig:
         return RuntimeConfig(
-            openai_api_key=api_key,
-            openai_model=model,
-            assistant_prompt=prompt,
-            temperature=parse_float(
-                settings_map.get("chatgpt_temperature"),
-                ChatGptRegosAssistantConfig.DEFAULT_TEMPERATURE,
-                minimum=0.0,
-                maximum=2.0,
-            ),
-            max_tool_rounds=parse_int(
-                settings_map.get("chatgpt_max_tool_rounds"),
-                ChatGptRegosAssistantConfig.DEFAULT_MAX_TOOL_ROUNDS,
-                minimum=1,
-                maximum=10,
-            ),
-            max_output_tokens=parse_int(
-                settings_map.get("chatgpt_max_output_tokens"),
-                ChatGptRegosAssistantConfig.DEFAULT_MAX_OUTPUT_TOKENS,
-                minimum=256,
-                maximum=8000,
-            ),
-            confirmation_ttl_sec=parse_int(
-                settings_map.get("chatgpt_confirmation_ttl_sec"),
-                ChatGptRegosAssistantConfig.DEFAULT_CONFIRMATION_TTL_SEC,
-                minimum=60,
-                maximum=3600,
-            ),
+            openai_api_key=ChatGptRegosAssistantConfig.CHATGPT_OPENAI_API_KEY,
+            openai_model=ChatGptRegosAssistantConfig.DEFAULT_OPENAI_MODEL,
+            assistant_prompt=ChatGptRegosAssistantConfig.DEFAULT_PROMPT,
+            temperature=ChatGptRegosAssistantConfig.DEFAULT_TEMPERATURE,
+            max_tool_rounds=ChatGptRegosAssistantConfig.DEFAULT_MAX_TOOL_ROUNDS,
+            max_output_tokens=ChatGptRegosAssistantConfig.DEFAULT_MAX_OUTPUT_TOKENS,
+            confirmation_ttl_sec=ChatGptRegosAssistantConfig.DEFAULT_CONFIRMATION_TTL_SEC,
         )
 
     async def _load_runtime(self, connected_integration_id: str) -> RuntimeConfig:
-        settings_map = await self._fetch_settings_map(connected_integration_id)
-        return self._build_runtime(settings_map)
-
-    @classmethod
-    async def _clear_settings_cache(cls, connected_integration_id: str) -> None:
-        await ChatGptRegosAssistantRedisState.delete(
-            ChatGptRegosAssistantRedisState.settings_cache_key(connected_integration_id)
-        )
-
-    @classmethod
-    async def _store_openai_api_key(cls, connected_integration_id: str, api_key: str) -> None:
-        async with RegosAPI(connected_integration_id=connected_integration_id) as api:
-            await api.integrations.connected_integration_setting.edit(
-                [
-                    {
-                        "connected_integration_id": connected_integration_id,
-                        "key": "chatgpt_openai_api_key",
-                        "value": api_key,
-                    }
-                ]
-            )
-        await cls._clear_settings_cache(connected_integration_id)
+        _ = connected_integration_id
+        return self._build_runtime()
 
     async def connect(self, **_: Any) -> Dict[str, Any]:
         ci = self._ci()
         if not ci:
             return {"status": "error", "error": "connected_integration_id is required"}
-        settings_map = await self._fetch_settings_map(ci, force_refresh=True)
-        runtime = self._build_runtime(settings_map)
+        runtime = self._build_runtime()
+        chat_enabled = self._runtime_chat_enabled(runtime)
         return {
             "status": "connected",
             "integration_key": ChatGptRegosAssistantConfig.INTEGRATION_KEY,
@@ -328,7 +173,7 @@ class ChatGptRegosAssistantIntegration(ClientBase):
             "ui_url": f"{self._external_base_url(ci)}ui",
             "embed_backend_url": f"{self._external_base_url(ci)}embed/consume",
             "embed_sdk_url": ChatGptRegosAssistantConfig.EMBED_SDK_URL,
-            "openai_api_chat_enabled": bool(runtime.openai_api_key),
+            "openai_api_chat_enabled": chat_enabled,
             "model": runtime.openai_model,
             "tools_count": len(REGOS_TOOLS),
             "confirmation_required_for_mutations": True,
@@ -337,9 +182,6 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         }
 
     async def disconnect(self, **_: Any) -> Dict[str, Any]:
-        ci = self._ci()
-        if ci:
-            await self._clear_settings_cache(ci)
         return {"status": "disconnected"}
 
     async def reconnect(self, **_: Any) -> Dict[str, Any]:
@@ -350,9 +192,6 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         self, settings: Optional[dict] = None, **_: Any
     ) -> Dict[str, Any]:
         _ = settings
-        ci = self._ci()
-        if ci:
-            await self._clear_settings_cache(ci)
         return {"status": "settings updated"}
 
     async def handle_webhook(
@@ -376,7 +215,6 @@ class ChatGptRegosAssistantIntegration(ClientBase):
                 "execute_tool",
                 "confirm_action",
                 "chat",
-                "chatgpt_connect",
                 "embed_login",
                 "consume_embed_token",
             ],
@@ -529,6 +367,73 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         return " ".join(parts).lower()
 
     @staticmethod
+    def _object_text(value: Any, *keys: str) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, dict):
+            lower_map = {str(key).lower(): item for key, item in value.items()}
+            for key in keys:
+                item = lower_map.get(str(key).lower())
+                if item is not None:
+                    return str(item or "").strip()
+            return ""
+        if hasattr(value, "model_dump"):
+            try:
+                dumped = value.model_dump(mode="json", exclude_none=True)
+                if isinstance(dumped, dict):
+                    return ChatGptRegosAssistantIntegration._object_text(dumped, *keys)
+            except Exception:
+                pass
+        for key in keys:
+            item = getattr(value, key, None)
+            if item is not None:
+                return str(item or "").strip()
+        return ""
+
+    @staticmethod
+    def _add_openai_usage(totals: Dict[str, int], response: Dict[str, Any]) -> None:
+        usage = response.get("usage") if isinstance(response, dict) else None
+        if not isinstance(usage, dict):
+            return
+        for key in ("input_tokens", "output_tokens", "total_tokens"):
+            try:
+                totals[key] = int(totals.get(key, 0)) + int(usage.get(key) or 0)
+            except (TypeError, ValueError):
+                continue
+
+    async def _resolve_api_login(
+        self,
+        connected_integration_id: str,
+        embed_session: Optional[Dict[str, Any]],
+    ) -> str:
+        try:
+            async with RegosAPI(
+                connected_integration_id=connected_integration_id,
+                bearer_token=access_token_from_session(embed_session),
+            ) as api:
+                response = await api.common.sys.get_info({})
+            api_login = self._object_text(
+                getattr(response, "result", None),
+                "api_login",
+                "apiLogin",
+                "ApiLogin",
+            )
+            if api_login:
+                return api_login
+        except Exception as exc:
+            logger.warning(
+                "Failed to resolve REGOS api_login via Sys/GetInfo: ci=%s error=%s",
+                connected_integration_id,
+                exc,
+            )
+
+        public_session = public_embed_session(embed_session)
+        return (
+            self._object_text(public_session.get("oauth"), "api_login", "apiLogin", "ApiLogin")
+            or self._object_text(public_session.get("user"), "api_login", "apiLogin", "ApiLogin")
+        )
+
+    @staticmethod
     def _tool_category(tool_name: str) -> str:
         if tool_name.startswith(("client_", "deal_", "ticket_")):
             return "crm"
@@ -674,29 +579,18 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         if ci and not self.connected_integration_id:
             self.connected_integration_id = ci
 
-        settings_map: Dict[str, str] = {}
         error = ""
-        if ci:
-            try:
-                settings_map = await self._fetch_settings_map(ci)
-            except Exception as exc:
-                error = str(exc)
-                logger.warning("Failed to load ChatGPT assistant UI settings: ci=%s error=%s", ci, exc)
 
-        runtime = self._build_runtime(settings_map)
+        runtime = self._build_runtime()
+        chat_enabled = self._runtime_chat_enabled(runtime)
         mode = (
             "server_chat_ready"
-            if runtime.openai_api_key
+            if chat_enabled
             else "missing_openai_api_key"
             if ci
             else "missing_connection"
         )
         external_url = self._external_base_url(ci) if ci else ""
-        embed_parent_origin = (
-            str(settings_map.get("chatgpt_regos_parent_origin") or "").strip()
-            or ChatGptRegosAssistantConfig.EMBED_PARENT_ORIGIN
-        )
-        chatgpt_connect_url = ChatGptRegosAssistantConfig.CHATGPT_CONNECT_URL
         return ChatGptRegosAssistantUiContext(
             connected_integration_id=ci,
             api_url=f"/clients/{ChatGptRegosAssistantConfig.INTEGRATION_KEY}",
@@ -704,63 +598,18 @@ class ChatGptRegosAssistantIntegration(ClientBase):
             embed_backend_url=f"{external_url}embed/consume" if external_url else "",
             embed_sdk_url=ChatGptRegosAssistantConfig.EMBED_SDK_URL,
             oauth_client_id=oauth_client_id(),
-            embed_parent_origin=embed_parent_origin,
+            embed_parent_origin=ChatGptRegosAssistantConfig.EMBED_PARENT_ORIGIN,
             model=runtime.openai_model,
             tools_count=len(REGOS_TOOLS),
             confirmation_ttl_sec=runtime.confirmation_ttl_sec,
-            openai_api_chat_enabled=bool(runtime.openai_api_key),
+            openai_api_chat_enabled=chat_enabled,
             mode=mode,
-            chatgpt_connect_url=chatgpt_connect_url,
             error=error,
         )
 
     async def handle_ui(self, envelope: Dict[str, Any]) -> HTMLResponse:
         ctx = await self._build_ui_context(envelope)
         return HTMLResponse(render_chatgpt_regos_assistant_ui(ctx))
-
-    async def chatgpt_connect(self, envelope: Optional[Dict[str, Any]] = None) -> HTMLResponse | RedirectResponse:
-        envelope = envelope or {}
-        ci = (
-            self._ci()
-            or self._query_value(envelope, "connected_integration_id")
-            or str(envelope.get("connected_integration_id") or "").strip()
-        )
-        if ci and not self.connected_integration_id:
-            self.connected_integration_id = ci
-        if not ci:
-            return self._response_page(
-                "Не удалось войти",
-                "Откройте помощника внутри REGOS и нажмите «Войти через ChatGPT» ещё раз.",
-                status_code=400,
-            )
-
-        return_url = self._safe_return_url(self._query_value(envelope, "return_url"))
-        try:
-            settings_map = await self._fetch_settings_map(ci, force_refresh=True)
-            runtime = self._build_runtime(settings_map)
-            if not runtime.openai_api_key:
-                api_key = ChatGptRegosAssistantConfig.CHATGPT_OPENAI_API_KEY
-                if not api_key:
-                    return self._response_page(
-                        "Вход пока не настроен",
-                        "Администратор должен настроить ChatGPT для REGOS Assistant на сервере.",
-                        status_code=503,
-                    )
-                await self._store_openai_api_key(ci, api_key)
-        except Exception as exc:
-            logger.warning("ChatGPT connect failed: ci=%s error=%s", ci, exc)
-            return self._response_page(
-                "Не получилось войти",
-                "Попробуйте ещё раз или обратитесь к администратору.",
-                status_code=500,
-            )
-
-        if return_url:
-            return RedirectResponse(return_url, status_code=302)
-        return self._response_page(
-            "Готово",
-            "ChatGPT подключён. Вернитесь в REGOS и продолжайте работу в чате.",
-        )
 
     async def list_tools(self, **_: Any) -> Dict[str, Any]:
         return {
@@ -947,9 +796,31 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         if not runtime.openai_api_key:
             return {
                 "status": "error",
-                "error": "chatgpt_openai_api_key or openai_api_key is required for server-side chat mode",
-                "hint": "Add an OpenAI API key to the connected integration settings.",
-                "tools": sorted(REGOS_TOOLS),
+                "error": "openai_api_key_missing",
+                "reply": "Чат ещё не включён. Попросите администратора подключить помощника.",
+            }
+
+        api_login = await self._resolve_api_login(ci, embed_session)
+        if not api_login:
+            return {
+                "status": "error",
+                "error": "account_info_unavailable",
+                "reply": "Не получилось получить данные аккаунта. Обновите страницу или попробуйте позже.",
+            }
+
+        reservation: Optional[ChatUsageReservation]
+        try:
+            reservation = await reserve_chat_request(
+                connected_integration_id=ci,
+                api_login=api_login,
+                model=runtime.openai_model,
+            )
+        except BillingUnavailableError as exc:
+            logger.warning("REGOS Assistant billing is unavailable: ci=%s error=%s", ci, exc)
+            return {
+                "status": "error",
+                "error": "billing_unavailable",
+                "reply": "Чат временно недоступен. Попробуйте позже.",
             }
 
         selected_tools = self._select_tools_for_chat(message=message, messages=messages)
@@ -969,52 +840,117 @@ class ChatGptRegosAssistantIntegration(ClientBase):
 
         last_response: Dict[str, Any] = {}
         tool_results: List[Dict[str, Any]] = []
-        async with httpx.AsyncClient(timeout=90) as client:
-            for _round in range(runtime.max_tool_rounds):
-                last_response = await post_openai_response(client, runtime, payload)
-                calls = extract_openai_tool_calls(last_response)
-                if not calls:
-                    return {
-                        "status": "answered",
-                        "reply": extract_openai_text(last_response),
-                        "response_id": last_response.get("id"),
-                        "tool_results": tool_results,
-                    }
-
-                function_outputs: List[Dict[str, Any]] = []
-                for call in calls:
-                    tool_result = await self.execute_tool(
-                        tool_name=call.name,
-                        arguments=call.arguments,
-                        source="openai_responses",
-                        embed_session_token=embed_session_token,
-                    )
-                    tool_results.append(tool_result)
-                    if tool_result.get("requires_confirmation"):
+        usage_totals: Dict[str, int] = {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+        }
+        try:
+            async with httpx.AsyncClient(timeout=90) as client:
+                for _round in range(runtime.max_tool_rounds):
+                    last_response = await post_openai_response(client, runtime, payload)
+                    self._add_openai_usage(usage_totals, last_response)
+                    calls = extract_openai_tool_calls(last_response)
+                    if not calls:
+                        await complete_chat_request(
+                            reservation,
+                            status="answered",
+                            response_id=str(last_response.get("id") or ""),
+                            usage=usage_totals,
+                            tool_call_count=len(tool_results),
+                        )
                         return {
-                            "status": "requires_confirmation",
-                            "reply": tool_result.get("message"),
+                            "status": "answered",
+                            "reply": extract_openai_text(last_response),
                             "response_id": last_response.get("id"),
-                            "pending_action": tool_result,
                             "tool_results": tool_results,
                         }
-                    function_outputs.append(
-                        {
-                            "type": "function_call_output",
-                            "call_id": call.call_id,
-                            "output": json_dumps(tool_result),
-                        }
-                    )
 
-                payload = {
-                    "model": runtime.openai_model,
-                    "previous_response_id": last_response.get("id"),
-                    "input": function_outputs,
-                    "tools": openai_tools,
-                    "temperature": runtime.temperature,
-                    "max_output_tokens": runtime.max_output_tokens,
-                }
+                    function_outputs: List[Dict[str, Any]] = []
+                    for call in calls:
+                        tool_result = await self.execute_tool(
+                            tool_name=call.name,
+                            arguments=call.arguments,
+                            source="openai_responses",
+                            embed_session_token=embed_session_token,
+                        )
+                        tool_results.append(tool_result)
+                        if tool_result.get("requires_confirmation"):
+                            await complete_chat_request(
+                                reservation,
+                                status="requires_confirmation",
+                                response_id=str(last_response.get("id") or ""),
+                                usage=usage_totals,
+                                tool_call_count=len(tool_results),
+                            )
+                            return {
+                                "status": "requires_confirmation",
+                                "reply": tool_result.get("message"),
+                                "response_id": last_response.get("id"),
+                                "pending_action": tool_result,
+                                "tool_results": tool_results,
+                            }
+                        function_outputs.append(
+                            {
+                                "type": "function_call_output",
+                                "call_id": call.call_id,
+                                "output": json_dumps(tool_result),
+                            }
+                        )
 
+                    payload = {
+                        "model": runtime.openai_model,
+                        "previous_response_id": last_response.get("id"),
+                        "input": function_outputs,
+                        "tools": openai_tools,
+                        "temperature": runtime.temperature,
+                        "max_output_tokens": runtime.max_output_tokens,
+                    }
+        except httpx.HTTPStatusError as exc:
+            status_code = exc.response.status_code if exc.response else 0
+            await complete_chat_request(
+                reservation,
+                status="openai_http_error",
+                response_id=str(last_response.get("id") or ""),
+                usage=usage_totals,
+                tool_call_count=len(tool_results),
+                error_code=str(status_code or "http_error"),
+                error_description=str(exc)[:512],
+            )
+            logger.warning(
+                "OpenAI Responses API rejected REGOS Assistant request: ci=%s status=%s",
+                ci,
+                status_code,
+            )
+            return {
+                "status": "error",
+                "error": "assistant_request_failed",
+                "reply": "Не получилось получить ответ. Попробуйте ещё раз.",
+            }
+        except Exception as exc:
+            await complete_chat_request(
+                reservation,
+                status="error",
+                response_id=str(last_response.get("id") or ""),
+                usage=usage_totals,
+                tool_call_count=len(tool_results),
+                error_code=type(exc).__name__,
+                error_description=str(exc)[:512],
+            )
+            logger.exception("REGOS Assistant chat request failed: ci=%s", ci)
+            return {
+                "status": "error",
+                "error": "assistant_request_failed",
+                "reply": "Не получилось выполнить запрос. Попробуйте ещё раз.",
+            }
+
+        await complete_chat_request(
+            reservation,
+            status="tool_round_limit_reached",
+            response_id=str(last_response.get("id") or ""),
+            usage=usage_totals,
+            tool_call_count=len(tool_results),
+        )
         return {
             "status": "tool_round_limit_reached",
             "reply": extract_openai_text(last_response),
@@ -1031,9 +967,6 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         embed_response = await self._handle_embed_external(path, payload)
         if embed_response is not None:
             return embed_response
-        chatgpt_response = await self._handle_chatgpt_external(envelope, path, payload)
-        if chatgpt_response is not None:
-            return chatgpt_response
         action_payload = self._action_payload(payload)
         if action in {"ui", "app"}:
             return await self.handle_ui(envelope)
@@ -1078,18 +1011,6 @@ class ChatGptRegosAssistantIntegration(ClientBase):
                 ),
             )
         return {"status": "error", "error": f"Unsupported external action: {action}"}
-
-    async def _handle_chatgpt_external(
-        self,
-        envelope: Dict[str, Any],
-        path: str,
-        payload: Dict[str, Any],
-    ) -> HTMLResponse | RedirectResponse | None:
-        normalized_path = str(path or "").strip("/").lower()
-        action = str(payload.get("action") or "").strip().lower()
-        if normalized_path == "chatgpt/connect" or action == "chatgpt_connect":
-            return await self.chatgpt_connect(envelope)
-        return None
 
     async def _handle_embed_external(
         self, path: str, payload: Dict[str, Any]

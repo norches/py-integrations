@@ -148,15 +148,34 @@ class Settings(BaseSettings):
     meta_leadgen_redirect_uri: str = ""
     meta_leadgen_webhook_verify_token: str = ""
     meta_leadgen_graph_version: str = "v25.0"
-    chatgpt_regos_connect_url: str = Field(
-        default="https://py-integrations.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect",
-        validation_alias="CHATGPT_REGOS_CONNECT_URL",
-    )
     chatgpt_regos_openai_api_key: str = Field(
         default="",
         validation_alias="CHATGPT_REGOS_OPENAI_API_KEY",
     )
-
+    chatgpt_regos_openai_model: str = Field(
+        default="gpt-4.1-mini",
+        validation_alias="CHATGPT_REGOS_OPENAI_MODEL",
+    )
+    chatgpt_regos_temperature: float = Field(
+        default=0.2,
+        validation_alias="CHATGPT_REGOS_TEMPERATURE",
+    )
+    chatgpt_regos_max_tool_rounds: int = Field(
+        default=5,
+        validation_alias="CHATGPT_REGOS_MAX_TOOL_ROUNDS",
+    )
+    chatgpt_regos_max_output_tokens: int = Field(
+        default=1200,
+        validation_alias="CHATGPT_REGOS_MAX_OUTPUT_TOKENS",
+    )
+    chatgpt_regos_confirmation_ttl_sec: int = Field(
+        default=900,
+        validation_alias="CHATGPT_REGOS_CONFIRMATION_TTL_SEC",
+    )
+    chatgpt_regos_parent_origin: str = Field(
+        default="https://regos.online",
+        validation_alias="CHATGPT_REGOS_PARENT_ORIGIN",
+    )
     oauth_endpoint: str = "https://auth.regos.uz/" # oath/token
     oauth_client_id: str = ""
     oauth_secret: str = ""

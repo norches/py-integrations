@@ -23,10 +23,6 @@ class ChatGptRegosAssistantRedisState:
         return redis_make_key("integration", ChatGptRegosAssistantConfig.INTEGRATION_KEY, *parts)
 
     @classmethod
-    def settings_cache_key(cls, connected_integration_id: str) -> str:
-        return cls.redis_key("settings", connected_integration_id)
-
-    @classmethod
     def confirmation_key(cls, connected_integration_id: str, confirmation_id: str) -> str:
         return cls.redis_key("confirm", connected_integration_id, confirmation_id)
 

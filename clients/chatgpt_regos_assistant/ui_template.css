@@ -172,16 +172,11 @@ p {
   border-bottom-right-radius: 8px;
 }
 
-.setup-actions,
 .confirm-row {
   display: flex;
   flex-wrap: wrap;
   gap: 9px;
   margin-top: 12px;
-}
-
-.setup-actions[hidden] {
-  display: none;
 }
 
 .button,

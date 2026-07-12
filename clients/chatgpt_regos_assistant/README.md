@@ -14,17 +14,17 @@ Integration key: `chatgpt_regos_assistant`
 
 | Язык | Описание |
 | --- | --- |
-| RU | AI-чат внутри REGOS: сотрудник задает задачу обычным языком, ассистент ищет данные, готовит ответы и выполняет действия через REGOS API только после подтверждения. |
-| UZ | REGOS ichidagi AI-chat: xodim oddiy tilda vazifa beradi, yordamchi ma'lumot topadi, javob tayyorlaydi va REGOS API orqali amallarni faqat tasdiqdan keyin bajaradi. |
-| EN | An AI chat inside REGOS: a teammate asks in natural language, the assistant finds data, prepares answers, and runs REGOS API actions only after confirmation. |
+| RU | AI-чат внутри REGOS: сотрудник пишет задачу обычными словами, ассистент ищет данные и выполняет действия через REGOS API только после подтверждения. |
+| UZ | REGOS ichidagi AI-chat: xodim vazifani oddiy so'zlar bilan yozadi, yordamchi ma'lumot topadi va REGOS API orqali amallarni faqat tasdiqdan keyin bajaradi. |
+| EN | An AI chat inside REGOS: a teammate writes a task in plain language, the assistant finds data and performs REGOS API actions only after confirmation. |
 
 ## Полное описание
 
 | Язык | Описание |
 | --- | --- |
-| RU | AI-ассистент открывается прямо внутри REGOS во встроенном окне. Пользователь входит через REGOS Embed SDK, поэтому ассистент работает от имени сотрудника, который открыл интеграцию. Он помогает искать товары, проверять остатки, работать со складскими документами, клиентами, сделками, тикетами и чатами. Чтение данных выполняется сразу, а создание, изменение, проведение, закрытие или удаление всегда требуют явного подтверждения в интерфейсе. |
-| UZ | AI yordamchi REGOS ichida o'rnatilgan oynada ochiladi. Foydalanuvchi REGOS Embed SDK orqali kiradi, shuning uchun yordamchi integratsiyani ochgan xodim nomidan ishlaydi. U tovarlarni qidirish, qoldiqlarni tekshirish, ombor hujjatlari, mijozlar, bitimlar, tiketlar va chatlar bilan ishlashga yordam beradi. Ma'lumot o'qish darhol bajariladi, yaratish, o'zgartirish, o'tkazish, yopish yoki o'chirish esa interfeysda aniq tasdiqdan keyin bajariladi. |
-| EN | The AI assistant opens inside REGOS as an embedded chat. The user signs in through the REGOS Embed SDK, so the assistant works on behalf of the teammate who opened the integration. It helps search items, check balances, manage warehouse documents, clients, deals, tickets, and chats. Read-only requests run immediately, while create, update, perform, close, or delete actions always require explicit confirmation in the UI. |
+| RU | AI-ассистент открывается прямо внутри REGOS во встроенном окне. Пользователь авторизуется через REGOS Embed SDK, поэтому все REGOS API действия выполняются от имени сотрудника, который открыл чат. Ассистент помогает искать товары, проверять остатки, смотреть складские документы, работать с клиентами, сделками, тикетами и чатами. Чтение выполняется сразу, а создание, изменение, проведение, закрытие или удаление всегда требуют явного подтверждения. |
+| UZ | AI yordamchi REGOS ichida o'rnatilgan oynada ochiladi. Foydalanuvchi REGOS Embed SDK orqali avtorizatsiyadan o'tadi, shuning uchun REGOS API amallari chatni ochgan xodim nomidan bajariladi. Yordamchi tovarlarni qidirish, qoldiqlarni tekshirish, ombor hujjatlari, mijozlar, bitimlar, tiketlar va chatlar bilan ishlashga yordam beradi. O'qish amallari darhol bajariladi, yaratish, o'zgartirish, o'tkazish, yopish yoki o'chirish esa aniq tasdiqdan keyin bajariladi. |
+| EN | The AI assistant opens inside REGOS as an embedded chat. The user is authorized through the REGOS Embed SDK, so REGOS API actions run on behalf of the teammate who opened the chat. The assistant helps search items, check stock, view warehouse documents, and work with clients, deals, tickets, and chats. Read-only requests run immediately, while create, update, perform, close, or delete actions always require explicit confirmation. |
 
 ## Список обрабатываемых вебхуков
 
@@ -40,8 +40,10 @@ Integration key: `chatgpt_regos_assistant`
 | Действие | Когда выполняется |
 | --- | --- |
 | Открытие UI | При переходе на `/external/{connected_integration_id}/ui`. |
-| Авторизация пользователя | UI получает `embed_token` через REGOS Embed SDK и backend обменивает его на пользовательский REGOS access token. |
+| Авторизация пользователя | UI получает `embed_token` через REGOS Embed SDK, backend обменивает его на пользовательский REGOS access token. |
+| Получение аккаунта | Перед обращением к OpenAI backend вызывает `Sys/GetInfo` и берет `result.api_login` для учета. |
 | Обработка сообщения | UI отправляет текст пользователя в действие `chat`, backend вызывает OpenAI Responses API и подбирает нужные REGOS-инструменты. |
+| Учет запроса | Запрос резервируется в MariaDB по `api_login`; дневной лимит и цена берутся из активного тарифа в БД. |
 | Чтение данных REGOS | Запросы на поиск, получение списков, карточек, остатков и документов выполняются без дополнительного подтверждения. |
 | Подготовка изменения | Для создания, редактирования, проведения, закрытия или удаления создается pending confirmation с ограниченным TTL. |
 | Выполнение изменения | Выполняется только после подтверждения пользователем через `confirm_action`. |
@@ -58,16 +60,7 @@ Integration key: `chatgpt_regos_assistant`
 
 ## Настройки интеграции
 
-| Ключ | Обяз. | Тип данных | Наименование (RU / UZ / EN) | Описание (RU / UZ / EN) | Placeholder (RU / UZ / EN) |
-| --- | --- | --- | --- | --- | --- |
-| `chatgpt_openai_api_key` | Автоматически | String | OpenAI API ключ / OpenAI API kaliti / OpenAI API key | Служебный ключ для вызова OpenAI Responses API. Обычно заполняется backend-сервисом после кнопки "Войти через ChatGPT" и не отправляется в браузер. / Backend servis tomonidan to'ldiriladigan xizmat kaliti. / Service key used by the backend and normally filled by the ChatGPT sign-in flow. | `sk-...` |
-| `chatgpt_openai_model` | Нет | String | Модель OpenAI / OpenAI modeli / OpenAI model | Модель для ответов ассистента. По умолчанию используется `gpt-4.1-mini`. / Yordamchi javoblari uchun model. Standart qiymat `gpt-4.1-mini`. / Model used for assistant responses. Default is `gpt-4.1-mini`. | `gpt-4.1-mini` |
-| `chatgpt_assistant_prompt` | Нет | Text | Инструкция ассистента / Yordamchi yo'riqnomasi / Assistant instructions | Дополнительные правила поведения ассистента: тон, ограничения, внутренние регламенты и приоритеты. / Yordamchi xatti-harakati uchun qo'shimcha qoidalar: ohang, cheklovlar, ichki reglamentlar va ustuvorliklar. / Additional behavior rules for the assistant: tone, limits, internal policies, and priorities. | `Отвечай кратко и уточняй данные перед изменениями` |
-| `chatgpt_temperature` | Нет | Number | Температура / Harorat / Temperature | Управляет вариативностью ответов. Допустимый диапазон: `0`-`2`, значение по умолчанию `0.2`. / Javoblar o'zgaruvchanligini boshqaradi. Ruxsat etilgan oraliq: `0`-`2`, standart qiymat `0.2`. / Controls response variability. Allowed range: `0`-`2`, default is `0.2`. | `0.2` |
-| `chatgpt_max_tool_rounds` | Нет | Integer | Лимит циклов инструментов / Instrument sikllari limiti / Tool round limit | Максимальное количество последовательных обращений ассистента к REGOS API в одном сообщении. Диапазон: `1`-`10`, по умолчанию `5`. / Bitta xabarda REGOS API ga ketma-ket murojaatlar soni. Oraliq: `1`-`10`, standart `5`. / Maximum number of sequential REGOS API tool calls in one assistant turn. Range: `1`-`10`, default is `5`. | `5` |
-| `chatgpt_max_output_tokens` | Нет | Integer | Лимит ответа / Javob limiti / Output limit | Максимальный размер финального ответа модели. Диапазон: `256`-`8000`, по умолчанию `1200`. / Model yakuniy javobi hajmi. Oraliq: `256`-`8000`, standart `1200`. / Maximum size of the model's final answer. Range: `256`-`8000`, default is `1200`. | `1200` |
-| `chatgpt_confirmation_ttl_sec` | Нет | Integer | Время подтверждения / Tasdiqlash muddati / Confirmation TTL | Сколько секунд pending confirmation остается доступным. Диапазон: `60`-`3600`, по умолчанию `900`. / Pending confirmation necha soniya faol turadi. Oraliq: `60`-`3600`, standart `900`. / How long a pending confirmation remains available. Range: `60`-`3600`, default is `900`. | `900` |
-| `chatgpt_regos_parent_origin` | Нет | String | Origin REGOS / REGOS origin / REGOS origin | Origin родительского окна REGOS для Embed SDK. По умолчанию `https://regos.online`. / Embed SDK uchun REGOS ota oynasi origin qiymati. Standart `https://regos.online`. / Parent REGOS window origin for the Embed SDK. Default is `https://regos.online`. | `https://regos.online` |
+У подключенной интеграции нет пользовательских OpenAI-настроек. Пользователь ничего не вводит вручную: REGOS Assistant работает только через серверный ключ, а лимиты и тарифы берутся из БД.
 
 ## Глобальные настройки сервиса
 
@@ -79,19 +72,39 @@ Integration key: `chatgpt_regos_assistant`
 | `oauth_client_id` | Да | OAuth client id приложения, зарегистрированного для работы с REGOS embed token. |
 | `oauth_secret` | Да | OAuth secret приложения. |
 | `integration_url` | Да | Публичный HTTPS URL сервиса интеграций, с которого открывается iframe UI. Используется для построения `/external/{connected_integration_id}/...`; `proxy_integration_url` не должен подменять origin для Embed OAuth. |
-| `CHATGPT_REGOS_CONNECT_URL` | Нет | Единый URL сценария входа через ChatGPT. UI открывает его по кнопке "Войти через ChatGPT" и передает `connected_integration_id` и `return_url`; сценарий подключает модель для конкретного подключения. По умолчанию: `https://py-integrations.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect`. |
-| `CHATGPT_REGOS_OPENAI_API_KEY` | Да для one-click подключения | OpenAI API key, который backend записывает в `chatgpt_openai_api_key` текущего `connected_integration_id` после кнопки "Войти через ChatGPT". Значение не отправляется в браузер. |
+| `CHATGPT_REGOS_OPENAI_API_KEY` | Да | Серверный OpenAI API key. Пользователи не видят этот ключ и не могут заменить его в настройках подключения. |
+| `CHATGPT_REGOS_OPENAI_MODEL` | Нет | Модель для ответов ассистента. По умолчанию `gpt-4.1-mini`. |
+| `CHATGPT_REGOS_TEMPERATURE` | Нет | Вариативность ответов. Диапазон `0`-`2`, по умолчанию `0.2`. |
+| `CHATGPT_REGOS_MAX_TOOL_ROUNDS` | Нет | Максимальное число последовательных обращений к REGOS API в одном сообщении. По умолчанию `5`. |
+| `CHATGPT_REGOS_MAX_OUTPUT_TOKENS` | Нет | Максимальный размер финального ответа модели. По умолчанию `1200`. |
+| `CHATGPT_REGOS_CONFIRMATION_TTL_SEC` | Нет | Сколько секунд pending confirmation остается доступным. По умолчанию `900`. |
+| `CHATGPT_REGOS_PARENT_ORIGIN` | Нет | Origin родительского окна REGOS для Embed SDK. По умолчанию `https://regos.online`. |
+
+## Биллинг и лимиты
+
+Все запросы идут через серверный `CHATGPT_REGOS_OPENAI_API_KEY`. Перед обращением к OpenAI backend вызывает `Sys/GetInfo`, получает `api_login` текущего REGOS-аккаунта и резервирует запрос в БД. Дневной бесплатный лимит и цена платного запроса берутся из активного тарифа в `chatgpt_regos_assistant_tariff`.
+
+Таблицы MariaDB:
+
+| Таблица | Назначение |
+| --- | --- |
+| `chatgpt_regos_assistant_tariff` | Тарифы ассистента: код, дневной бесплатный лимит, цена платного запроса, валюта и флаг активного тарифа по умолчанию. |
+| `chatgpt_regos_assistant_usage_daily` | Дневной агрегат по `usage_date` и `api_login`: количество запросов, бесплатные и платные запросы, токены. |
+| `chatgpt_regos_assistant_usage_log` | Подробный лог каждого запроса: тариф, лимит на момент запроса, модель, статус, response id, токены, ошибки. |
+
+Миграция создает дефолтный тариф `default`: 20 бесплатных запросов в день и цену `0.0000 UZS` для платных запросов. Реальные цены и лимиты меняются в БД без изменения настроек подключенной интеграции. Оплаты подключаются отдельным платежным слоем поверх `billable_request_count`: текущая интеграция уже готовит корректную базу для начислений по `api_login`.
 
 ## Порядок настройки
 
 1. Зарегистрировать OAuth-приложение для REGOS embed token и заполнить `oauth_endpoint`, `oauth_client_id`, `oauth_secret`.
 2. Убедиться, что backend интеграций доступен по публичному HTTPS URL и он указан в `integration_url`; этот origin должен совпадать с адресом, с которого REGOS открывает iframe.
-3. Заполнить `CHATGPT_REGOS_OPENAI_API_KEY` на backend-сервисе. При необходимости переопределить `CHATGPT_REGOS_CONNECT_URL`; по умолчанию используется общий production URL входа через ChatGPT.
-4. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
-5. Открыть `/external/{connected_integration_id}/ui` во фрейме REGOS.
-6. Проверить вход пользователя через REGOS Embed SDK: после успешного входа поле ввода чата становится активным.
-7. Отправить тестовый запрос на чтение, например "Покажи остатки товара X".
-8. Проверить изменение с подтверждением, например "Создай товар X": ассистент должен показать действие и выполнить его только после подтверждения.
+3. Заполнить `CHATGPT_REGOS_OPENAI_API_KEY` на backend-сервисе.
+4. Применить миграцию ассистента и при необходимости изменить дефолтный тариф в `chatgpt_regos_assistant_tariff`.
+5. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
+6. Открыть `/external/{connected_integration_id}/ui` во фрейме REGOS.
+7. Проверить вход пользователя через REGOS Embed SDK: после успешного входа поле ввода чата становится активным.
+8. Отправить тестовый запрос на чтение, например "Покажи остатки товара X".
+9. Проверить изменение с подтверждением, например "Создай товар X": ассистент должен показать действие и выполнить его только после подтверждения.
 
 ## Внешние endpoint-ы
 
@@ -99,7 +112,6 @@ Integration key: `chatgpt_regos_assistant`
 | --- | --- |
 | `GET /external/{connected_integration_id}/ui` | Полноценный iframe UI чата. |
 | `POST /external/{connected_integration_id}/embed/consume` | Принимает `embed_token` от REGOS Embed SDK и возвращает `embed_session_token`. |
-| `GET /clients/chatgpt_regos_assistant/chatgpt/connect` | One-click подключение ChatGPT для `connected_integration_id`, переданного в query. |
 | `metadata` / `info` | Возвращает информацию об интеграции, URL, SDK и доступных действиях. |
 | `list_tools` / `tools` | Возвращает список REGOS-инструментов ассистента. |
 | `chat` | Обрабатывает сообщение пользователя через OpenAI Responses API и REGOS tools. |
@@ -118,5 +130,8 @@ Pending confirmation привязан к `connected_integration_id`, конкр�
 2. Backend проверяет `connected_integration_id`, `origin` и обменивает `embed_token` через REGOS OAuth grant type `embed_token`.
 3. Пользовательский REGOS access token хранится только на backend в короткоживущей embed-сессии.
 4. UI отправляет в `chat` только локальный `embed_session_token`.
-5. Backend вызывает REGOS API от имени пользователя, выбрав релевантные tools для сообщения.
-6. Для мутаций backend сначала возвращает подтверждение, а после `confirm_action` выполняет исходный REGOS API вызов.
+5. Backend вызывает `Sys/GetInfo`, получает `api_login` текущего аккаунта, выбирает активный тариф и резервирует usage-запись в MariaDB.
+6. Backend вызывает OpenAI Responses API через серверный `CHATGPT_REGOS_OPENAI_API_KEY`.
+7. Backend вызывает REGOS API от имени пользователя, выбрав релевантные tools для сообщения.
+8. Для мутаций backend сначала возвращает подтверждение, а после `confirm_action` выполняет исходный REGOS API вызов.
+9. После ответа OpenAI backend записывает статус, response id и токены в MariaDB.

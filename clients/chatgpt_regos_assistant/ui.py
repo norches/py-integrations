@@ -31,7 +31,6 @@ class ChatGptRegosAssistantUiContext:
     confirmation_ttl_sec: int
     openai_api_chat_enabled: bool
     mode: str
-    chatgpt_connect_url: str
     error: str = ""
 
 
@@ -69,10 +68,7 @@ def _initial_message(ctx: ChatGptRegosAssistantUiContext) -> str:
     if not ctx.connected_integration_id:
         return "Откройте помощника внутри REGOS, чтобы начать работу."
     if not ctx.openai_api_chat_enabled:
-        return (
-            "Чтобы начать, нажмите «Войти через ChatGPT». Потом выберите подсказку "
-            "или напишите свою задачу простыми словами."
-        )
+        return "Чат ещё не включён. Попросите администратора подключить помощника."
     return (
         "Здравствуйте! Напишите, что нужно сделать. Например: найти товар, "
         "проверить остатки, показать продажи или создать задачу."
@@ -94,7 +90,6 @@ def render_chatgpt_regos_assistant_ui(ctx: ChatGptRegosAssistantUiContext) -> st
         "embedBackendUrl": ctx.embed_backend_url,
         "oauthClientId": ctx.oauth_client_id,
         "embedParentOrigin": ctx.embed_parent_origin,
-        "chatGptConnectUrl": ctx.chatgpt_connect_url,
     }
     style_block = f"<style>{_load_css()}</style>"
     template = _load_template()
