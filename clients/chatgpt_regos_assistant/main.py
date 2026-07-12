@@ -57,9 +57,12 @@ class ChatGptRegosAssistantIntegration(ClientBase):
 
     @staticmethod
     def _external_base_url(connected_integration_id: str) -> str:
+        # The iframe UI and Embed OAuth callback must stay on the REGOS-facing
+        # integration origin. proxy_integration_url is used by webhook-style
+        # integrations and can point to another host.
         base_url = (
-            str(app_settings.proxy_integration_url or "").strip()
-            or str(app_settings.integration_url or "").strip()
+            str(app_settings.integration_url or "").strip()
+            or str(app_settings.proxy_integration_url or "").strip()
         )
         return f"{base_url.rstrip('/')}/external/{connected_integration_id}/"
 

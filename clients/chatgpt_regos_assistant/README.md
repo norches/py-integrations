@@ -78,12 +78,12 @@ Integration key: `chatgpt_regos_assistant`
 | `oauth_endpoint` | Да | Базовый URL REGOS OAuth. Backend вызывает `{oauth_endpoint}/oauth/token`. |
 | `oauth_client_id` | Да | OAuth client id приложения, зарегистрированного для работы с REGOS embed token. |
 | `oauth_secret` | Да | OAuth secret приложения. |
-| `proxy_integration_url` или `integration_url` | Да | Публичный HTTPS URL сервиса интеграций. Используется для построения `/external/{connected_integration_id}/...`. |
+| `integration_url` | Да | Публичный HTTPS URL сервиса интеграций, с которого открывается iframe UI. Используется для построения `/external/{connected_integration_id}/...`; `proxy_integration_url` не должен подменять origin для Embed OAuth. |
 
 ## Порядок настройки
 
 1. Зарегистрировать OAuth-приложение для REGOS embed token и заполнить `oauth_endpoint`, `oauth_client_id`, `oauth_secret`.
-2. Убедиться, что backend интеграций доступен по публичному HTTPS URL и он указан в `proxy_integration_url` или `integration_url`.
+2. Убедиться, что backend интеграций доступен по публичному HTTPS URL и он указан в `integration_url`; этот origin должен совпадать с адресом, с которого REGOS открывает iframe.
 3. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
 4. Добавить настройку `chatgpt_openai_api_key`; при необходимости указать модель, prompt и лимиты.
 5. Открыть `/external/{connected_integration_id}/ui` во фрейме REGOS.
