@@ -14,23 +14,25 @@ from schemas.api.common.base import RegosModel
 
 
 class PermissionGroup(RegosModel):
+    "Модель, описывающая группы прав доступа пользователей"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    order: int | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id группы прав доступа")
+    parent_id: int | None = PydField(default=None, description="Id родительской группы прав доступа")
+    name: str | None = PydField(default=None, description="Наименование группы прав доступа")
+    order: int | None = PydField(default=None, description="Порядковый номер права доступа")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time в секундах")
 
 
 class PermissionGroupGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив id групп прав доступа пользователей")
 
 
 class PermissionGroupRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[PermissionGroup] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[PermissionGroup] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

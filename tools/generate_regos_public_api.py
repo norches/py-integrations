@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import keyword
+import os
 import re
 import urllib.request
 from collections import Counter, defaultdict
@@ -11,7 +12,8 @@ from pathlib import Path
 from typing import Any
 
 
-SWAGGER_URL = "https://api.regos.uz/v1/swagger/public-v1/swagger.json"
+DEFAULT_SWAGGER_URL = "https://api.regos.uz/v1/swagger/public-v1/swagger.json"
+SWAGGER_URL = os.getenv("REGOS_SWAGGER_URL", DEFAULT_SWAGGER_URL)
 DOCS_ROOT = Path(r"D:\regos\git\api\api\Regos_API\docs")
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -197,10 +199,57 @@ def field_name(value: str) -> tuple[str, str | None]:
     return name, None
 
 
-def enum_member_name(value: int) -> str:
-    if value < 0:
-        return f"NEGATIVE_{abs(value)}"
-    return f"VALUE_{value}"
+def enum_member_name(value: Any) -> str:
+    if isinstance(value, int) and not isinstance(value, bool):
+        if value < 0:
+            return f"NEGATIVE_{abs(value)}"
+        return f"VALUE_{value}"
+
+    text = str(value or "").strip()
+    if re.fullmatch(r"-?\d+", text):
+        int_value = int(text)
+        if int_value < 0:
+            return f"NEGATIVE_{abs(int_value)}"
+        return f"VALUE_{int_value}"
+
+    name = re.sub(r"[^0-9A-Za-z_]+", "_", text).strip("_")
+    if not name:
+        name = "Value"
+    if name[0].isdigit():
+        name = f"VALUE_{name}"
+    if keyword.iskeyword(name):
+        name = f"{name}_"
+    return name
+
+
+def enum_member_names(values: list[Any]) -> list[str]:
+    names: list[str] = []
+    used: set[str] = set()
+    for value in values:
+        name = enum_member_name(value)
+        candidate = name
+        suffix = 2
+        while candidate in used:
+            candidate = f"{name}_{suffix}"
+            suffix += 1
+        used.add(candidate)
+        names.append(candidate)
+    return names
+
+
+def is_string_enum_schema(schema: dict[str, Any]) -> bool:
+    enum_values = schema.get("enum") or []
+    return schema.get("type") == "string" or any(isinstance(value, str) for value in enum_values)
+
+
+def description_literal(schema: dict[str, Any]) -> str | None:
+    description = schema.get("description")
+    if not isinstance(description, str):
+        return None
+    description = description.strip()
+    if not description:
+        return None
+    return json.dumps(description, ensure_ascii=False)
 
 
 def section_slug(docs_section: str) -> str:
@@ -477,6 +526,13 @@ def render_schema_module(
 ) -> str:
     schemas = swagger["components"]["schemas"]
     is_common = module == COMMON_MODULE
+    has_string_enum = any(
+        is_string_enum_schema(schemas[name])
+        for name in schema_names
+        if "enum" in schemas[name]
+    )
+    enum_import = "from enum import Enum, IntEnum" if has_string_enum else "from enum import IntEnum"
+
     lines: list[str] = [
         '"""REGOS API schemas."""',
         f"# {GENERATED_MARKER}",
@@ -485,7 +541,7 @@ def render_schema_module(
         "",
         "from datetime import datetime as _DateTime",
         "from decimal import Decimal as _Decimal",
-        "from enum import IntEnum",
+        enum_import,
         "from typing import Any, TypeAlias",
         "",
         "from pydantic import ConfigDict, Field as PydField, RootModel",
@@ -521,10 +577,22 @@ def render_schema_module(
     for name in schema_names:
         schema = schemas[name]
         if "enum" in schema:
-            lines.append(f"class {name}(IntEnum):")
-            for value in schema.get("enum") or []:
-                lines.append(f"    {enum_member_name(int(value))} = {int(value)}")
-            if not schema.get("enum"):
+            enum_values = schema.get("enum") or []
+            if is_string_enum_schema(schema):
+                lines.append(f"class {name}(str, Enum):")
+                description = description_literal(schema)
+                if description:
+                    lines.append(f"    {description}")
+                for member_name, value in zip(enum_member_names(enum_values), enum_values):
+                    lines.append(f"    {member_name} = {json.dumps(str(value), ensure_ascii=False)}")
+            else:
+                lines.append(f"class {name}(IntEnum):")
+                description = description_literal(schema)
+                if description:
+                    lines.append(f"    {description}")
+                for member_name, value in zip(enum_member_names(enum_values), enum_values):
+                    lines.append(f"    {member_name} = {int(value)}")
+            if not enum_values:
                 lines.append("    pass")
             lines.append("")
             lines.append("")
@@ -535,6 +603,9 @@ def render_schema_module(
 
         extra_mode = "forbid" if name in strict_schema_names else "ignore"
         lines.append(f"class {name}(RegosModel):")
+        description = description_literal(schema)
+        if description:
+            lines.append(f"    {description}")
         lines.append(f'    model_config = ConfigDict(extra="{extra_mode}", populate_by_name=True)')
         properties = schema.get("properties") or {}
         if not properties:
@@ -545,6 +616,9 @@ def render_schema_module(
             field_args = ["default=None"]
             if alias:
                 field_args.append(f'alias="{alias}"')
+            description = description_literal(property_schema)
+            if description:
+                field_args.append(f"description={description}")
             lines.append(f"    {py_name}: {annotation} = PydField({', '.join(field_args)})")
         lines.append("")
         lines.append("")

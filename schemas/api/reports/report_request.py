@@ -14,27 +14,29 @@ from schemas.api.common.base import RegosModel
 
 
 class ReportRequest(RegosModel):
+    "> Раздел устарел. Поддерживается до 03.04.2027. Рекомендуется использовать Report/AddRequest"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    status: int | None = PydField(default=None)
-    report: Report | None = PydField(default=None)
-    user_id: int | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    warnings: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="Uuid запроса отчета")
+    date: int | None = PydField(default=None, description="Дата запроса на отчет в формате unix time в секундах")
+    status: int | None = PydField(default=None, description="статус отчета: 0 - в процессе, 1 - готов, 2 - ошибка")
+    report: Report | None = PydField(default=None, description="Отчет")
+    user_id: int | None = PydField(default=None, description="Id пользователя который отправил запрос на подготовку отчета")
+    description: str | None = PydField(default=None, description="Дополнительное описание")
+    warnings: str | None = PydField(default=None, description="Информация об ошибках при выполнении запроса")
 
 
 class ReportRequestArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[ReportRequest] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[ReportRequest] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class ReportRequestGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    user_ids: list[int] | None = PydField(default=None)
-    statuses: list[int] | None = PydField(default=None)
-    request_uuid: str | None = PydField(default=None)
+    user_ids: list[int] | None = PydField(default=None, description="Массив id пользователей, которые отправили запросы")
+    statuses: list[int] | None = PydField(default=None, description="Массив статусов запросов")
+    request_uuid: str | None = PydField(default=None, description="UUID конкретной заявки на отчёт")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

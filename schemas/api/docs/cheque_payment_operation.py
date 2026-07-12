@@ -15,87 +15,96 @@ from schemas.api.common.base import RegosModel
 
 class DocRetailPayment(RegosModel):
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    has_storno: bool | None = PydField(default=None)
-    storno_uuid: str | None = PydField(default=None)
-    document: str | None = PydField(default=None)
-    order: int | None = PydField(default=None)
-    type: PaymentType | None = PydField(default=None)
-    payment_type: PaymentType | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    has_change: bool | None = PydField(default=None)
-    change_uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="UUID платежа")
+    has_storno: bool | None = PydField(default=None, description="плтаёж сторнированный или нет")
+    storno_uuid: str | None = PydField(default=None, description="UUID сторнированного платежа")
+    document: str | None = PydField(default=None, description="UUID документа продажи")
+    order: int | None = PydField(default=None, description="позиция в документе оплаты")
+    type: PaymentType | None = PydField(default=None, description="вид оплаты")
+    payment_type: PaymentType | None = PydField(default=None, description="вид оплаты")
+    value: _Decimal | None = PydField(default=None, description="Значение")
+    has_change: bool | None = PydField(default=None, description="имеет ли сдачу")
+    change_uuid: str | None = PydField(default=None, description="UUID платежа со сдачей")
 
 
 class DocRetailPaymentGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    doc_sale_uuid: str | None = PydField(default=None)
-    uuids: list[str] | None = PydField(default=None)
+    doc_sale_uuid: str | None = PydField(default=None, description="UUID документа розничной продажи")
+    uuids: list[str] | None = PydField(default=None, description="Массив UUID операций платежей")
 
 
 class DocRetailPaymentRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[DocRetailPayment] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[DocRetailPayment] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 class Payment(RegosModel):
+    "модель позиции-оплаты"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    has_storno: bool | None = PydField(default=None)
-    storno_uuid: str | None = PydField(default=None)
-    document_uuid: str | None = PydField(default=None)
-    order: int | None = PydField(default=None)
-    type: PaymentType | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    payment_id: str | None = PydField(default=None)
-    has_change: bool | None = PydField(default=None)
-    change_uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="идентификатор позиции-оплаты")
+    has_storno: bool | None = PydField(default=None, description="флаг, что это позиция сторнирована")
+    storno_uuid: str | None = PydField(default=None, description="идентификатор сторнированного позиции-оплаты. (ссылка/связка на него)")
+    document_uuid: str | None = PydField(default=None, description="идентификатор чека куда относится позиция-оплаты")
+    order: int | None = PydField(default=None, description="порядковый номер позиции-оплаты для сортировки")
+    type: PaymentType | None = PydField(default=None, description="форма оплаты")
+    value: _Decimal | None = PydField(default=None, description="значение (позиции)оплаты")
+    payment_id: str | None = PydField(default=None, description="id платежа в vcr, если бьла оплата через платёжную систему")
+    has_change: bool | None = PydField(default=None, description="флаг, что это позиция имеет сдачу")
+    change_uuid: str | None = PydField(default=None, description="идентификатор позиции-оплаты куда ссылается позиция сдачи")
 
 
 class PaymentAdd(RegosModel):
+    "модель для добавления позиции-оплаты"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_uuid: str | None = PydField(default=None)
-    type_id: int | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    data: str | None = PydField(default=None)
+    document_uuid: str | None = PydField(default=None, description="UUID кассового чека")
+    type_id: int | None = PydField(default=None, description="ID формы оплаты")
+    value: _Decimal | None = PydField(default=None, description="Сумма оплаты")
+    data: str | None = PydField(default=None, description="Данные платёжных систем")
 
 
 class PaymentArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Payment] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Payment] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class PaymentGet(RegosModel):
+    "модель выборки позиции-оплат"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuids: list[str] | None = PydField(default=None)
-    document_uuid: str | None = PydField(default=None)
-    payment_type_ids: list[int] | None = PydField(default=None)
-    exclude_storno: bool | None = PydField(default=None)
+    uuids: list[str] | None = PydField(default=None, description="Массив UUID позиций оплаты кассового чека")
+    document_uuid: str | None = PydField(default=None, description="UUID кассового чека")
+    payment_type_ids: list[int] | None = PydField(default=None, description="Массив ID типов оплат")
+    exclude_storno: bool | None = PydField(default=None, description="Исключать сторнированную и сторнирующую позиции оплаты")
 
 
 class PaymentStorno(RegosModel):
+    "модель сторнирования позиции-оплаты"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    document_uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="UUID сторнируемой позиции оплаты кассового чека")
+    document_uuid: str | None = PydField(default=None, description="UUID кассового чека")
 
 
 class PosPaymentSystemGet(RegosModel):
+    "Модель для получения id платёжной системы по форме оплаты"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_uuid: str | None = PydField(default=None)
-    payment_type_id: int | None = PydField(default=None)
+    document_uuid: str | None = PydField(default=None, description="UUID кассового чека")
+    payment_type_id: int | None = PydField(default=None, description="ID формы оплаты")
 
 
 class PosPaymentSystemID(RegosModel):
+    "Модель ответа id платёжной системы"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    payment_system_id: int | None = PydField(default=None)
+    payment_system_id: int | None = PydField(default=None, description="Id платёжной системы")
 
 
 class PosPaymentSystemIDRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: PosPaymentSystemID | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: PosPaymentSystemID | Error | None = PydField(default=None, description="Объект результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

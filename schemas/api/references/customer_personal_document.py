@@ -14,37 +14,39 @@ from schemas.api.common.base import RegosModel
 
 
 class CustomerPersonalDocument(RegosModel):
+    "Модель, описывающая персональные документы покупателей"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    customer_id: int | None = PydField(default=None)
-    personal_doc_type: PersonalDocType | None = PydField(default=None)
-    file: CommonFile | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None, description="ID персонального документа покупателя")
+    personal_doc_type: PersonalDocType | None = PydField(default=None, description="Тип персонального документа")
+    file: CommonFile | None = PydField(default=None, description="Файл")
     value: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time")
 
 
 class CustomerPersonalDocumentDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    customer_id: int | None = PydField(default=None)
-    personal_doc_type_id: int | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None, description="Id покупателя")
+    personal_doc_type_id: int | None = PydField(default=None, description="Id типа персонального документа")
 
 
 class CustomerPersonalDocumentGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    customer_id: int | None = PydField(default=None)
-    personal_doc_type_id: int | None = PydField(default=None)
-    include_data: bool | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None, description="ID покупателя")
+    personal_doc_type_id: int | None = PydField(default=None, description="ID типа документа")
+    include_data: bool | None = PydField(default=None, description="Включать бинарные данные файла в ответ")
 
 
 class CustomerPersonalDocumentRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[CustomerPersonalDocument] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[CustomerPersonalDocument] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 class CustomerPersonalDocumentRemoveFile(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    customer_id: int | None = PydField(default=None)
-    personal_doc_type_id: int | None = PydField(default=None)
+    customer_id: int | None = PydField(default=None, description="Id покупателя")
+    personal_doc_type_id: int | None = PydField(default=None, description="Id типа персонального документа")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -14,31 +14,25 @@ from schemas.api.common.base import RegosModel
 
 
 class ConnectedIntegrationEdit(RegosModel):
+    "Модель описывающая редактирование интеграции"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    integration_key: str | None = PydField(default=None)
-    connected_integration_id: str | None = PydField(default=None)
-    is_active: bool | None = PydField(default=None)
-    alias: str | None = PydField(default=None)
-    settings: list[ConnectedIntegrationSettingEdit] | None = PydField(default=None)
-    schedule: IntegrationSchedule | None = PydField(default=None)
+    integration_key: str | None = PydField(default=None, description="Ключ (системное название) интеграции. Если передан одновременно с connected_integration_id, используется\nconnected_integration_id. Если по integration_key найдено более одной подключённой интеграции, метод вернёт ошибку 1100")
+    connected_integration_id: str | None = PydField(default=None, description="ID подключённой интеграции. Имеет приоритет над integration_key (если переданы оба поля)")
+    is_active: bool | None = PydField(default=None, description="Является ли интеграция активной: true - Активная, fatse - Не активная")
+    alias: str | None = PydField(default=None, description="Alias интеграции (для версии БД 365+). Если передано null, значение в БД не меняется; пустая строка сохраняется как null; длина после EscapeStr — не более 255 символов")
+    settings: list[ConnectedIntegrationSettingEdit] | None = PydField(default=None, description="Массив настроек интеграции")
+    schedule: IntegrationSchedule | None = PydField(default=None, description="Обработчки интеграции: <MarketPlace | 1> - Маркетлпейсы (выгрузка номенклатуры, заказы), <EPS | 2> -\nПлатежные системы, <EDO | 3> - Электронный документооборот, <SMS | 4> - СМС шлюзы, <TG_BOT | 5> -\nТелеграмм боты")
 
 
 class ConnectedIntegrationID(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    connected_integration_id: str | None = PydField(default=None)
+    connected_integration_id: str | None = PydField(default=None, description="-")
 
 
 class ConnectedIntegrationWebhookInfoGet(RegosModel):
+    "Модель для отправки уведомления об изменениях настроек"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    connected_integration_id: str | None = PydField(default=None)
-
-
-class RegosIntegrationIntegrationStateEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
+    connected_integration_id: str | None = PydField(default=None, description="ID подключенной интеграции")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.
@@ -69,7 +63,6 @@ __all__ = [
     'ConnectedIntegrationEdit',
     'ConnectedIntegrationID',
     'ConnectedIntegrationWebhookInfoGet',
-    'RegosIntegrationIntegrationStateEnum',
     'ConnectedIntegrationGetRequest',
     'ConnectedIntegrationGetResponse',
     'ConnectedIntegrationEditRequest',

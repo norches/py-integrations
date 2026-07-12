@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,61 +14,68 @@ from schemas.api.common.base import RegosModel
 
 
 class SingleSms(RegosModel):
+    "Класс, представляющий единичное SMS-сообщение"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None)
-    entity_id: int | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    status: SingleSmsStatusEnum | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Уникальный идентификатор SMS-сообщения")
+    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None, description="Тип сущности получателя СМС")
+    entity_id: int | None = PydField(default=None, description="ID сщности получателя смс")
+    date: int | None = PydField(default=None, description="Дата и время создания сообщения (в формате Unix Timestamp)")
+    status: SingleSmsStatusEnum | None = PydField(default=None, description="Текущий статус SMS-сообщения")
     phone: str | None = PydField(default=None)
-    message: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    message: str | None = PydField(default=None, description="Текст SMS-сообщения")
+    last_update: int | None = PydField(default=None, description="Время последнего обновления (в формате Unix Timestamp)")
 
 
 class SingleSmsAdd(RegosModel):
+    "Добавление единичной СМС"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None)
-    entity_id: int | None = PydField(default=None)
-    message: str | None = PydField(default=None)
+    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None, description="Получатель СМС сообщения: <RetailCustomer | 1> - Розничный покупатель, <Partner | 2> - Контрагент")
+    entity_id: int | None = PydField(default=None, description="ID получателя СМС сообщения")
+    message: str | None = PydField(default=None, description="Текст СМС сообщения")
 
 
-class SingleSmsEntityTypeEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
+class SingleSmsEntityTypeEnum(str, Enum):
+    "Перечисление сущностей получателей СМС"
+    Default = "Default"
+    RetailCustomer = "RetailCustomer"
+    Partner = "Partner"
 
 
 class SingleSmsGet(RegosModel):
+    "Получить список единичных СМС"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None)
-    entity_id: int | None = PydField(default=None)
-    status: SingleSmsStatusEnum | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID единичных СМС")
+    entity_type: SingleSmsEntityTypeEnum | None = PydField(default=None, description="Тип получателя СМС: <RetailCustomer | 1> - Розничный покупатель, <Partner | 2> - Контрагент")
+    entity_id: int | None = PydField(default=None, description="ID получателя СМС")
+    status: SingleSmsStatusEnum | None = PydField(default=None, description="Статус отправки СМС: <New | 1> - Создано, <Sended | 2> - Отправлено, <Delivered | 3> - Доставлено, <Error | 4> - Ошибка отправки")
+    limit: int | None = PydField(default=None, description="Количество возвращаемых элементов выборки")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class SingleSmsRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[SingleSms] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[SingleSms] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class SingleSmsSetStatus(RegosModel):
+    "Установка статуса единичного смс"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    status: SingleSmsStatusEnum | None = PydField(default=None)
-    error_message: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID СМС сообщения")
+    status: SingleSmsStatusEnum | None = PydField(default=None, description="Статусы СМС сообщения: <New | 1> - Создано, <Sended | 2> - Отправлено, <Delivered | 3> - Доставлено, <Error | 4> - Ошибка отправки")
+    error_message: str | None = PydField(default=None, description="Сообщение об ошибке")
 
 
-class SingleSmsStatusEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
+class SingleSmsStatusEnum(str, Enum):
+    "Перечисление статусов единичных SMS-сообщений"
+    Default = "Default"
+    New = "New"
+    Sended = "Sended"
+    Delivered = "Delivered"
+    Error = "Error"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

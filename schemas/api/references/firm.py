@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,7 +14,12 @@ from schemas.api.common.base import RegosModel
 
 
 class Firm(RegosModel):
+    "Модель, описывающая предприятия"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    id: int | None = PydField(default=None, description="id предприятия")
+    group: FirmGroup | None = PydField(default=None, description="id группы предприятия")
+    deleted_mark: bool | None = PydField(default=None, description="Метка на удаление")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unixtime в секундах")
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
     boss_name: str | None = PydField(default=None)
@@ -27,14 +32,11 @@ class Firm(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    id: int | None = PydField(default=None)
-    group: FirmGroup | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
 
 
 class FirmAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    group_id: int | None = PydField(default=None, description="id группы предприятия в системе")
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
     boss_name: str | None = PydField(default=None)
@@ -47,27 +49,28 @@ class FirmAdd(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    group_id: int | None = PydField(default=None)
 
 
 class FirmDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id предприятия")
 
 
 class FirmDeleteConfirm(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    confirm_code: str | None = PydField(default=None)
+    confirm_code: str | None = PydField(default=None, description="Код подтверждения")
+    id: int | None = PydField(default=None, description="Id предприятия")
 
 
 class FirmDeleteMark(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id предприятия")
 
 
 class FirmEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None, description="ID пердприятия")
+    group_id: int | None = PydField(default=None, description="id группы предприятия в системе")
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
     boss_name: str | None = PydField(default=None)
@@ -80,22 +83,23 @@ class FirmEdit(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    id: int | None = PydField(default=None)
-    group_id: int | None = PydField(default=None)
 
 
 class FirmGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    group_ids: list[int] | None = PydField(default=None)
-    sort_orders: list[FirmSortOrder] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    deleted_mark: bool | None = PydField(default=None, description="Помеченные на удаление: null - показывает всё, true - только помеченнае на удаление, false - не помечанные на удаление")
+    ids: list[int] | None = PydField(default=None, description="Массив id предприятий")
+    group_ids: list[int] | None = PydField(default=None, description="Массив id групп предприятий")
+    sort_orders: list[FirmSortOrder] | None = PydField(default=None, description="Сортировка выходных данных")
+    search: str | None = PydField(default=None, description="Строка поиска по полям: name, fullname, address, inn, rs")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе. Значение по умолчанию 10000. Максимальное значение 10000")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class FirmImage(RegosModel):
+    "Модель, описывающая изображения предприятия"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    firm_id: int | None = PydField(default=None, description="Id предприятия")
     id: int | None = PydField(default=None)
     width: int | None = PydField(default=None)
     height: int | None = PydField(default=None)
@@ -103,7 +107,6 @@ class FirmImage(RegosModel):
     file: str | None = PydField(default=None)
     url: str | None = PydField(default=None)
     last_update: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
 
 
 class FirmImageDelete(RegosModel):
@@ -113,24 +116,26 @@ class FirmImageDelete(RegosModel):
 
 class FirmImageGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    firm_id: int | None = PydField(default=None, description="Id предприятия")
     ids: list[int] | None = PydField(default=None)
     include_data: bool | None = PydField(default=None)
     compress_data: bool | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
 
 
 class FirmImageRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[FirmImage] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[FirmImage] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 class FirmRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Firm] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Firm] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class FirmSetting(RegosModel):
@@ -139,49 +144,50 @@ class FirmSetting(RegosModel):
     key: str | None = PydField(default=None)
     name: str | None = PydField(default=None)
     value: str | None = PydField(default=None)
-    name_var: str | None = PydField(default=None)
-    dataType: str | None = PydField(default=None)
+    name_var: str | None = PydField(default=None, description="Наименование (ключ из переводов)")
+    dataType: str | None = PydField(default=None, description="Тип данных")
     last_update: int | None = PydField(default=None)
 
 
 class FirmSettingArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[FirmSetting] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[FirmSetting] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class FirmSortOrder(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: FirmSortOrderColumn | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class FirmSortOrderColumn(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
-    VALUE_9 = 9
-    VALUE_10 = 10
-    VALUE_11 = 11
-    VALUE_12 = 12
-    VALUE_13 = 13
+class FirmSortOrderColumn(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    Name = "Name"
+    Fullname = "Fullname"
+    Bossname = "Bossname"
+    Address = "Address"
+    Phones = "Phones"
+    Inn = "Inn"
+    BankName = "BankName"
+    Mfo = "Mfo"
+    Rs = "Rs"
+    Oked = "Oked"
+    VatIndex = "VatIndex"
+    LastUpdate = "LastUpdate"
 
 
 class Firm_SettingEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    value: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID настройки пердприятия")
+    value: str | None = PydField(default=None, description="значение настройки")
 
 
 class Firm_SettingGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    firm_id: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

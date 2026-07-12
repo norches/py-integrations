@@ -14,64 +14,70 @@ from schemas.api.common.base import RegosModel
 
 
 class PosDocSession(RegosModel):
+    "Смена"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    operating_cash_id: int | None = PydField(default=None)
-    start_date: int | None = PydField(default=None)
-    start_user: User | None = PydField(default=None)
-    start_amount: _Decimal | None = PydField(default=None)
-    close_date: int | None = PydField(default=None)
-    close_user: User | None = PydField(default=None)
-    closed: bool | None = PydField(default=None)
-    close_amount: _Decimal | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="идентификатор")
+    code: str | None = PydField(default=None, description="код")
+    operating_cash_id: int | None = PydField(default=None, description="привязка к кассе")
+    start_date: int | None = PydField(default=None, description="время открытия")
+    start_user: User | None = PydField(default=None, description="кассир открывщий")
+    start_amount: _Decimal | None = PydField(default=None, description="начальная сумма на кассе при открытии")
+    close_date: int | None = PydField(default=None, description="время закрытия")
+    close_user: User | None = PydField(default=None, description="кассир закрывщий смену")
+    closed: bool | None = PydField(default=None, description="флаг закрытости смены")
+    close_amount: _Decimal | None = PydField(default=None, description="конечная сумма на кассе при закрытии")
+    last_update: int | None = PydField(default=None, description="дата последнего изменения строки на базе")
 
 
 class PosDocSessionArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[PosDocSession] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[PosDocSession] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class PosDocSessionClose(RegosModel):
+    "модель закрытия смены"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    session_uuid: str | None = PydField(default=None)
+    session_uuid: str | None = PydField(default=None, description="uuid смены")
 
 
 class PosDocSessionGet(RegosModel):
+    "модель получения смены"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    operating_cash_ids: list[int] | None = PydField(default=None)
-    start_user: int | None = PydField(default=None)
-    close_user: int | None = PydField(default=None)
-    closed: bool | None = PydField(default=None)
-    start_date1: int | None = PydField(default=None)
-    start_date2: int | None = PydField(default=None)
-    close_date1: int | None = PydField(default=None)
-    close_date2: int | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="uuid смены")
+    code: str | None = PydField(default=None, description="Код смены")
+    operating_cash_ids: list[int] | None = PydField(default=None, description="Массив Id касс, к которым привязаны смены")
+    start_user: int | None = PydField(default=None, description="id пользователя, открывшего смену")
+    close_user: int | None = PydField(default=None, description="id пользователя, закрывшего смену")
+    closed: bool | None = PydField(default=None, description="Метка о том, что смена закрыта")
+    start_date1: int | None = PydField(default=None, description="Начало периода даты открытия смены в формате unixtime в секундах")
+    start_date2: int | None = PydField(default=None, description="Окончание периода даты открытия смены в формате unixtime в секундах")
+    close_date1: int | None = PydField(default=None, description="Начало периода даты закрытия смены в формате unixtime в секундах")
+    close_date2: int | None = PydField(default=None, description="Окончание периода даты закрытия смены в формате unixtime в секундах")
 
 
 class PosDocSessionRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: PosDocSession | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: PosDocSession | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class PosDocSessionReport(RegosModel):
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    session: PosDocSession | None = PydField(default=None)
+    session: PosDocSession | None = PydField(default=None, description="Смена")
     sale_counters: list[PosDocSessionSaleCounter] | None = PydField(default=None)
     sale_details: list[SessionSaleDetails] | None = PydField(default=None)
     payment_sale: list[SessionPaymentSale] | None = PydField(default=None)
-    cash_total: SessionCashOprPaymentAmount | None = PydField(default=None)
+    cash_total: SessionCashOprPaymentAmount | None = PydField(default=None, description="Операции по кассовому журналу")
 
 
 class PosDocSessionReportRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: PosDocSessionReport | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: PosDocSessionReport | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class PosDocSessionSaleCounter(RegosModel):

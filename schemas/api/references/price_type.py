@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,75 +14,78 @@ from schemas.api.common.base import RegosModel
 
 
 class PriceType(RegosModel):
+    "Модель, описывающая виды цен"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    round_to: _Decimal | None = PydField(default=None)
-    markup: _Decimal | None = PydField(default=None)
-    max_discount: _Decimal | None = PydField(default=None)
-    currency: Currency | None = PydField(default=None)
-    currency_additional: Currency | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id вида цены")
+    name: str | None = PydField(default=None, description="Наименование вида цены")
+    round_to: _Decimal | None = PydField(default=None, description="Предел округления")
+    markup: _Decimal | None = PydField(default=None, description="Наценка для вида цены")
+    max_discount: _Decimal | None = PydField(default=None, description="Максимальная скидка")
+    currency: Currency | None = PydField(default=None, description="Валюта")
+    currency_additional: Currency | None = PydField(default=None, description="Дополнительная валюта")
+    last_update: int | None = PydField(default=None, description="Последнее изменение строки в формате unix time в секундах")
 
 
 class PriceTypeAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    name: str | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    currency_additional_id: int | None = PydField(default=None)
-    round_to: _Decimal | None = PydField(default=None)
-    markup: _Decimal | None = PydField(default=None)
-    max_discount: _Decimal | None = PydField(default=None)
+    name: str | None = PydField(default=None, description="Наименование вида цены")
+    currency_id: int | None = PydField(default=None, description="id валюты")
+    currency_additional_id: int | None = PydField(default=None, description="id дополнительной валюты")
+    round_to: _Decimal | None = PydField(default=None, description="Предел округления")
+    markup: _Decimal | None = PydField(default=None, description="Наценка для вида цены")
+    max_discount: _Decimal | None = PydField(default=None, description="Максимальная скидка")
 
 
 class PriceTypeDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id вида цены")
 
 
 class PriceTypeEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    currency_additional_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    round_to: _Decimal | None = PydField(default=None)
-    markup: _Decimal | None = PydField(default=None)
-    max_discount: _Decimal | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id вида цены")
+    currency_id: int | None = PydField(default=None, description="id валюты")
+    currency_additional_id: int | None = PydField(default=None, description="id дополнительной валюты")
+    name: str | None = PydField(default=None, description="Наименование вида цены")
+    round_to: _Decimal | None = PydField(default=None, description="Предел округления")
+    markup: _Decimal | None = PydField(default=None, description="Наценка для вида цены")
+    max_discount: _Decimal | None = PydField(default=None, description="Максимальная скидка")
 
 
 class PriceTypeGet(RegosModel):
+    "модель для получения списка вида цены"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    currency_ids: list[int] | None = PydField(default=None)
-    sort_orders: list[PriceType_SortOrder] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив Id видов цен")
+    currency_ids: list[int] | None = PydField(default=None, description="ID валюты")
+    sort_orders: list[PriceType_SortOrder] | None = PydField(default=None, description="Сортировака выходных параметров")
+    search: str | None = PydField(default=None, description="Строка поиска по: name (наименование вида цены)")
+    limit: int | None = PydField(default=None, description="Количество элементов выборки, возвращаемых при запросе")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class PriceTypeRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[PriceType] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[PriceType] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class PriceType_SortOrder(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: PriceType_SortOrderColumn | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class PriceType_SortOrderColumn(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
+class PriceType_SortOrderColumn(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    Name = "Name"
+    RoundTo = "RoundTo"
+    MarkUp = "MarkUp"
+    MaxDiscount = "MaxDiscount"
+    LastUpdate = "LastUpdate"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

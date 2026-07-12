@@ -14,18 +14,19 @@ from schemas.api.common.base import RegosModel
 
 
 class ReturnsToPartnerOperation(RegosModel):
+    "Модель, описывающая операции возврата контрагенту"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    document_id: int | None = PydField(default=None)
-    item: Item | None = PydField(default=None)
-    quantity: _Decimal | None = PydField(default=None)
-    cost: _Decimal | None = PydField(default=None)
-    order: int | None = PydField(default=None)
-    last_purchase_cost: _Decimal | None = PydField(default=None)
-    vat_value: _Decimal | None = PydField(default=None)
-    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID операции")
+    document_id: int | None = PydField(default=None, description="ID документа возврата")
+    item: Item | None = PydField(default=None, description="Номенклатура")
+    quantity: _Decimal | None = PydField(default=None, description="Количество номенклатуры")
+    cost: _Decimal | None = PydField(default=None, description="Стоимость возврата номенклатуры")
+    order: int | None = PydField(default=None, description="Порядок операции")
+    last_purchase_cost: _Decimal | None = PydField(default=None, description="Стоимость последней закупки")
+    vat_value: _Decimal | None = PydField(default=None, description="Значение ставки НДС")
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None, description="Расчет НДС: <No | 1> - Не начислять, <Exclude | 2> - В сумме, <Include | 3> - Сверху")
+    description: str | None = PydField(default=None, description="Примечание")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unixtime в секундах")
 
 
 class ReturnsToPartnerOperationAdd(RegosModel):
@@ -34,9 +35,9 @@ class ReturnsToPartnerOperationAdd(RegosModel):
     item_id: int | None = PydField(default=None)
     quantity: _Decimal | None = PydField(default=None)
     cost: _Decimal | None = PydField(default=None)
-    order: int | None = PydField(default=None)
+    order: int | None = PydField(default=None, description="Порядок операции (NULL = не задано, в БД сохраняется как NULL).\nДля версий БД ниже 363 игнорируется.")
     vat_value: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
+    description: str | None = PydField(default=None, description="примечание")
 
 
 class ReturnsToPartnerOperationDelete(RegosModel):
@@ -49,32 +50,33 @@ class ReturnsToPartnerOperationEdit(RegosModel):
     id: int | None = PydField(default=None)
     quantity: _Decimal | None = PydField(default=None)
     cost: _Decimal | None = PydField(default=None)
-    order: int | None = PydField(default=None)
+    order: int | None = PydField(default=None, description="Порядок операции. Если NULL, значение в БД не меняется.\nДля версий БД ниже 363 игнорируется.")
     vat_value: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
+    description: str | None = PydField(default=None, description="примечание")
 
 
 class ReturnsToPartnerOperationGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    item_ids: list[int] | None = PydField(default=None)
-    document_ids: list[int] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID операций возврата контрагенту")
+    item_ids: list[int] | None = PydField(default=None, description="Массив ID номенклатуры")
+    document_ids: list[int] | None = PydField(default=None, description="Массив ID документов (не более 1 элемента)")
+    search: str | None = PydField(default=None, description="Поиск по значениям параметров: Item.name, Item.articul, Item.code, Item.barcodes")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class ReturnsToPartnerOperationRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[ReturnsToPartnerOperation] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[ReturnsToPartnerOperation] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class SetCostByLastReturnToPartner(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_id: int | None = PydField(default=None)
+    document_id: int | None = PydField(default=None, description="ID документа возврата контрагенту")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -14,28 +14,31 @@ from schemas.api.common.base import RegosModel
 
 
 class EditedExchangeRateLog(RegosModel):
+    "Модель, описывающая лог изменений курса валюты"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    user: User | None = PydField(default=None)
-    currency: Currency | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID зиписи лога")
+    user: User | None = PydField(default=None, description="Пользователь, вносивший изменение")
+    currency: Currency | None = PydField(default=None, description="Валюта")
+    date: int | None = PydField(default=None, description="Дата внесения изменения в курс валюты в unix time")
+    value: _Decimal | None = PydField(default=None, description="Значение курса")
+    last_update: int | None = PydField(default=None, description="Дата изменени в unix time")
 
 
 class EditedExchangeRateLogGet(RegosModel):
+    "Модель запроса истории изменения курса."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    currency_id: int | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    currency_id: int | None = PydField(default=None, description="ID вылюты")
+    limit: int | None = PydField(default=None, description="Количество элементов выборки, возвращаемых при запросе")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class EditedExchangeRateLogRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[EditedExchangeRateLog] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[EditedExchangeRateLog] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

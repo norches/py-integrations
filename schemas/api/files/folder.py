@@ -14,43 +14,48 @@ from schemas.api.common.base import RegosModel
 
 
 class CommonFolderAdd(RegosModel):
+    "Модель запроса добавления папки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    name: str | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    access_level: CommonFileAccessLevelEnum | None = PydField(default=None)
+    name: str | None = PydField(default=None, description="Наименование папки")
+    parent_id: int | None = PydField(default=None, description="Родительская папка. По умолчанию используется root (id = 1)")
+    access_level: CommonFileAccessLevelEnum | None = PydField(default=None, description="personal или public")
 
 
 class CommonFolderDelete(RegosModel):
+    "Модель запроса удаления папки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID папки")
 
 
 class CommonFolderEdit(RegosModel):
+    "Модель запроса редактирования папки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    access_level: CommonFileAccessLevelEnum | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID папки")
+    name: str | None = PydField(default=None, description="Новое имя папки")
+    parent_id: int | None = PydField(default=None, description="Новый родитель")
+    access_level: CommonFileAccessLevelEnum | None = PydField(default=None, description="Новый уровень доступа")
 
 
 class CommonFolderGet(RegosModel):
+    "Модель запроса получения папок."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    user_id: int | None = PydField(default=None)
-    access_level: CommonFileAccessLevelEnum | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
-    sort_orders: list[BaseSortColumn] | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Фильтр по ID папок")
+    parent_id: int | None = PydField(default=None, description="Фильтр по родительской папке")
+    user_id: int | None = PydField(default=None, description="Фильтр по владельцу")
+    access_level: CommonFileAccessLevelEnum | None = PydField(default=None, description="Фильтр по уровню доступа")
+    search: str | None = PydField(default=None, description="Поиск по имени папки")
+    limit: int | None = PydField(default=None, description="Лимит")
+    offset: int | None = PydField(default=None, description="Смещение")
+    sort_orders: list[BaseSortColumn] | None = PydField(default=None, description="Сортировка")
 
 
 class CommonFolderRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[CommonFolder] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[CommonFolder] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -15,8 +15,8 @@ from schemas.api.common.base import RegosModel
 
 class BatchRequest(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    stop_on_error: bool | None = PydField(default=None)
-    requests: list[BatchStep] | None = PydField(default=None)
+    stop_on_error: bool | None = PydField(default=None, description="Если true, пакет прерывается на первом неуспешном шаге")
+    requests: list[BatchStep] | None = PydField(default=None, description="Список шагов пакета. Максимум 50 элементов")
 
 
 class BatchResponse(RegosModel):
@@ -25,16 +25,17 @@ class BatchResponse(RegosModel):
 
 
 class BatchResponseRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: BatchResponse | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: BatchResponse | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class BatchStep(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    key: str | None = PydField(default=None)
-    path: str | None = PydField(default=None)
-    payload: Any = PydField(default=None)
+    Key: str | None = PydField(default=None, description="Уникальный ключ шага")
+    path: str | None = PydField(default=None, description="Имя метода в формате Controller/Method")
+    payload: Any = PydField(default=None, description="Параметры запроса (object или array)")
 
 
 class BatchStepResponse(RegosModel):

@@ -14,41 +14,43 @@ from schemas.api.common.base import RegosModel
 
 
 class Region(RegosModel):
+    "Модель, описывающая регионы"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID региона")
+    parent_id: int | None = PydField(default=None, description="ID родительского региона")
+    name: str | None = PydField(default=None, description="Наименование региона")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time в секундах")
 
 
 class RegionAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None, description="ID родительского региона. По умолчанию: 0")
+    name: str | None = PydField(default=None, description="Наименование Региона")
 
 
 class RegionDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID региона")
 
 
 class RegionEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID региона")
+    parent_id: int | None = PydField(default=None, description="ID родительского региона")
+    name: str | None = PydField(default=None, description="Наименование региона")
 
 
 class RegionGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    parent_ids: list[int] | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID регионов")
+    parent_ids: list[int] | None = PydField(default=None, description="Массив ID родительских регионов (в которые вложены запрашиваемые регионы)")
 
 
 class RegionRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Region] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Region] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

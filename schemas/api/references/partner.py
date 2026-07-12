@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,8 +14,14 @@ from schemas.api.common.base import RegosModel
 
 
 class Partner(RegosModel):
+    "Модель, описывающая контрагентов"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    legal_status: LegalStatus | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="id контрагента")
+    group: PartnerGroup | None = PydField(default=None, description="Группа контрагентов")
+    deleted_mark: bool | None = PydField(default=None, description="Метка об удалении")
+    fields: list[FieldValue] | None = PydField(default=None, description="Массив значений дополнительных полей")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unixtime в секундах")
+    legal_status: LegalStatus | None = PydField(default=None, description="Юридческий статус")
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
     boss_name: str | None = PydField(default=None)
@@ -29,15 +35,12 @@ class Partner(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    id: int | None = PydField(default=None)
-    group: PartnerGroup | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    fields: list[FieldValue] | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
 
 
 class PartnerAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    group_id: int | None = PydField(default=None, description="id группы контрагента в системе")
+    fields: list[FieldValueAdd] | None = PydField(default=None, description="Массив значений дополнительных полей")
     legal_status: LegalStatus | None = PydField(default=None)
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
@@ -52,28 +55,29 @@ class PartnerAdd(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    group_id: int | None = PydField(default=None)
-    fields: list[FieldValueAdd] | None = PydField(default=None)
 
 
 class PartnerCurrentBalanceGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id контрагента")
+    firm_id: int | None = PydField(default=None, description="Id предприятия")
 
 
 class PartnerDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id контрагента")
 
 
 class PartnerDeleteMark(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id контрагента")
 
 
 class PartnerEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    id: int | None = PydField(default=None, description="ID контрагента")
+    group_id: int | None = PydField(default=None, description="ID группы контрагента")
+    fields: list[FieldValueEdit] | None = PydField(default=None, description="Массив значений дополнительных полей")
     legal_status: LegalStatus | None = PydField(default=None)
     name: str | None = PydField(default=None)
     fullname: str | None = PydField(default=None)
@@ -88,54 +92,52 @@ class PartnerEdit(RegosModel):
     rs: str | None = PydField(default=None)
     oked: str | None = PydField(default=None)
     vat_index: str | None = PydField(default=None)
-    id: int | None = PydField(default=None)
-    group_id: int | None = PydField(default=None)
-    fields: list[FieldValueEdit] | None = PydField(default=None)
 
 
 class PartnerGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    group_ids: list[int] | None = PydField(default=None)
-    legal_status: LegalStatus | None = PydField(default=None)
-    sort_orders: list[PartnerSortOrder] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    filters: list[Filter] | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив id контрагентов")
+    group_ids: list[int] | None = PydField(default=None, description="Массив id групп контрагентов")
+    legal_status: LegalStatus | None = PydField(default=None, description="Юридический статус: <Legal | 1> - юр. лицо, <Natural | 2> - физ. лицо")
+    sort_orders: list[PartnerSortOrder] | None = PydField(default=None, description="Сортировка выходных параметров")
+    search: str | None = PydField(default=None, description="Строка поиска по полям: name, fullname, address, inn, rs, phones, email")
+    deleted_mark: bool | None = PydField(default=None, description="Пометка на удаление: true - помеченные на удаление, false - не помеченные на удаление")
+    filters: list[Filter] | None = PydField(default=None, description="Фильтры по основным и дополнительным полям")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class PartnerRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Partner] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Partner] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class PartnerSortOrder(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: PartnerSortOrderColumnsEnum | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class PartnerSortOrderColumnsEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
-    VALUE_9 = 9
-    VALUE_10 = 10
-    VALUE_11 = 11
-    VALUE_12 = 12
-    VALUE_13 = 13
-    VALUE_14 = 14
+class PartnerSortOrderColumnsEnum(str, Enum):
+    default = "default"
+    id = "id"
+    name = "name"
+    legal_status = "legal_status"
+    fullname = "fullname"
+    boss_name = "boss_name"
+    address = "address"
+    phones = "phones"
+    inn = "inn"
+    bank_name = "bank_name"
+    mfo = "mfo"
+    rs = "rs"
+    oked = "oked"
+    vat_index = "vat_index"
+    last_update = "last_update"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -14,23 +14,25 @@ from schemas.api.common.base import RegosModel
 
 
 class ItemPrice(RegosModel):
+    "Модель, описывающая цены номенклатуры"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    item_id: int | None = PydField(default=None)
-    price_type: PriceType | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    item_id: int | None = PydField(default=None, description="Id номенклатуры")
+    price_type: PriceType | None = PydField(default=None, description="Тип цены")
+    value: _Decimal | None = PydField(default=None, description="Значение цены")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unixtime в секундах")
 
 
 class ItemPriceGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    item_ids: list[int] | None = PydField(default=None)
-    price_type_ids: list[int] | None = PydField(default=None)
+    item_ids: list[int] | None = PydField(default=None, description="Массив id номенклатуры")
+    price_type_ids: list[int] | None = PydField(default=None, description="Массив id типа цены")
 
 
 class ItemPriceRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[ItemPrice] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[ItemPrice] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

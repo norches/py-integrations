@@ -14,42 +14,44 @@ from schemas.api.common.base import RegosModel
 
 
 class RetailCardGroup(RegosModel):
+    "Модель, описывающая группы карт покупателей"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    child_count: int | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id группы в системе")
+    parent_id: int | None = PydField(default=None, description="Id родительской группы")
+    name: str | None = PydField(default=None, description="Наименование группы")
+    child_count: int | None = PydField(default=None, description="Количество вложенных (дочерних) групп")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time в секундах")
 
 
 class RetailCardGroupAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    parent_id: int | None = PydField(default=None, description="Id родительской группы. Значение по умолчанию 0 - корневая группа")
+    name: str | None = PydField(default=None, description="Наименование группы")
 
 
 class RetailCardGroupArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[RetailCardGroup] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[RetailCardGroup] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class RetailCardGroupDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id группы в системе")
 
 
 class RetailCardGroupEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    parent_id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID группы")
+    parent_id: int | None = PydField(default=None, description="ID родительской группы")
+    name: str | None = PydField(default=None, description="Имя группы")
 
 
 class RetailCardGroupGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    parent_ids: list[int] | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив id групп")
+    parent_ids: list[int] | None = PydField(default=None, description="Массив id родительских групп")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

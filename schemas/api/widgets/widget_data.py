@@ -14,9 +14,10 @@ from schemas.api.common.base import RegosModel
 
 
 class ObjectRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Any] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Any] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,101 +14,103 @@ from schemas.api.common.base import RegosModel
 
 
 class DocOpeningBalance(RegosModel):
+    "Модель, описывающая документы начальных взаиморасчётов с контрагентом"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    partner: Partner | None = PydField(default=None)
-    firm: Firm | None = PydField(default=None)
-    debit: _Decimal | None = PydField(default=None)
-    credit: _Decimal | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    currency: Currency | None = PydField(default=None)
-    performed: bool | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа")
+    date: int | None = PydField(default=None, description="Дата документа в формате unix time в секундах")
+    code: str | None = PydField(default=None, description="Код документа")
+    partner: Partner | None = PydField(default=None, description="Контрагент")
+    firm: Firm | None = PydField(default=None, description="Предприятие")
+    debit: _Decimal | None = PydField(default=None, description="Значение суммы дебета")
+    credit: _Decimal | None = PydField(default=None, description="Значение суммы кредита")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты по отношению к основной")
+    currency: Currency | None = PydField(default=None, description="Валюта")
+    performed: bool | None = PydField(default=None, description="Метка о проведении документа")
+    deleted_mark: bool | None = PydField(default=None, description="Метка об удалении")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unixtime в секундах")
 
 
 class DocOpeningBalanceAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    date: int | None = PydField(default=None)
-    partner_id: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    debit: _Decimal | None = PydField(default=None)
-    credit: _Decimal | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
+    date: int | None = PydField(default=None, description="Дата в формате unix time в секундах")
+    partner_id: int | None = PydField(default=None, description="ID контрагента")
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    debit: _Decimal | None = PydField(default=None, description="Значение суммы дебета")
+    credit: _Decimal | None = PydField(default=None, description="Значение суммы кредита")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты по отношению к основной")
+    currency_id: int | None = PydField(default=None, description="ID валюты")
 
 
 class DocOpeningBalanceColumn(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: DocOpeningBalanceColumns | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class DocOpeningBalanceColumns(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
-    VALUE_9 = 9
-    VALUE_10 = 10
-    VALUE_11 = 11
+class DocOpeningBalanceColumns(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    Date = "Date"
+    Code = "Code"
+    PartnerName = "PartnerName"
+    FirmName = "FirmName"
+    Debit = "Debit"
+    Credit = "Credit"
+    CurrencyName = "CurrencyName"
+    Performed = "Performed"
+    DeletedMark = "DeletedMark"
+    LastUpdate = "LastUpdate"
 
 
 class DocOpeningBalanceDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа начальных взаиморасчётов с контрагентом")
 
 
 class DocOpeningBalanceDeleteMark(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа")
 
 
 class DocOpeningBalanceEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    partner_id: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    debit: _Decimal | None = PydField(default=None)
-    credit: _Decimal | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа установки цен")
+    date: int | None = PydField(default=None, description="Дата в формате unix time в секундах")
+    partner_id: int | None = PydField(default=None, description="ID контрагента")
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    debit: _Decimal | None = PydField(default=None, description="Значение суммы дебета")
+    credit: _Decimal | None = PydField(default=None, description="Значение суммы кредита")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты по отношению к основной")
+    currency_id: int | None = PydField(default=None, description="ID валюты")
 
 
 class DocOpeningBalanceGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    start_date: int | None = PydField(default=None)
-    end_date: int | None = PydField(default=None)
-    ids: list[int] | None = PydField(default=None)
-    partner_ids: list[int] | None = PydField(default=None)
-    firm_ids: list[int] | None = PydField(default=None)
-    sort_orders: list[DocOpeningBalanceColumn] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    performed: bool | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None, description="Дата начала периода в формате unix time в секундах")
+    end_date: int | None = PydField(default=None, description="Дата окончания периода в формате unix time в секундах")
+    ids: list[int] | None = PydField(default=None, description="Массив ID документов начальных взаиморасчётов с контрагентом")
+    partner_ids: list[int] | None = PydField(default=None, description="Массив ID контрагентов")
+    firm_ids: list[int] | None = PydField(default=None, description="Массив ID предприятий")
+    sort_orders: list[DocOpeningBalanceColumn] | None = PydField(default=None, description="Сортировака выходных параметров")
+    search: str | None = PydField(default=None, description="Поиск про значениям параметров: code - Код документа, Firm/name - Наименование предприятия, Firm/inn - ИНН предприятия,\nPartner/name - Наименование контрагента, Partner/inn - ИНН контрагента")
+    performed: bool | None = PydField(default=None, description="Состояние проведение документа: true - Проведён, false - Не проведён")
+    deleted_mark: bool | None = PydField(default=None, description="Состояние пометки на удаление: true - Помечен на удаление, false - Не помечен на удаление")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе. Значение по умолчанию 10000. Максимальное значение 10000")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class DocOpeningBalancePerformAndCancel(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа начальных взаиморасчётов с контрагентом")
 
 
 class DocOpeningBalanceRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[DocOpeningBalance] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[DocOpeningBalance] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

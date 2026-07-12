@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,32 +14,34 @@ from schemas.api.common.base import RegosModel
 
 
 class DocPeriodClosing(RegosModel):
+    "Модель, описывающая документы закрытия периода"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    close_date: int | None = PydField(default=None)
-    run_date: int | None = PydField(default=None)
-    status: str | None = PydField(default=None)
-    firm: Firm | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    scheduler_uuid: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
-    status_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа закрытия периода")
+    close_date: int | None = PydField(default=None, description="Дата закрытия периода в формате unix time в секундах")
+    run_date: int | None = PydField(default=None, description="Дата обработки документа закрытия периода в формате unix time в секундах")
+    status: str | None = PydField(default=None, description="Статус документа закрытия периода: <WaitingClose | 1> - Ожидание закрытия периода, <WaitingSynchronise | 2>\n- Ожидание синхронизации, <InProcess | 3> - В процессе выполнения, <Closed | 4> - Закрыт, <Canceled |\n5> - Отменён")
+    firm: Firm | None = PydField(default=None, description="Предприятие")
+    description: str | None = PydField(default=None, description="Дополнительное описание")
+    scheduler_uuid: str | None = PydField(default=None, description="UUID планировщика")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time в секундах")
+    status_id: int | None = PydField(default=None, description="ID статуса документа закрытия периода")
 
 
 class DocPeriodClosingAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    close_date: int | None = PydField(default=None)
-    run_date: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    description: str | None = PydField(default=None)
+    close_date: int | None = PydField(default=None, description="Дата закрытия периода в формате unix time в секундах")
+    run_date: int | None = PydField(default=None, description="Дата обработки документа закрытия периода в формате unix time в секундах")
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    description: str | None = PydField(default=None, description="Дополнительное описание")
 
 
 class DocPeriodClosingCancelClose(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа закрытия периода")
 
 
 class DocPeriodClosingCheck(RegosModel):
+    "модель для ответа для метода проверки возможности создания документа закрытия периода"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
     ok: bool | None = PydField(default=None)
     cash_servers: list[DocPeriodClosingCheckStageElement] | None = PydField(default=None)
@@ -51,20 +53,23 @@ class DocPeriodClosingCheck(RegosModel):
 
 
 class DocPeriodClosingCheckGet(RegosModel):
+    "модель входящих параметров для проверки возможности закрытия периода"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    firm_id: int | None = PydField(default=None)
-    close_date: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    close_date: int | None = PydField(default=None, description="Дата предполагаемого закрытия периода в формате Unix time в секундах")
 
 
 class DocPeriodClosingCheckRegosOffsettedObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult when result is an object."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: DocPeriodClosingCheck | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: DocPeriodClosingCheck | Error | None = PydField(default=None, description="Объект результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class DocPeriodClosingCheckStageElement(RegosModel):
+    "модель для описания этапа проверки для возможности создания документа закрытия."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
     name: str | None = PydField(default=None)
     status: bool | None = PydField(default=None)
@@ -73,51 +78,52 @@ class DocPeriodClosingCheckStageElement(RegosModel):
 class DocPeriodClosingColumn(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: DocPeriodClosingColumns | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class DocPeriodClosingColumns(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
+class DocPeriodClosingColumns(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    CloseDate = "CloseDate"
+    RunDate = "RunDate"
+    StatusName = "StatusName"
+    FirmName = "FirmName"
 
 
 class DocPeriodClosingDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID документа закрытия периода")
 
 
 class DocPeriodClosingEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    close_date: int | None = PydField(default=None)
-    run_date: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    scheduler_uuid: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id документа закрытия периода")
+    close_date: int | None = PydField(default=None, description="Дата закрытия периода в формате unixtime в секундах")
+    run_date: int | None = PydField(default=None, description="Дата обработки документа закрытия периода в формате unixtime в секундах")
+    firm_id: int | None = PydField(default=None, description="Id предприятия")
+    description: str | None = PydField(default=None, description="Дополнительное описание")
+    scheduler_uuid: str | None = PydField(default=None, description="UUID ?????? ? ????????????")
 
 
 class DocPeriodClosingGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    status_ids: list[int] | None = PydField(default=None)
-    firm_ids: list[int] | None = PydField(default=None)
-    sort_order: list[DocPeriodClosingColumn] | None = PydField(default=None)
-    sort_orders: list[DocPeriodClosingColumn] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID документов закрытия периода")
+    status_ids: list[int] | None = PydField(default=None, description="Массив ID статусов документов закрытия периода")
+    firm_ids: list[int] | None = PydField(default=None, description="Массив ID предприятий")
+    sort_order: list[DocPeriodClosingColumn] | None = PydField(default=None, description="Устаревшая сортировка выходных параметров. Используйте sort_orders")
+    sort_orders: list[DocPeriodClosingColumn] | None = PydField(default=None, description="Сортировака выходных параметров")
+    search: str | None = PydField(default=None, description="Строка поиска по полям: id - Id документа, Firm/name - Наименование предприятия, Firm/inn - ИНН пердприятия")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе. Значение по умолчанию 10000. Максимальное значение 10000")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class DocPeriodClosingRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[DocPeriodClosing] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[DocPeriodClosing] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

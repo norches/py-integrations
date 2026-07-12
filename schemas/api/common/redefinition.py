@@ -20,22 +20,24 @@ class AccessApp(RegosModel):
 
 
 class Redefinition(RegosModel):
+    "Модель, описывающая переопределения"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    app: AccessApp | None = PydField(default=None)
-    language: Language | None = PydField(default=None)
-    table: Table | None = PydField(default=None)
-    data_id: int | None = PydField(default=None)
-    value: str | None = PydField(default=None)
-    active: bool | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id переопределения")
+    app: AccessApp | None = PydField(default=None, description="Приложение для которого переопределение")
+    language: Language | None = PydField(default=None, description="Язык для которого переопределение")
+    table: Table | None = PydField(default=None, description="Таблица, в которой находится запись для переопределения")
+    data_id: int | None = PydField(default=None, description="ID записи, для которой переопределение")
+    value: str | None = PydField(default=None, description="Значение переопределения")
+    active: bool | None = PydField(default=None, description="Метка о том, что переопределение используется")
     hidden: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    last_update: int | None = PydField(default=None, description="Последнее изменение строки в формате unix time в секундах")
 
 
 class RedefinitionRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Redefinition] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Redefinition] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 class Redefinition_Add(RegosModel):

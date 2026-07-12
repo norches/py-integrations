@@ -14,25 +14,28 @@ from schemas.api.common.base import RegosModel
 
 
 class Translation(RegosModel):
+    "Модель, описывающая переменные локализации и их значения"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
     variable: str | None = PydField(default=None)
-    variable_value: str | None = PydField(default=None)
+    variable_value: str | None = PydField(default=None, description="Наименование переменной локализации")
     value: str | None = PydField(default=None)
-    translate_value: str | None = PydField(default=None)
+    translate_value: str | None = PydField(default=None, description="Значение переменной локализации")
 
 
 class TranslationArrayRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Translation] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Translation] | Error | None = PydField(default=None, description="Объект результата.")
 
 
 class TranslationGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    language_code: str | None = PydField(default=None)
+    language_code: str | None = PydField(default=None, description="-")
 
 
 class TranslationShort(RegosModel):
+    "Модель короткой записи перевода"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
     id: int | None = PydField(default=None)
     variable_value: str | None = PydField(default=None)

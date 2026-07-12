@@ -14,15 +14,17 @@ from schemas.api.common.base import RegosModel
 
 
 class IntegrationWebhook(RegosModel):
+    "Модель, описывающая вебхук интеграции"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    name: str | None = PydField(default=None)
-    order: int | None = PydField(default=None)
+    name: str | None = PydField(default=None, description="Название вебхука интеграции")
+    order: int | None = PydField(default=None, description="Порядок вебхука интеграции")
 
 
 class IntegrationWebhookRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[IntegrationWebhook] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[IntegrationWebhook] | Error | None = PydField(default=None, description="Массив результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

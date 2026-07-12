@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,236 +14,244 @@ from schemas.api.common.base import RegosModel
 
 
 class DocInvoice(RegosModel):
+    "Модель, описывающая счёт-фактуру"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
-    corrected_date: int | None = PydField(default=None)
-    corrected_code: str | None = PydField(default=None)
-    contract: DocContractShort | None = PydField(default=None)
-    firm: Firm | None = PydField(default=None)
-    partner: Partner | None = PydField(default=None)
-    currency: Currency | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
-    attached_user: User | None = PydField(default=None)
-    base_document_id: int | None = PydField(default=None)
-    document_type: int | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    uuid: str | None = PydField(default=None)
-    external_code: str | None = PydField(default=None)
-    status: DocInvoiceStatusEnum | None = PydField(default=None)
-    error: str | None = PydField(default=None)
-    blocked: bool | None = PydField(default=None)
-    current_user_blocked: bool | None = PydField(default=None)
-    performed: bool | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID счёт-фактуры")
+    date: int | None = PydField(default=None, description="Дата")
+    code: str | None = PydField(default=None, description="Код счёт-фактуры")
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None, description="Типы документа счёт-фактуры: <Income | 1> - Входящая счёт-фактура, <Outcome | 2> - Исходящая счёт-фактура, <Corrective | 3> - Корректировачная")
+    corrected_date: int | None = PydField(default=None, description="Дата документа от которого идёт возврат")
+    corrected_code: str | None = PydField(default=None, description="Код документа от которого идёт возврат")
+    contract: DocContractShort | None = PydField(default=None, description="Договор")
+    firm: Firm | None = PydField(default=None, description="Предприятие")
+    partner: Partner | None = PydField(default=None, description="Контрагент")
+    currency: Currency | None = PydField(default=None, description="Валюта")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты")
+    amount: _Decimal | None = PydField(default=None, description="Сумма")
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None, description="Расчет НДС: <No | 1> - Не начислять, <Exclude | 2> - В сумме, <Include | 3> - Сверху")
+    attached_user: User | None = PydField(default=None, description="Ответственный пользователь")
+    base_document_id: int | None = PydField(default=None, description="ID документа, на основании которого создана счёт-фактура")
+    document_type: int | None = PydField(default=None, description="Тип документа, на основании которого создана счёт-фактура")
+    description: str | None = PydField(default=None, description="Примечание")
+    uuid: str | None = PydField(default=None, description="UUID счёт-фактуры")
+    external_code: str | None = PydField(default=None, description="Уникальный код ответа от сервиса faktura.uz")
+    status: DocInvoiceStatusEnum | None = PydField(default=None, description="<New | 1> - Счёт-фактура создана, <InSentProgress | 2> - В процессе отпраки, <Sent | 3> - Отправлена,\n<InReceivedProgress | 4> - В процессе получения, <Received | 5> - Получнеа, <ErrorSent | 6> - Ошибка\nотправки, <ErrorReceived | 7> - Ошибка получения, <Unknown | 8> - Статус не известен")
+    error: str | None = PydField(default=None, description="Ошибки при отпраке док-та на сервис faktura.uz")
+    blocked: bool | None = PydField(default=None, description="Заблокирована ли счёт-фактура для редактирования: true - Заблокирована, false - Не заблокирована")
+    current_user_blocked: bool | None = PydField(default=None, description="Заблокирована ли счёт-фактура текущим пользователем для редактирования: true - Заблокирована, false - Не заблокирована")
+    performed: bool | None = PydField(default=None, description="Проведена ли счёт-фактура: true - Проведена, false - Не проведена")
+    deleted_mark: bool | None = PydField(default=None, description="Помечена ли на удалние счёт-фактура: true - Помечена на удаление, false - Не помечена на удаление")
+    last_update: int | None = PydField(default=None, description="Дата изменения в unix time")
 
 
 class DocInvoiceAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    code: str | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    corrected_date: int | None = PydField(default=None)
-    corrected_code: str | None = PydField(default=None)
-    document_id: int | None = PydField(default=None)
-    document_type_id: int | None = PydField(default=None)
-    contract_id: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    partner_id: int | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
-    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
-    attached_user_id: int | None = PydField(default=None)
+    code: str | None = PydField(default=None, description="Код счёт-фактуры")
+    date: int | None = PydField(default=None, description="Дата")
+    corrected_date: int | None = PydField(default=None, description="Дата документа от которого идёт возврат")
+    corrected_code: str | None = PydField(default=None, description="Код документа от которого идёт возвра")
+    document_id: int | None = PydField(default=None, description="ID документа, на основании которого создаётся счёт-фактура")
+    document_type_id: int | None = PydField(default=None, description="ID типа документа, на основании которого создаётся счёт-фактура")
+    contract_id: int | None = PydField(default=None, description="ID договора")
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    partner_id: int | None = PydField(default=None, description="ID контрагента")
+    currency_id: int | None = PydField(default=None, description="ID вылюты")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты")
+    description: str | None = PydField(default=None, description="Примечание")
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None, description="Типы документа счёт-фактуры: <Income | 1> - Входящая счёт-фактура, <Outcome | 2> - Исходящая счёт-фактура, <Corrective | 3> - Корректировачная")
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None, description="Расчет НДС: <No | 1> - Не начислять, <Exclude | 2> - В сумме, <Include | 3> - Сверху")
+    attached_user_id: int | None = PydField(default=None, description="ID ответственного пользователя. По умалчанию - текущий пользователь")
 
 
 class DocInvoiceAddOnBase(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_type_id: int | None = PydField(default=None)
-    document_id: int | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    corrected_date: int | None = PydField(default=None)
-    corrected_code: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    attached_user_id: int | None = PydField(default=None)
+    document_type_id: int | None = PydField(default=None, description="ID типа документа, на основании которого создаётся счёт-фактура")
+    document_id: int | None = PydField(default=None, description="ID документа, на основании которого создаётся счёт-фактура")
+    code: str | None = PydField(default=None, description="Код счёт-фактуры")
+    date: int | None = PydField(default=None, description="Дата")
+    corrected_date: int | None = PydField(default=None, description="Дата документа от которого идёт возврат")
+    corrected_code: str | None = PydField(default=None, description="Код документа от которого идёт возвра")
+    description: str | None = PydField(default=None, description="Примечание")
+    attached_user_id: int | None = PydField(default=None, description="ID ответственного пользователя. По умалчанию - текущий пользователь")
 
 
 class DocInvoiceColumn(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: DocInvoiceColumns | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class DocInvoiceColumns(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
-    VALUE_9 = 9
-    VALUE_10 = 10
-    VALUE_11 = 11
-    VALUE_12 = 12
-    VALUE_13 = 13
-    VALUE_14 = 14
-    VALUE_15 = 15
+class DocInvoiceColumns(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    Date = "Date"
+    Code = "Code"
+    PartnerName = "PartnerName"
+    FirmName = "FirmName"
+    CurrencyName = "CurrencyName"
+    ContractName = "ContractName"
+    Amount = "Amount"
+    VatCalculationType = "VatCalculationType"
+    AttacheUserName = "AttacheUserName"
+    PriceTypeName = "PriceTypeName"
+    Blocked = "Blocked"
+    Performed = "Performed"
+    DeletedMark = "DeletedMark"
+    LastUpdate = "LastUpdate"
 
 
 class DocInvoiceDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID счёт-фактуры")
 
 
 class DocInvoiceDeleteMark(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id счёт-фактуры")
 
 
 class DocInvoiceEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    date: int | None = PydField(default=None)
-    code: str | None = PydField(default=None)
-    corrected_date: int | None = PydField(default=None)
-    corrected_code: str | None = PydField(default=None)
-    document_id: int | None = PydField(default=None)
-    document_type_id: int | None = PydField(default=None)
-    contract_id: int | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
-    partner_id: int | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
-    attached_user_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID счёт-фактуры")
+    date: int | None = PydField(default=None, description="Дата")
+    code: str | None = PydField(default=None, description="Код счёт-фактуры")
+    corrected_date: int | None = PydField(default=None, description="Дата документа от которого идёт возврат")
+    corrected_code: str | None = PydField(default=None, description="Код документа от которого идёт возвра")
+    document_id: int | None = PydField(default=None, description="ID документа, на основании которого создаётся счёт-фактура")
+    document_type_id: int | None = PydField(default=None, description="ID типа документа, на основании которого создаётся счёт-фактура")
+    contract_id: int | None = PydField(default=None, description="ID договора")
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    partner_id: int | None = PydField(default=None, description="ID контрагента")
+    currency_id: int | None = PydField(default=None, description="ID вылюты")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты")
+    description: str | None = PydField(default=None, description="Примечание")
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None, description="Расчет НДС: <No | 1> - Не начислять, <Exclude | 2> - В сумме, <Include | 3> - Сверху")
+    attached_user_id: int | None = PydField(default=None, description="ID ответственного пользователя. По умалчанию - текущий пользователь")
 
 
 class DocInvoiceFromRoaming(RegosModel):
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: str | None = PydField(default=None)
-    roaming_id: str | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    partner_name: str | None = PydField(default=None)
-    partner_inn: str | None = PydField(default=None)
-    contract: str | None = PydField(default=None)
-    firm: str | None = PydField(default=None)
-    date: _DateTime | None = PydField(default=None)
-    create_date: _DateTime | None = PydField(default=None)
-    update_date: _DateTime | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
+    id: str | None = PydField(default=None, description="id документа в системе ЭДО")
+    roaming_id: str | None = PydField(default=None, description="id документа в системе ГНК")
+    name: str | None = PydField(default=None, description="наименование счёт фактуры")
+    partner_name: str | None = PydField(default=None, description="наименование контрагента")
+    partner_inn: str | None = PydField(default=None, description="ИНН контрагента")
+    contract: str | None = PydField(default=None, description="Договор")
+    firm: str | None = PydField(default=None, description="предприятие")
+    date: _DateTime | None = PydField(default=None, description="Дата документа")
+    create_date: _DateTime | None = PydField(default=None, description="Дата создания счёт фактуры")
+    update_date: _DateTime | None = PydField(default=None, description="Дата последнего изменения счёт фактуры")
+    amount: _Decimal | None = PydField(default=None, description="Сумма счёт фактуры")
 
 
 class DocInvoiceFromRoamingGet(RegosModel):
+    "Получение документов от роуминга"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    firm_id: int | None = PydField(default=None)
-    start_date: int | None = PydField(default=None)
-    end_date: int | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    firm_id: int | None = PydField(default=None, description="ID предприятия")
+    start_date: int | None = PydField(default=None, description="Начало периода в формате Unix time в секундах")
+    end_date: int | None = PydField(default=None, description="Конец периода в формате Unix time в секундах")
+    limit: int | None = PydField(default=None, description="Количество возвращаемых элементов выборки")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class DocInvoiceFromRoamingImport(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: str | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
+    id: str | None = PydField(default=None, description="ID документа в системе провайдера для получения")
+    firm_id: int | None = PydField(default=None, description="ID предприятия, которое делает получение")
 
 
 class DocInvoiceFromRoamingRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[DocInvoiceFromRoaming] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[DocInvoiceFromRoaming] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class DocInvoiceGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    start_date: int | None = PydField(default=None)
-    end_date: int | None = PydField(default=None)
-    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None)
-    ids: list[int] | None = PydField(default=None)
-    contract_ids: list[int] | None = PydField(default=None)
-    firm_ids: list[int] | None = PydField(default=None)
-    partner_ids: list[int] | None = PydField(default=None)
-    external_code: str | None = PydField(default=None)
-    attached_user_ids: list[int] | None = PydField(default=None)
-    performed: bool | None = PydField(default=None)
-    blocked: bool | None = PydField(default=None)
-    deleted_mark: bool | None = PydField(default=None)
-    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None)
-    sort_orders: list[DocInvoiceColumn] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    start_date: int | None = PydField(default=None, description="Дата начала периода в формате unix time в секундах")
+    end_date: int | None = PydField(default=None, description="Дата окончания периода в формате unix time в секундах")
+    invoice_type: DocInvoiceTypeEnum | None = PydField(default=None, description="Типы документа счёт-фактуры: <Income | 1> - Входящая счёт-фактура, <Outcome | 2> - Исходящая счёт-фактура, <Corrective | 3> - Корректировачная")
+    ids: list[int] | None = PydField(default=None, description="Массив ID документов установки цен")
+    contract_ids: list[int] | None = PydField(default=None, description="Массив ID договоров")
+    firm_ids: list[int] | None = PydField(default=None, description="Массив ID пердприятий")
+    partner_ids: list[int] | None = PydField(default=None, description="Массив ID контрагентов")
+    external_code: str | None = PydField(default=None, description="Внешний код (id) документа")
+    attached_user_ids: list[int] | None = PydField(default=None, description="Массив ID ответственных пользователей")
+    performed: bool | None = PydField(default=None, description="Проведён ли документ: true - Проведён, false - Не проведён")
+    blocked: bool | None = PydField(default=None, description="Заблокирован ли документ: true - Заблокирован, false - Не заблокирован")
+    deleted_mark: bool | None = PydField(default=None, description="Помечен ли документ на удаление: true - Помечен на удаление, false - Не помечен на удаление")
+    vat_calculation_type: VatCalculationTypeEnum | None = PydField(default=None, description="Расчет НДС: <No | 1> - Не начислять, <Exclude | 2> - В сумме, <Include | 3> - Сверху")
+    sort_orders: list[DocInvoiceColumn] | None = PydField(default=None, description="Сортировака выходных параметров")
+    search: str | None = PydField(default=None, description="Строка поиска по полям: code - Код счёт-фактуры, Partner/name - ФИО контрагента, Firm/name - Наименование предприятия,\nContract/name - Наименование договора, User/name - ФИО ответственного пользователя")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе. Значение по умолчанию 10000. Максимальное значение 10000")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class DocInvoiceLockAndUnlock(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID счёт-фактур")
 
 
 class DocInvoicePerformAndCancel(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID счёт-фактуры")
 
 
 class DocInvoiceRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[DocInvoice] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[DocInvoice] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class DocInvoiceSend(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_ids: list[int] | None = PydField(default=None)
-    firm_id: int | None = PydField(default=None)
+    document_ids: list[int] | None = PydField(default=None, description="Массив ID счёт-фактур")
+    firm_id: int | None = PydField(default=None, description="ID предприятия, от имени которого отправляется счёт-фактура")
 
 
 class DocInvoiceSetExternalData(RegosModel):
+    "Модель для установки статуса отправки документа"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_id: int | None = PydField(default=None)
-    integration_key: str | None = PydField(default=None)
-    connected_integration_id: str | None = PydField(default=None)
-    external_id: str | None = PydField(default=None)
-    roaming_id: str | None = PydField(default=None)
+    document_id: int | None = PydField(default=None, description="-")
+    integration_key: str | None = PydField(default=None, description="Устаревшее поле. Если передан одновременно с connected_integration_id, используется connected_integration_id")
+    connected_integration_id: str | None = PydField(default=None, description="ID подключённой интеграции. Имеет приоритет над integration_key")
+    external_id: str | None = PydField(default=None, description="-")
+    roaming_id: str | None = PydField(default=None, description="-")
 
 
 class DocInvoiceSetStatus(RegosModel):
+    "Модель для установки статуса отправки документа"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    document_id: int | None = PydField(default=None)
-    status: DocInvoiceStatusEnum | None = PydField(default=None)
-    error_message: str | None = PydField(default=None)
+    document_id: int | None = PydField(default=None, description="-")
+    status: DocInvoiceStatusEnum | None = PydField(default=None, description="-")
+    error_message: str | None = PydField(default=None, description="-")
 
 
-class DocInvoiceStatusEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
+class DocInvoiceStatusEnum(str, Enum):
+    "Статусы счёт фактуры"
+    Default = "Default"
+    New = "New"
+    InSentProgress = "InSentProgress"
+    Sent = "Sent"
+    InReceivedProgress = "InReceivedProgress"
+    Received = "Received"
+    ErrorSent = "ErrorSent"
+    ErrorReceived = "ErrorReceived"
+    Unknown = "Unknown"
 
 
-class DocInvoiceTypeEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
+class DocInvoiceTypeEnum(str, Enum):
+    "Типы документов счёт фактуры"
+    Default = "Default"
+    Income = "Income"
+    Outcome = "Outcome"
+    Corrective = "Corrective"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

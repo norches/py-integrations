@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,42 +14,47 @@ from schemas.api.common.base import RegosModel
 
 
 class TargetSetting(RegosModel):
+    "Модель, описывающая настройки цели"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    target_id: int | None = PydField(default=None)
-    type: TargetSettingTypeEnum | None = PydField(default=None)
-    value: str | None = PydField(default=None)
-    include: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID настройки")
+    target_id: int | None = PydField(default=None, description="ID цели")
+    type: TargetSettingTypeEnum | None = PydField(default=None, description="Тип насторойки цели: <Item | 1> - номенклатура, <ItemGroup | 2> - группа номенклатуры, <Pipeline | 3> - CRM воронка, <DealType | 4> - CRM тип сделки")
+    value: str | None = PydField(default=None, description="Значение настройки")
+    include: bool | None = PydField(default=None, description="Состояние настройки: true - включена, false - выключена")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time в секундах")
 
 
 class TargetSettingAdd(RegosModel):
+    "модель добавления цели"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    target_id: int | None = PydField(default=None)
-    type: TargetSettingTypeEnum | None = PydField(default=None)
-    value: str | None = PydField(default=None)
-    include: bool | None = PydField(default=None)
+    target_id: int | None = PydField(default=None, description="ID цели")
+    type: TargetSettingTypeEnum | None = PydField(default=None, description="Тип настройки цели: <Item | 1> - номенклатура, <ItemGroup | 2> - группа номенклатуры, <Pipeline | 3> - CRM воронка, <DealType | 4> - CRM тип сделки")
+    value: str | None = PydField(default=None, description="Значение настройки")
+    include: bool | None = PydField(default=None, description="Состояние настройки: true - включена, false - выключена")
 
 
 class TargetSettingGet(RegosModel):
+    "Получение настроек целей"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    target_id: int | None = PydField(default=None)
-    ids: list[int] | None = PydField(default=None)
-    type: TargetSettingTypeEnum | None = PydField(default=None)
+    target_id: int | None = PydField(default=None, description="ID цели")
+    ids: list[int] | None = PydField(default=None, description="Массив ID настроек")
+    type: TargetSettingTypeEnum | None = PydField(default=None, description="Тип настройки цели: <Item | 1> - номенклатура, <ItemGroup | 2> - группа номенклатуры, <Pipeline | 3> - CRM воронка, <DealType | 4> - CRM тип сделки")
 
 
 class TargetSettingRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[TargetSetting] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[TargetSetting] | Error | None = PydField(default=None, description="Массив результата.")
 
 
-class TargetSettingTypeEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
+class TargetSettingTypeEnum(str, Enum):
+    "Перечисление типов настроек цели"
+    Default = "Default"
+    Item = "Item"
+    ItemGroup = "ItemGroup"
+    Pipeline = "Pipeline"
+    DealType = "DealType"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

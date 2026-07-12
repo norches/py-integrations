@@ -14,135 +14,136 @@ from schemas.api.common.base import RegosModel
 
 
 class Deal(RegosModel):
+    "Модели Deal"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    client_id: int | None = PydField(default=None)
-    client: Client | None = PydField(default=None)
-    task_id: int | None = PydField(default=None)
-    lead_id: int | None = PydField(default=None)
-    ticket_id: int | None = PydField(default=None)
-    source_deal_id: int | None = PydField(default=None)
-    deal_type_id: int | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    status: DealStatusEnum | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMention] | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    currency: Currency | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    open_date: int | None = PydField(default=None)
-    close_date: int | None = PydField(default=None)
-    fields: list[FieldValue] | None = PydField(default=None)
-    created_user_id: int | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
-    chat_id: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
+    client_id: int | None = PydField(default=None, description="ID клиента")
+    client: Client | None = PydField(default=None, description="Вложенный объект клиента")
+    task_id: int | None = PydField(default=None, description="ID связанной задачи проекта.")
+    lead_id: int | None = PydField(default=None, description="ID исходного обращения (если сделка создана из Lead)")
+    ticket_id: int | None = PydField(default=None, description="ID тикета-источника (информационная ссылка)")
+    source_deal_id: int | None = PydField(default=None, description="ID исходной сделки (информационная ссылка)")
+    deal_type_id: int | None = PydField(default=None, description="Тип сделки")
+    pipeline_id: int | None = PydField(default=None, description="Воронка сделки")
+    stage_id: int | None = PydField(default=None, description="Текущая стадия")
+    title: str | None = PydField(default=None, description="Наименование сделки")
+    description: str | None = PydField(default=None, description="Описание сделки")
+    description_mentions: list[CommonMention] | None = PydField(default=None, description="Упоминания пользователей в description, возвращаются при include_mentions = true")
+    amount: _Decimal | None = PydField(default=None, description="Сумма сделки")
+    currency: Currency | None = PydField(default=None, description="Валюта сделки")
+    responsible_user_id: int | None = PydField(default=None, description="Ответственный сотрудник")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Участники-сотрудники сделки")
+    open_date: int | None = PydField(default=None, description="Дата открытия (Unix time, сек.)")
+    close_date: int | None = PydField(default=None, description="Дата закрытия (Unix time, сек.)")
+    fields: list[FieldValue] | None = PydField(default=None, description="Значения дополнительных полей")
+    created_user_id: int | None = PydField(default=None, description="ID пользователя, создавшего запись")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения (Unix time, сек.)")
+    chat_id: str | None = PydField(default=None, description="UUID связанного чата сделки")
 
 
 class DealAdd(RegosModel):
+    "Модель создания сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    source_lead_id: int | None = PydField(default=None)
-    ticket_id: int | None = PydField(default=None)
-    source_deal_id: int | None = PydField(default=None)
-    client_id: int | None = PydField(default=None)
-    task_id: int | None = PydField(default=None)
-    chat_id: str | None = PydField(default=None)
-    lead_id: int | None = PydField(default=None)
-    deal_type_id: int | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
-    mention_options: CommonMentionOptions | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    fields: list[FieldValueAdd] | None = PydField(default=None)
+    source_lead_id: int | None = PydField(default=None, description="ID исходного лида (информационная ссылка)")
+    ticket_id: int | None = PydField(default=None, description="ID исходного тикета (информационная ссылка)")
+    source_deal_id: int | None = PydField(default=None, description="ID исходной сделки (информационная ссылка)")
+    client_id: int | None = PydField(default=None, description="ID клиента в CRM")
+    task_id: int | None = PydField(default=None, description="ID связанной задачи проекта")
+    chat_id: str | None = PydField(default=None, description="UUID существующего чата, который нужно привязать к сделке (task-chat использовать нельзя)")
+    lead_id: int | None = PydField(default=None, description="ID исходного обращения")
+    deal_type_id: int | None = PydField(default=None, description="ID типа сделки")
+    pipeline_id: int | None = PydField(default=None, description="ID воронки; если не передан, используется воронка по умолчанию для Deal")
+    stage_id: int | None = PydField(default=None, description="ID не терминальной стадии; если не передан, используется стартовая стадия воронки")
+    title: str | None = PydField(default=None, description="Название сделки")
+    description: str | None = PydField(default=None, description="Описание сделки")
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None, description="Структурированные упоминания пользователей в description")
+    mention_options: CommonMentionOptions | None = PydField(default=None, description="Опции обработки упоминаний")
+    amount: _Decimal | None = PydField(default=None, description="Сумма сделки")
+    currency_id: int | None = PydField(default=None, description="ID валюты (ctlg_common_currency_ref.crnc_id)")
+    responsible_user_id: int | None = PydField(default=None, description="Ответственный пользователь")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Участники сделки")
+    fields: list[FieldValueAdd] | None = PydField(default=None, description="Значения дополнительных полей")
 
 
 class DealClose(RegosModel):
+    "Модель закрытия сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
+    stage_id: int | None = PydField(default=None, description="ID терминальной стадии воронки сделки")
 
 
 class DealDelete(RegosModel):
+    "Модель удаления сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
 
 
 class DealEdit(RegosModel):
+    "Модель редактирования сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    task_id: int | None = PydField(default=None)
-    deal_type_id: int | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
-    mention_options: CommonMentionOptions | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    fields: list[FieldValueEdit] | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
+    task_id: int | None = PydField(default=None, description="ID связанной задачи проекта (0 — снять привязку)")
+    deal_type_id: int | None = PydField(default=None, description="ID типа сделки")
+    pipeline_id: int | None = PydField(default=None, description="Изменение воронки через edit запрещено; используйте отдельный сценарий смены стадии/воронки")
+    stage_id: int | None = PydField(default=None, description="Изменение стадии через edit запрещено; используйте deal/setstage")
+    title: str | None = PydField(default=None, description="Название сделки")
+    description: str | None = PydField(default=None, description="Описание сделки")
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None, description="Новый список структурированных упоминаний в description")
+    mention_options: CommonMentionOptions | None = PydField(default=None, description="Опции обработки упоминаний")
+    amount: _Decimal | None = PydField(default=None, description="Сумма сделки")
+    currency_id: int | None = PydField(default=None, description="ID валюты (ctlg_common_currency_ref.crnc_id)")
+    fields: list[FieldValueEdit] | None = PydField(default=None, description="Изменения дополнительных полей")
 
 
 class DealGet(RegosModel):
+    "Модель фильтров и пагинации для получения списка сделок."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    client_ids: list[int] | None = PydField(default=None)
-    task_ids: list[int] | None = PydField(default=None)
-    lead_ids: list[int] | None = PydField(default=None)
-    responsible_user_ids: list[int] | None = PydField(default=None)
-    stage_ids: list[int] | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    from_date: int | None = PydField(default=None)
-    to_date: int | None = PydField(default=None)
-    include_mentions: bool | None = PydField(default=None)
-    statuses: list[DealStatusEnum] | None = PydField(default=None)
-    filters: list[Filter] | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Фильтр по ID сделок")
+    client_ids: list[int] | None = PydField(default=None, description="Фильтр по связанным клиентам")
+    task_ids: list[int] | None = PydField(default=None, description="Фильтр по связанным задачам проекта")
+    lead_ids: list[int] | None = PydField(default=None, description="Фильтр по связанным обращениям")
+    responsible_user_ids: list[int] | None = PydField(default=None, description="Фильтр по ответственным")
+    stage_ids: list[int] | None = PydField(default=None, description="Фильтр по стадиям")
+    pipeline_id: int | None = PydField(default=None, description="Фильтр по воронке")
+    currency_id: int | None = PydField(default=None, description="Фильтр по валюте сделки")
+    from_date: int | None = PydField(default=None, description="Нижняя граница open_date (дата старта сделки, Unix time, сек.)")
+    to_date: int | None = PydField(default=None, description="Верхняя граница open_date (дата старта сделки, Unix time, сек.)")
+    include_mentions: bool | None = PydField(default=None, description="Вернуть description_mentions для описания сделки")
+    filters: list[Filter] | None = PydField(default=None, description="Дополнительные фильтры по основным и пользовательским полям")
+    limit: int | None = PydField(default=None, description="Лимит выборки, при <= 0 используется 100, максимум 1000")
+    offset: int | None = PydField(default=None, description="Смещение выборки, при < 0 используется 0")
 
 
 class DealRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Deal] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Deal] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class DealSetParticipants(RegosModel):
+    "Модель управления участниками сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    replace_mode: bool | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Список участников")
+    replace_mode: bool | None = PydField(default=None, description="Режим обновления: true — заменить состав, false — добавить к текущему")
 
 
 class DealSetResponsible(RegosModel):
+    "Модель назначения ответственного по сделке."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID сделки")
+    responsible_user_id: int | None = PydField(default=None, description="ID нового ответственного")
 
 
 class DealSetStage(RegosModel):
+    "Модель смены стадии сделки."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    comment: str | None = PydField(default=None)
-
-
-class DealStatusEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
+    id: int | None = PydField(default=None, description="ID сделки")
+    stage_id: int | None = PydField(default=None, description="ID новой стадии")
+    comment: str | None = PydField(default=None, description="Комментарий к смене стадии")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.
@@ -185,7 +186,6 @@ __all__ = [
     'DealSetParticipants',
     'DealSetResponsible',
     'DealSetStage',
-    'DealStatusEnum',
     'DealGetRequest',
     'DealGetResponse',
     'DealAddRequest',

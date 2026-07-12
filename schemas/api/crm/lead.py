@@ -14,158 +14,127 @@ from schemas.api.common.base import RegosModel
 
 
 class Lead(RegosModel):
+    "Модели Lead"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    client_id: int | None = PydField(default=None)
-    client: Client | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    status: LeadStatusEnum | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
-    responsible_hold_until: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMention] | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    external_id: str | None = PydField(default=None)
-    client_name: str | None = PydField(default=None)
-    client_phone: str | None = PydField(default=None)
-    client_photo_url: str | None = PydField(default=None)
-    first_response_date: int | None = PydField(default=None)
-    start_date: int | None = PydField(default=None)
-    end_date: int | None = PydField(default=None)
-    rating: int | None = PydField(default=None)
-    rating_comment: str | None = PydField(default=None)
-    first_response_due_date: int | None = PydField(default=None)
-    resolve_due_date: int | None = PydField(default=None)
-    sla_breached: bool | None = PydField(default=None)
-    sla_breached_date: int | None = PydField(default=None)
-    converted_deal_id: int | None = PydField(default=None)
-    repeat_of_lead_id: int | None = PydField(default=None)
-    ticket_id: int | None = PydField(default=None)
-    created_user_id: int | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
-    chat_id: str | None = PydField(default=None)
-    fields: list[FieldValue] | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    client_id: int | None = PydField(default=None, description="ID клиента")
+    client: Client | None = PydField(default=None, description="Вложенный объект клиента")
+    pipeline_id: int | None = PydField(default=None, description="ID воронки")
+    stage_id: int | None = PydField(default=None, description="ID текущей стадии")
+    responsible_user_id: int | None = PydField(default=None, description="ID ответственного сотрудника")
+    participant_user_ids: list[int] | None = PydField(default=None, description="IDs участников-сотрудников обращения")
+    title: str | None = PydField(default=None, description="Тема обращения")
+    description: str | None = PydField(default=None, description="Описание обращения")
+    description_mentions: list[CommonMention] | None = PydField(default=None, description="Упоминания пользователей в description, возвращаются при include_mentions = true")
+    amount: _Decimal | None = PydField(default=None, description="Сумма обращения")
+    start_date: int | None = PydField(default=None, description="Дата начала обработки (Unix time, сек.)")
+    end_date: int | None = PydField(default=None, description="Дата завершения обработки (Unix time, сек.)")
+    converted_deal_id: int | None = PydField(default=None, description="ID сделки, созданной из обращения")
+    repeat_of_lead_id: int | None = PydField(default=None, description="ID исходного обращения, если это повтор")
+    ticket_id: int | None = PydField(default=None, description="ID тикета-источника (информационная ссылка)")
+    created_user_id: int | None = PydField(default=None, description="ID пользователя, создавшего запись")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения (Unix time, сек.)")
+    chat_id: str | None = PydField(default=None, description="UUID связанного чата обращения")
+    fields: list[FieldValue] | None = PydField(default=None, description="Значения дополнительных полей")
 
 
 class LeadAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    client_id: int | None = PydField(default=None)
-    ticket_id: int | None = PydField(default=None)
-    chat_id: str | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
-    mention_options: CommonMentionOptions | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    external_id: str | None = PydField(default=None)
-    client_name: str | None = PydField(default=None)
-    client_phone: str | None = PydField(default=None)
-    client_photo_url: str | None = PydField(default=None)
-    fields: list[FieldValueAdd] | None = PydField(default=None)
-    copy_from_repeat: bool | None = PydField(default=None)
+    client_id: int | None = PydField(default=None, description="ID клиента в CRM")
+    ticket_id: int | None = PydField(default=None, description="ID тикета-источника (информационная ссылка)")
+    chat_id: str | None = PydField(default=None, description="UUID существующего чата, который нужно привязать к лиду")
+    pipeline_id: int | None = PydField(default=None, description="ID воронки; если не передан, используется воронка по умолчанию для Lead")
+    stage_id: int | None = PydField(default=None, description="ID не терминальной стадии; если не передан, используется стартовая стадия воронки")
+    responsible_user_id: int | None = PydField(default=None, description="ID ответственного пользователя")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Участники обращения")
+    title: str | None = PydField(default=None, description="Тема обращения")
+    description: str | None = PydField(default=None, description="Описание обращения")
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None, description="Структурированные упоминания пользователей в description")
+    mention_options: CommonMentionOptions | None = PydField(default=None, description="Опции обработки упоминаний")
+    amount: _Decimal | None = PydField(default=None, description="Сумма обращения")
+    fields: list[FieldValueAdd] | None = PydField(default=None, description="Значения дополнительных полей")
 
 
 class LeadClose(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    stage_id: int | None = PydField(default=None, description="Терминальная неуспешная стадия (is_terminal = true, is_success = false)")
 
 
 class LeadConvert(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    target_entity_type: CrmEntityTypeEnum | None = PydField(default=None)
-    deal_type_id: int | None = PydField(default=None)
-    deal_title: str | None = PydField(default=None)
-    pipeline_id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    currency_id: int | None = PydField(default=None)
-    fields: list[FieldValueAdd] | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    target_entity_type: CrmEntityTypeEnum | None = PydField(default=None, description="Целевая сущность, допустимо только Deal")
+    deal_type_id: int | None = PydField(default=None, description="ID типа сделки")
+    deal_title: str | None = PydField(default=None, description="Название создаваемой сделки")
+    pipeline_id: int | None = PydField(default=None, description="Воронка сделки")
+    stage_id: int | None = PydField(default=None, description="Стадия сделки")
+    responsible_user_id: int | None = PydField(default=None, description="Ответственный по сделке")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Участники сделки")
+    amount: _Decimal | None = PydField(default=None, description="Сумма сделки; если не передана, используется lead.amount (если задана у лида)")
+    currency_id: int | None = PydField(default=None, description="ID валюты (ctlg_common_currency_ref.crnc_id)")
+    fields: list[FieldValueAdd] | None = PydField(default=None, description="Дополнительные поля сделки")
 
 
 class LeadDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
 
 
 class LeadEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    title: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    description_mentions: list[CommonMentionInput] | None = PydField(default=None)
-    mention_options: CommonMentionOptions | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
-    external_id: str | None = PydField(default=None)
-    client_name: str | None = PydField(default=None)
-    client_phone: str | None = PydField(default=None)
-    client_photo_url: str | None = PydField(default=None)
-    fields: list[FieldValueEdit] | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    stage_id: int | None = PydField(default=None, description="Изменение стадии через edit запрещено; используйте lead/setstage")
+    title: str | None = PydField(default=None, description="Тема обращения")
+    description: str | None = PydField(default=None, description="Описание обращения")
+    description_mentions: list[CommonMentionInput] | None = PydField(default=None, description="Новый список структурированных упоминаний в description")
+    mention_options: CommonMentionOptions | None = PydField(default=None, description="Опции обработки упоминаний")
+    amount: _Decimal | None = PydField(default=None, description="Сумма обращения")
+    fields: list[FieldValueEdit] | None = PydField(default=None, description="Изменения дополнительных полей")
 
 
 class LeadGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    client_ids: list[int] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    responsible_user_ids: list[int] | None = PydField(default=None)
-    stage_ids: list[int] | None = PydField(default=None)
-    statuses: list[LeadStatusEnum] | None = PydField(default=None)
-    from_date: int | None = PydField(default=None)
-    to_date: int | None = PydField(default=None)
-    include_mentions: bool | None = PydField(default=None)
-    sla_breached: bool | None = PydField(default=None)
-    filters: list[Filter] | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Фильтр по ID обращений")
+    client_ids: list[int] | None = PydField(default=None, description="Фильтр по связанным клиентам")
+    search: str | None = PydField(default=None, description="Поиск по полям обращения (title, description)")
+    responsible_user_ids: list[int] | None = PydField(default=None, description="Фильтр по ответственным")
+    stage_ids: list[int] | None = PydField(default=None, description="Фильтр по стадиям")
+    from_date: int | None = PydField(default=None, description="Нижняя граница start_date (Unix time, сек.)")
+    to_date: int | None = PydField(default=None, description="Верхняя граница start_date (Unix time, сек.)")
+    include_mentions: bool | None = PydField(default=None, description="Вернуть description_mentions для описания обращения")
+    filters: list[Filter] | None = PydField(default=None, description="Дополнительные фильтры по основным и пользовательским полям")
+    limit: int | None = PydField(default=None, description="Лимит выборки, при <= 0 используется 100, максимум 1000")
+    offset: int | None = PydField(default=None, description="Смещение выборки, при < 0 используется 0")
 
 
 class LeadRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Lead] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Lead] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class LeadSetParticipants(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    participant_user_ids: list[int] | None = PydField(default=None)
-    replace_mode: bool | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    participant_user_ids: list[int] | None = PydField(default=None, description="Список участников")
+    replace_mode: bool | None = PydField(default=None, description="Режим обновления: true — заменить состав, false — добавить к текущему")
 
 
 class LeadSetResponsible(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    responsible_user_id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID обращения")
+    responsible_user_id: int | None = PydField(default=None, description="ID нового ответственного")
 
 
 class LeadSetStage(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    stage_id: int | None = PydField(default=None)
-    comment: str | None = PydField(default=None)
-
-
-class LeadStatusEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
+    id: int | None = PydField(default=None, description="ID обращения")
+    stage_id: int | None = PydField(default=None, description="ID новой стадии")
+    comment: str | None = PydField(default=None, description="Комментарий к смене стадии")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.
@@ -210,7 +179,6 @@ __all__ = [
     'LeadSetParticipants',
     'LeadSetResponsible',
     'LeadSetStage',
-    'LeadStatusEnum',
     'LeadGetRequest',
     'LeadGetResponse',
     'LeadAddRequest',

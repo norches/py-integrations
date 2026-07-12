@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,41 +14,44 @@ from schemas.api.common.base import RegosModel
 
 
 class WidgetType(RegosModel):
+    "Модель, описывающая WidgetType"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    name_key: str | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID типа виджета")
+    name: str | None = PydField(default=None, description="Наименование типа виджета")
+    name_key: str | None = PydField(default=None, description="Ключ наименования")
+    description: str | None = PydField(default=None, description="Описание")
+    last_update: int | None = PydField(default=None, description="Дата последнего обновления в unix time")
 
 
 class WidgetTypeRegosArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[WidgetType] | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[WidgetType] | Error | None = PydField(default=None, description="Массив результата.")
 
 
-class WidgetTypesEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
-    VALUE_7 = 7
-    VALUE_8 = 8
-    VALUE_9 = 9
-    VALUE_10 = 10
-    VALUE_11 = 11
-    VALUE_12 = 12
-    VALUE_13 = 13
-    VALUE_14 = 14
-    VALUE_15 = 15
-    VALUE_16 = 16
-    VALUE_17 = 17
-    VALUE_18 = 18
-    VALUE_19 = 19
+class WidgetTypesEnum(str, Enum):
+    "Перечисление типов виджетов"
+    Default = "Default"
+    PersonalTargets = "PersonalTargets"
+    GlobalTargets = "GlobalTargets"
+    Accounts = "Accounts"
+    RetailOrders = "RetailOrders"
+    OperatingCashes = "OperatingCashes"
+    RetailSaleStats = "RetailSaleStats"
+    RetailPaymentStats = "RetailPaymentStats"
+    RetailSalesDynamics = "RetailSalesDynamics"
+    RetailTop10Quantity = "RetailTop10Quantity"
+    RetailTop10ItemsAmount = "RetailTop10ItemsAmount"
+    RetailCustomersComingBirthdays = "RetailCustomersComingBirthdays"
+    RetailCustomersPreferredPurchasesTop10 = "RetailCustomersPreferredPurchasesTop10"
+    PartnersDebtTop10 = "PartnersDebtTop10"
+    RetailCustomersAgeDistribution = "RetailCustomersAgeDistribution"
+    RetailCustomersSexDistribution = "RetailCustomersSexDistribution"
+    TariffInfo = "TariffInfo"
+    RetailCustomersDebtTop10 = "RetailCustomersDebtTop10"
+    RetailSalesActivity = "RetailSalesActivity"
+    Integration = "Integration"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

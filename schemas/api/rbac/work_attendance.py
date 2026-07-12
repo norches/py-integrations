@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -15,49 +15,49 @@ from schemas.api.common.base import RegosModel
 
 class WorkAttendanceBreakEnd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    comment: str | None = PydField(default=None)
+    comment: str | None = PydField(default=None, description="Комментарий к завершению перерыва")
 
 
 class WorkAttendanceBreakStart(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    break_type: WorkBreakTypeEnum | None = PydField(default=None)
-    comment: str | None = PydField(default=None)
+    break_type: WorkBreakTypeEnum | None = PydField(default=None, description="Тип перерыва: Lunch, Short, Other")
+    comment: str | None = PydField(default=None, description="Комментарий к перерыву")
 
 
 class WorkAttendanceCheckIn(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    comment: str | None = PydField(default=None)
+    comment: str | None = PydField(default=None, description="Комментарий к check-in")
 
 
 class WorkAttendanceCheckOut(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    comment: str | None = PydField(default=None)
+    comment: str | None = PydField(default=None, description="Комментарий к check-out")
 
 
 class WorkAttendanceCurrentSession(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    user_id: int | None = PydField(default=None)
+    user_id: int | None = PydField(default=None, description="ID пользователя (по умолчанию текущий)")
 
 
 class WorkAttendanceStatus(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    user_id: int | None = PydField(default=None)
+    user_id: int | None = PydField(default=None, description="ID пользователя (по умолчанию текущий)")
 
 
-class WorkAvailabilityStatusEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
+class WorkAvailabilityStatusEnum(str, Enum):
+    Default = "Default"
+    Offline = "Offline"
+    InShiftNotCheckedIn = "InShiftNotCheckedIn"
+    Available = "Available"
+    OnBreak = "OnBreak"
+    OutOfShift = "OutOfShift"
 
 
-class WorkBreakTypeEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
+class WorkBreakTypeEnum(str, Enum):
+    Default = "Default"
+    Lunch = "Lunch"
+    Short = "Short"
+    Other = "Other"
 
 
 class WorkSession(RegosModel):
@@ -79,15 +79,16 @@ class WorkSession(RegosModel):
 
 
 class WorkSessionRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: WorkSession | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: WorkSession | Error | None = PydField(default=None, description="Объект результата.")
 
 
-class WorkSessionSourceEnum(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
+class WorkSessionSourceEnum(str, Enum):
+    Default = "Default"
+    User = "User"
+    Manager = "Manager"
 
 
 class WorkUserAvailability(RegosModel):
@@ -105,9 +106,10 @@ class WorkUserAvailability(RegosModel):
 
 
 class WorkUserAvailabilityRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: WorkUserAvailability | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: WorkUserAvailability | Error | None = PydField(default=None, description="Объект результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

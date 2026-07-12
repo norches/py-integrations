@@ -14,13 +14,14 @@ from schemas.api.common.base import RegosModel
 
 
 class OrderToMovementOperation(RegosModel):
+    "Модель, описывающая операции заказа на перемещение"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    document_id: int | None = PydField(default=None)
-    item: Item | None = PydField(default=None)
-    quantity: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID операции")
+    document_id: int | None = PydField(default=None, description="ID документа заказа на перемещение")
+    item: Item | None = PydField(default=None, description="Номенклатура")
+    quantity: _Decimal | None = PydField(default=None, description="Количество номенклатуры")
+    description: str | None = PydField(default=None, description="Примечание")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате unix time")
 
 
 class OrderToMovementOperationAdd(RegosModel):
@@ -28,7 +29,7 @@ class OrderToMovementOperationAdd(RegosModel):
     document_id: int | None = PydField(default=None)
     item_id: int | None = PydField(default=None)
     quantity: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
+    description: str | None = PydField(default=None, description="примечание")
 
 
 class OrderToMovementOperationDelete(RegosModel):
@@ -40,25 +41,26 @@ class OrderToMovementOperationEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     id: int | None = PydField(default=None)
     quantity: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
+    description: str | None = PydField(default=None, description="примечание")
 
 
 class OrderToMovementOperationGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    item_ids: list[int] | None = PydField(default=None)
-    document_ids: list[int] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив ID операций заказа на перемещение")
+    item_ids: list[int] | None = PydField(default=None, description="Массив ID номенклатуры")
+    document_ids: list[int] | None = PydField(default=None, description="Массив ID документов (не более 1 элемента)")
+    search: str | None = PydField(default=None, description="Поиск по значениям параметров: Item.name, Item.articul, Item.code, Item.barcodes")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class OrderToMovementOperationRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[OrderToMovementOperation] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[OrderToMovementOperation] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

@@ -14,36 +14,41 @@ from schemas.api.common.base import RegosModel
 
 
 class QuickReply(RegosModel):
+    "Общие подсказки быстрых ответов для чатов"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    text: str | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Идентификатор подсказки")
+    text: str | None = PydField(default=None, description="Текст подсказки")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения (Unix time, сек.)")
 
 
 class QuickReplyAdd(RegosModel):
+    "Модель добавления шаблона быстрого ответа."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    text: str | None = PydField(default=None)
+    text: str | None = PydField(default=None, description="Текст подсказки")
 
 
 class QuickReplyDelete(RegosModel):
+    "Модель удаления шаблона быстрого ответа."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="ID подсказки")
 
 
 class QuickReplyGet(RegosModel):
+    "Модель фильтров для получения шаблонов быстрых ответов."
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Фильтр по ID")
+    search: str | None = PydField(default=None, description="Поиск по тексту")
+    limit: int | None = PydField(default=None, description="Размер страницы")
+    offset: int | None = PydField(default=None, description="Смещение")
 
 
 class QuickReplyRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[QuickReply] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[QuickReply] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

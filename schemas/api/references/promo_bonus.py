@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -15,55 +15,58 @@ from schemas.api.common.base import RegosModel
 
 class PromoBonusCancelPayment(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="UUID операции платежа с карты покупателя")
 
 
 class PromoBonusCreateEnrollment(RegosModel):
+    "Зачисление"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    card_id: int | None = PydField(default=None)
-    promo_id: int | None = PydField(default=None)
-    document_uuid: str | None = PydField(default=None)
-    is_return: bool | None = PydField(default=None)
-    amount: _Decimal | None = PydField(default=None)
+    card_id: int | None = PydField(default=None, description="Id карты покупателя")
+    promo_id: int | None = PydField(default=None, description="Id промоакции")
+    document_uuid: str | None = PydField(default=None, description="Uuid документа розничной продажи (чека), по которому создаётся платёж")
+    is_return: bool | None = PydField(default=None, description="Метка о том, что операция зачисления является возвратом (списание)")
+    amount: _Decimal | None = PydField(default=None, description="Сумма к зачислению")
 
 
 class PromoBonusCreateManualOperation(RegosModel):
+    "списание/зачисление бонуса в ручную"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    card_id: int | None = PydField(default=None)
-    promo_id: int | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
-    description: str | None = PydField(default=None)
-    exp_date: int | None = PydField(default=None)
+    card_id: int | None = PydField(default=None, description="Id карты покупателя")
+    promo_id: int | None = PydField(default=None, description="Id промоакции")
+    value: _Decimal | None = PydField(default=None, description="Сумма списания")
+    description: str | None = PydField(default=None, description="Дополнительно описание")
+    exp_date: int | None = PydField(default=None, description="Дата окончания начисления бонуса в формате unix time в секундах")
 
 
 class PromoBonusCreatePayment(RegosModel):
+    "создание платежа бонусами"
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    card_id: int | None = PydField(default=None)
-    promo_id: int | None = PydField(default=None)
-    document_uuid: str | None = PydField(default=None)
-    is_return: bool | None = PydField(default=None)
-    value: _Decimal | None = PydField(default=None)
+    card_id: int | None = PydField(default=None, description="-")
+    promo_id: int | None = PydField(default=None, description="-")
+    document_uuid: str | None = PydField(default=None, description="-")
+    is_return: bool | None = PydField(default=None, description="-")
+    value: _Decimal | None = PydField(default=None, description="-")
 
 
 class PromoBonusGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="-")
 
 
 class PromoBonusPerformEnrollment(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="UUID операции зачисления на карту покупателя")
 
 
 class PromoBonusPerformPayment(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    uuid: str | None = PydField(default=None)
+    uuid: str | None = PydField(default=None, description="UUID операции платежа с карты покупателя")
 
 
-class PromoBonusType(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
+class PromoBonusType(str, Enum):
+    Default = "Default"
+    Income = "Income"
+    Outcome = "Outcome"
 
 
 class PromoBonusesRemainder(RegosModel):
@@ -74,14 +77,15 @@ class PromoBonusesRemainder(RegosModel):
 
 class PromoBonusesRemainderGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    card_id: int | None = PydField(default=None)
-    promo_id: int | None = PydField(default=None)
+    card_id: int | None = PydField(default=None, description="Id карты покупателя")
+    promo_id: int | None = PydField(default=None, description="Id промоакции")
 
 
 class PromoBonusesRemainderRegosObjectResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleObjectResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: PromoBonusesRemainder | Error | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: PromoBonusesRemainder | Error | None = PydField(default=None, description="Объект результата.")
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.

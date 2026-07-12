@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime as _DateTime
 from decimal import Decimal as _Decimal
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import Any, TypeAlias
 
 from pydantic import ConfigDict, Field as PydField, RootModel
@@ -14,74 +14,76 @@ from schemas.api.common.base import RegosModel
 
 
 class Currency(RegosModel):
+    "Модель, описывающая валюты"
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    code_num: int | None = PydField(default=None)
-    code_chr: str | None = PydField(default=None)
-    name: str | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
-    is_base: bool | None = PydField(default=None)
-    deleted: bool | None = PydField(default=None)
-    last_update: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id валюты")
+    code_num: int | None = PydField(default=None, description="Цифровой код валюты")
+    code_chr: str | None = PydField(default=None, description="Буквенный код валюты")
+    name: str | None = PydField(default=None, description="Наименование валюты")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты по отношению к основной")
+    is_base: bool | None = PydField(default=None, description="Метка валюты о том, что валюта основная")
+    deleted: bool | None = PydField(default=None, description="Метка об удалении")
+    last_update: int | None = PydField(default=None, description="Дата последнего изменения записи в формате Unix time в секундах")
 
 
 class CurrencyAdd(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    code_num: int | None = PydField(default=None)
-    code_chr: str | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    code_num: int | None = PydField(default=None, description="Цифровой код валюты")
+    code_chr: str | None = PydField(default=None, description="Буквенный код валюты")
+    name: str | None = PydField(default=None, description="Наименование валюты")
 
 
 class CurrencyDelete(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="Id валюты")
 
 
 class CurrencyEdit(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    code_num: int | None = PydField(default=None)
-    code_chr: str | None = PydField(default=None)
-    name: str | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="id валюты")
+    code_num: int | None = PydField(default=None, description="Цифровой код валюты")
+    code_chr: str | None = PydField(default=None, description="Буквенный код валюты")
+    name: str | None = PydField(default=None, description="Наименование валюты")
 
 
 class CurrencyEditExchangeRate(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    id: int | None = PydField(default=None)
-    exchange_rate: _Decimal | None = PydField(default=None)
+    id: int | None = PydField(default=None, description="id валюты")
+    exchange_rate: _Decimal | None = PydField(default=None, description="Курс валюты по отношению к основной")
 
 
 class CurrencyGet(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
-    ids: list[int] | None = PydField(default=None)
-    sort_orders: list[CurrencySortOrder] | None = PydField(default=None)
-    search: str | None = PydField(default=None)
-    limit: int | None = PydField(default=None)
-    offset: int | None = PydField(default=None)
+    ids: list[int] | None = PydField(default=None, description="Массив с ID валют")
+    sort_orders: list[CurrencySortOrder] | None = PydField(default=None, description="Сортировака выходных параметров")
+    search: str | None = PydField(default=None, description="Строка поиска по: name (наименование), code_chr (Буквенный код)")
+    limit: int | None = PydField(default=None, description="Лимит возвращаемых данных при запросе. Значение по умолчанию 10000. Максимальное значение 10000")
+    offset: int | None = PydField(default=None, description="Смещение от начала выборки")
 
 
 class CurrencyRegosOffsettedArrayResult(RegosModel):
+    "OpenAPI-only typed equivalent of SingleArrayOffsettedResult."
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-    ok: bool | None = PydField(default=None)
-    result: list[Currency] | Error | None = PydField(default=None)
-    next_offset: int | None = PydField(default=None)
-    total: int | None = PydField(default=None)
+    ok: bool | None = PydField(default=None, description="Признак успешности выполнения запроса.")
+    result: list[Currency] | Error | None = PydField(default=None, description="Массив результата.")
+    next_offset: int | None = PydField(default=None, description="Смещение для следующей выборки данных.")
+    total: int | None = PydField(default=None, description="Общее количество элементов выборки.")
 
 
 class CurrencySortOrder(RegosModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
     column: CurrencySortOrderColumn | None = PydField(default=None)
-    direction: ColumnSortOrderDirection | None = PydField(default=None)
+    direction: ColumnSortOrderDirection | None = PydField(default=None, description="enum для перечесление сортировок колонок")
 
 
-class CurrencySortOrderColumn(IntEnum):
-    VALUE_0 = 0
-    VALUE_1 = 1
-    VALUE_2 = 2
-    VALUE_3 = 3
-    VALUE_4 = 4
-    VALUE_5 = 5
-    VALUE_6 = 6
+class CurrencySortOrderColumn(str, Enum):
+    Default = "Default"
+    Id = "Id"
+    Name = "Name"
+    CodeNum = "CodeNum"
+    CodeChr = "CodeChr"
+    ExchangeRate = "ExchangeRate"
+    LastUpdate = "LastUpdate"
 
 
 # Imports are intentionally placed after model definitions to avoid circular imports.
