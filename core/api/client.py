@@ -144,6 +144,8 @@ class APIClient:
     def _serialize_payload(data: Any) -> Any:
         if isinstance(data, BaseModel):
             return data.model_dump(mode="json", exclude_none=True, by_alias=True)
+        if data is None or isinstance(data, (str, int, float, bool)):
+            return data
         if isinstance(data, list):
             return [APIClient._serialize_payload(item) for item in data]
         if isinstance(data, dict):
