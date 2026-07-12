@@ -31,6 +31,7 @@ class ChatGptRegosAssistantUiContext:
     confirmation_ttl_sec: int
     openai_api_chat_enabled: bool
     mode: str
+    chatgpt_connect_url: str = ""
     error: str = ""
 
 
@@ -77,8 +78,8 @@ def _initial_message(ctx: ChatGptRegosAssistantUiContext) -> str:
         return "Не удалось определить подключённую интеграцию. Откройте виджет из REGOS."
     if not ctx.openai_api_chat_enabled:
         return (
-            "ChatGPT ещё не подключён. Добавьте OpenAI API key в настройках "
-            "интеграции, после этого здесь появится чат REGOS Assistant."
+            "ChatGPT ещё не подключён. Нажмите «Войти через ChatGPT», "
+            "чтобы подключить модель к этой интеграции."
         )
     return (
         "REGOS Assistant готов. Запросы на чтение выполняются сразу, "
@@ -101,6 +102,7 @@ def render_chatgpt_regos_assistant_ui(ctx: ChatGptRegosAssistantUiContext) -> st
         "embedBackendUrl": ctx.embed_backend_url,
         "oauthClientId": ctx.oauth_client_id,
         "embedParentOrigin": ctx.embed_parent_origin,
+        "chatGptConnectUrl": ctx.chatgpt_connect_url,
     }
     style_block = f"<style>{_load_css()}</style>"
     template = _load_template()

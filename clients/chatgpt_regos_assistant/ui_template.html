@@ -52,6 +52,11 @@
       <div class="message-list" data-messages>
         <article class="message assistant">
           <div class="bubble">{safe_initial_message}</div>
+          <div class="setup-actions" data-chatgpt-connect hidden>
+            <button class="button primary" type="button" data-chatgpt-connect-button>
+              Войти через ChatGPT
+            </button>
+          </div>
         </article>
       </div>
 
@@ -74,8 +79,11 @@
       const errorLine = document.querySelector("[data-error]");
       const statusLine = document.querySelector("[data-status-line]");
       const modeBadge = document.querySelector("[data-mode-badge]");
+      const connectBlock = document.querySelector("[data-chatgpt-connect]");
+      const connectButton = document.querySelector("[data-chatgpt-connect-button]");
       let embedSessionToken = "";
       let embedAuthenticated = !cfg.embedAuthEnabled || !cfg.chatEnabled;
+      let connectWindowOpened = false;
 
       function appendMessage(role, text, extra) {{
         const item = document.createElement("article");
@@ -101,6 +109,34 @@
       function setStatus(text) {{
         if (statusLine) statusLine.textContent = text;
         if (modeBadge) modeBadge.textContent = text;
+      }}
+
+      function chatGptConnectUrl() {{
+        const raw = String(cfg.chatGptConnectUrl || "").trim();
+        if (!raw) return "";
+        try {{
+          const url = new URL(raw, window.location.href);
+          if (cfg.connectedIntegrationId) {{
+            url.searchParams.set("connected_integration_id", cfg.connectedIntegrationId);
+          }}
+          url.searchParams.set("return_url", window.location.href);
+          return url.toString();
+        }} catch (error) {{
+          return raw;
+        }}
+      }}
+
+      function openChatGptLogin() {{
+        const url = chatGptConnectUrl();
+        if (!url) {{
+          appendMessage(
+            "assistant",
+            "Вход через ChatGPT пока не настроен. Укажите chatgpt_connect_url в настройках интеграции."
+          );
+          return;
+        }}
+        connectWindowOpened = true;
+        window.open(url, "_blank", "noopener,noreferrer");
       }}
 
       async function callIntegration(action, data) {{
@@ -265,8 +301,20 @@
         }});
       }}
 
+      if (!cfg.chatEnabled && connectBlock) {{
+        connectBlock.hidden = false;
+      }}
+      if (connectButton) {{
+        connectButton.addEventListener("click", openChatGptLogin);
+      }}
+      window.addEventListener("focus", function () {{
+        if (connectWindowOpened && !cfg.chatEnabled) {{
+          window.location.reload();
+        }}
+      }});
+
       if (!cfg.chatEnabled && errorLine && !errorLine.textContent.trim()) {{
-        errorLine.textContent = "Добавьте OpenAI API key в настройках интеграции.";
+        errorLine.textContent = "Войдите через ChatGPT, чтобы подключить модель.";
       }}
       setBusy(false);
       if (cfg.chatEnabled) {{
