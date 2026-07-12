@@ -3,10 +3,12 @@ from __future__ import annotations
 import json
 import secrets
 import time
+from html import escape
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
 import httpx
-from starlette.responses import HTMLResponse, JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 
 from clients.base import ClientBase
 from config.settings import settings as app_settings
@@ -136,6 +138,70 @@ class ChatGptRegosAssistantIntegration(ClientBase):
             "description": description,
         }
 
+    @staticmethod
+    def _response_page(title: str, message: str, *, status_code: int = 200) -> HTMLResponse:
+        safe_title = escape(str(title or "REGOS Assistant"))
+        safe_message = escape(str(message or ""))
+        html = f"""<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{safe_title}</title>
+  <style>
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #f7f8fb;
+      color: #1f2933;
+      font: 16px/1.5 Arial, sans-serif;
+    }}
+    main {{
+      width: min(520px, calc(100% - 32px));
+      padding: 28px;
+      border: 1px solid #dde4ee;
+      border-radius: 28px;
+      background: #fff;
+      box-shadow: 0 20px 60px rgba(31, 41, 51, 0.08);
+    }}
+    h1 {{ margin: 0 0 10px; font-size: 24px; }}
+    p {{ margin: 0; color: #697586; }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{safe_title}</h1>
+    <p>{safe_message}</p>
+  </main>
+</body>
+</html>"""
+        return HTMLResponse(html, status_code=status_code)
+
+    @staticmethod
+    def _origin(value: str) -> str:
+        parsed = urlparse(str(value or "").strip())
+        if not parsed.scheme or not parsed.netloc:
+            return ""
+        return f"{parsed.scheme}://{parsed.netloc}".lower()
+
+    @classmethod
+    def _safe_return_url(cls, raw_url: str) -> str:
+        value = str(raw_url or "").strip()
+        if not value:
+            return ""
+        parsed = urlparse(value)
+        if not parsed.netloc and value.startswith("/"):
+            return value
+        target_origin = cls._origin(value)
+        allowed_origins = {
+            cls._origin(str(app_settings.integration_url or "")),
+            cls._origin(str(app_settings.proxy_integration_url or "")),
+        }
+        allowed_origins.discard("")
+        return value if target_origin in allowed_origins else ""
+
     @classmethod
     async def _fetch_settings_map(
         cls, connected_integration_id: str, *, force_refresh: bool = False
@@ -235,6 +301,20 @@ class ChatGptRegosAssistantIntegration(ClientBase):
             ChatGptRegosAssistantRedisState.settings_cache_key(connected_integration_id)
         )
 
+    @classmethod
+    async def _store_openai_api_key(cls, connected_integration_id: str, api_key: str) -> None:
+        async with RegosAPI(connected_integration_id=connected_integration_id) as api:
+            await api.integrations.connected_integration_setting.edit(
+                [
+                    {
+                        "connected_integration_id": connected_integration_id,
+                        "key": "chatgpt_openai_api_key",
+                        "value": api_key,
+                    }
+                ]
+            )
+        await cls._clear_settings_cache(connected_integration_id)
+
     async def connect(self, **_: Any) -> Dict[str, Any]:
         ci = self._ci()
         if not ci:
@@ -296,6 +376,7 @@ class ChatGptRegosAssistantIntegration(ClientBase):
                 "execute_tool",
                 "confirm_action",
                 "chat",
+                "chatgpt_connect",
                 "embed_login",
                 "consume_embed_token",
             ],
@@ -637,6 +718,50 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         ctx = await self._build_ui_context(envelope)
         return HTMLResponse(render_chatgpt_regos_assistant_ui(ctx))
 
+    async def chatgpt_connect(self, envelope: Optional[Dict[str, Any]] = None) -> HTMLResponse | RedirectResponse:
+        envelope = envelope or {}
+        ci = (
+            self._ci()
+            or self._query_value(envelope, "connected_integration_id")
+            or str(envelope.get("connected_integration_id") or "").strip()
+        )
+        if ci and not self.connected_integration_id:
+            self.connected_integration_id = ci
+        if not ci:
+            return self._response_page(
+                "Не удалось войти",
+                "Откройте помощника внутри REGOS и нажмите «Войти через ChatGPT» ещё раз.",
+                status_code=400,
+            )
+
+        return_url = self._safe_return_url(self._query_value(envelope, "return_url"))
+        try:
+            settings_map = await self._fetch_settings_map(ci, force_refresh=True)
+            runtime = self._build_runtime(settings_map)
+            if not runtime.openai_api_key:
+                api_key = ChatGptRegosAssistantConfig.CHATGPT_OPENAI_API_KEY
+                if not api_key:
+                    return self._response_page(
+                        "Вход пока не настроен",
+                        "Администратор должен настроить ChatGPT для REGOS Assistant на сервере.",
+                        status_code=503,
+                    )
+                await self._store_openai_api_key(ci, api_key)
+        except Exception as exc:
+            logger.warning("ChatGPT connect failed: ci=%s error=%s", ci, exc)
+            return self._response_page(
+                "Не получилось войти",
+                "Попробуйте ещё раз или обратитесь к администратору.",
+                status_code=500,
+            )
+
+        if return_url:
+            return RedirectResponse(return_url, status_code=302)
+        return self._response_page(
+            "Готово",
+            "ChatGPT подключён. Вернитесь в REGOS и продолжайте работу в чате.",
+        )
+
     async def list_tools(self, **_: Any) -> Dict[str, Any]:
         return {
             "tools": [tool.as_openai_tool() for tool in REGOS_TOOLS.values()],
@@ -906,6 +1031,9 @@ class ChatGptRegosAssistantIntegration(ClientBase):
         embed_response = await self._handle_embed_external(path, payload)
         if embed_response is not None:
             return embed_response
+        chatgpt_response = await self._handle_chatgpt_external(envelope, path, payload)
+        if chatgpt_response is not None:
+            return chatgpt_response
         action_payload = self._action_payload(payload)
         if action in {"ui", "app"}:
             return await self.handle_ui(envelope)
@@ -950,6 +1078,18 @@ class ChatGptRegosAssistantIntegration(ClientBase):
                 ),
             )
         return {"status": "error", "error": f"Unsupported external action: {action}"}
+
+    async def _handle_chatgpt_external(
+        self,
+        envelope: Dict[str, Any],
+        path: str,
+        payload: Dict[str, Any],
+    ) -> HTMLResponse | RedirectResponse | None:
+        normalized_path = str(path or "").strip("/").lower()
+        action = str(payload.get("action") or "").strip().lower()
+        if normalized_path == "chatgpt/connect" or action == "chatgpt_connect":
+            return await self.chatgpt_connect(envelope)
+        return None
 
     async def _handle_embed_external(
         self, path: str, payload: Dict[str, Any]

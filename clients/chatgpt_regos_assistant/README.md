@@ -60,7 +60,7 @@ Integration key: `chatgpt_regos_assistant`
 
 | Ключ | Обяз. | Тип данных | Наименование (RU / UZ / EN) | Описание (RU / UZ / EN) | Placeholder (RU / UZ / EN) |
 | --- | --- | --- | --- | --- | --- |
-| `chatgpt_openai_api_key` | Да | String | OpenAI API ключ / OpenAI API kaliti / OpenAI API key | Ключ используется backend-сервисом для вызова OpenAI Responses API. Значение не отправляется в браузер. / Kalit OpenAI Responses API chaqiruvi uchun backend servisda ishlatiladi. Brauzerga yuborilmaydi. / Used by the backend service to call the OpenAI Responses API. The value is never sent to the browser. | `sk-...` |
+| `chatgpt_openai_api_key` | Автоматически | String | OpenAI API ключ / OpenAI API kaliti / OpenAI API key | Служебный ключ для вызова OpenAI Responses API. Обычно заполняется backend-сервисом после кнопки "Войти через ChatGPT" и не отправляется в браузер. / Backend servis tomonidan to'ldiriladigan xizmat kaliti. / Service key used by the backend and normally filled by the ChatGPT sign-in flow. | `sk-...` |
 | `chatgpt_openai_model` | Нет | String | Модель OpenAI / OpenAI modeli / OpenAI model | Модель для ответов ассистента. По умолчанию используется `gpt-4.1-mini`. / Yordamchi javoblari uchun model. Standart qiymat `gpt-4.1-mini`. / Model used for assistant responses. Default is `gpt-4.1-mini`. | `gpt-4.1-mini` |
 | `chatgpt_assistant_prompt` | Нет | Text | Инструкция ассистента / Yordamchi yo'riqnomasi / Assistant instructions | Дополнительные правила поведения ассистента: тон, ограничения, внутренние регламенты и приоритеты. / Yordamchi xatti-harakati uchun qo'shimcha qoidalar: ohang, cheklovlar, ichki reglamentlar va ustuvorliklar. / Additional behavior rules for the assistant: tone, limits, internal policies, and priorities. | `Отвечай кратко и уточняй данные перед изменениями` |
 | `chatgpt_temperature` | Нет | Number | Температура / Harorat / Temperature | Управляет вариативностью ответов. Допустимый диапазон: `0`-`2`, значение по умолчанию `0.2`. / Javoblar o'zgaruvchanligini boshqaradi. Ruxsat etilgan oraliq: `0`-`2`, standart qiymat `0.2`. / Controls response variability. Allowed range: `0`-`2`, default is `0.2`. | `0.2` |
@@ -79,13 +79,14 @@ Integration key: `chatgpt_regos_assistant`
 | `oauth_client_id` | Да | OAuth client id приложения, зарегистрированного для работы с REGOS embed token. |
 | `oauth_secret` | Да | OAuth secret приложения. |
 | `integration_url` | Да | Публичный HTTPS URL сервиса интеграций, с которого открывается iframe UI. Используется для построения `/external/{connected_integration_id}/...`; `proxy_integration_url` не должен подменять origin для Embed OAuth. |
-| `CHATGPT_REGOS_CONNECT_URL` | Нет | Единый URL сценария входа через ChatGPT. UI открывает его по кнопке "Войти через ChatGPT" и передает `connected_integration_id` и `return_url`; сценарий должен подключить модель для конкретного подключения. По умолчанию: `https://integration.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect`. |
+| `CHATGPT_REGOS_CONNECT_URL` | Нет | Единый URL сценария входа через ChatGPT. UI открывает его по кнопке "Войти через ChatGPT" и передает `connected_integration_id` и `return_url`; сценарий подключает модель для конкретного подключения. По умолчанию: `https://py-integrations.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect`. |
+| `CHATGPT_REGOS_OPENAI_API_KEY` | Да для one-click подключения | OpenAI API key, который backend записывает в `chatgpt_openai_api_key` текущего `connected_integration_id` после кнопки "Войти через ChatGPT". Значение не отправляется в браузер. |
 
 ## Порядок настройки
 
 1. Зарегистрировать OAuth-приложение для REGOS embed token и заполнить `oauth_endpoint`, `oauth_client_id`, `oauth_secret`.
 2. Убедиться, что backend интеграций доступен по публичному HTTPS URL и он указан в `integration_url`; этот origin должен совпадать с адресом, с которого REGOS открывает iframe.
-3. При необходимости переопределить `CHATGPT_REGOS_CONNECT_URL`; по умолчанию используется общий production URL входа через ChatGPT.
+3. Заполнить `CHATGPT_REGOS_OPENAI_API_KEY` на backend-сервисе. При необходимости переопределить `CHATGPT_REGOS_CONNECT_URL`; по умолчанию используется общий production URL входа через ChatGPT.
 4. Создать подключение интеграции `chatgpt_regos_assistant` в REGOS.
 5. Открыть `/external/{connected_integration_id}/ui` во фрейме REGOS.
 6. Проверить вход пользователя через REGOS Embed SDK: после успешного входа поле ввода чата становится активным.
@@ -98,6 +99,7 @@ Integration key: `chatgpt_regos_assistant`
 | --- | --- |
 | `GET /external/{connected_integration_id}/ui` | Полноценный iframe UI чата. |
 | `POST /external/{connected_integration_id}/embed/consume` | Принимает `embed_token` от REGOS Embed SDK и возвращает `embed_session_token`. |
+| `GET /clients/chatgpt_regos_assistant/chatgpt/connect` | One-click подключение ChatGPT для `connected_integration_id`, переданного в query. |
 | `metadata` / `info` | Возвращает информацию об интеграции, URL, SDK и доступных действиях. |
 | `list_tools` / `tools` | Возвращает список REGOS-инструментов ассистента. |
 | `chat` | Обрабатывает сообщение пользователя через OpenAI Responses API и REGOS tools. |

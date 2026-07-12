@@ -149,8 +149,12 @@ class Settings(BaseSettings):
     meta_leadgen_webhook_verify_token: str = ""
     meta_leadgen_graph_version: str = "v25.0"
     chatgpt_regos_connect_url: str = Field(
-        default="https://integration.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect",
+        default="https://py-integrations.regos.uz/clients/chatgpt_regos_assistant/chatgpt/connect",
         validation_alias="CHATGPT_REGOS_CONNECT_URL",
+    )
+    chatgpt_regos_openai_api_key: str = Field(
+        default="",
+        validation_alias="CHATGPT_REGOS_OPENAI_API_KEY",
     )
 
     oauth_endpoint: str = "https://auth.regos.uz/" # oath/token

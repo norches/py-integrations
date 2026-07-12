@@ -41,88 +41,37 @@ button {
 }
 
 .assistant-shell {
-  min-height: 100dvh;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 18px;
-  width: min(980px, 100%);
-  margin: 0 auto;
-  padding: 18px clamp(14px, 3vw, 28px) 22px;
-}
-
-.topbar {
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  grid-template-rows: auto auto;
   gap: 14px;
+  width: min(820px, 100%);
+  margin: 0 auto;
+  padding: 22px clamp(14px, 3vw, 24px) 20px;
 }
 
-.brand-row {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-mark {
-  width: 42px;
-  height: 42px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #111827;
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 17px;
-}
-
-h1,
-h2,
 p {
   margin: 0;
   letter-spacing: 0;
 }
 
-h1 {
-  font-size: 19px;
-  line-height: 1.2;
-  font-weight: 760;
-}
-
-.brand-row p,
 .hero-copy p {
   color: var(--muted);
 }
 
-.status-pill {
-  flex: 0 0 auto;
-  min-height: 36px;
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: var(--success-soft);
-  color: #146c43;
-  font-size: 13px;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
 .hero-panel {
   display: grid;
-  gap: 16px;
-  padding: 22px;
+  gap: 11px;
+  padding: 14px 16px;
   border: 1px solid var(--line);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.74);
 }
 
 .hero-copy {
-  display: grid;
-  gap: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
 }
 
 .eyebrow {
@@ -136,34 +85,15 @@ h1 {
   font-weight: 800;
 }
 
-.hero-copy h2 {
-  font-size: clamp(22px, 4vw, 34px);
-  line-height: 1.1;
-  font-weight: 780;
-}
-
 .prompt-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.step-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.step-pills span {
-  min-height: 32px;
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 11px;
-  border-radius: 999px;
-  background: #fff7ed;
-  color: #8a4b0b;
+.hint-line {
+  color: var(--muted);
   font-size: 13px;
-  font-weight: 750;
 }
 
 .prompt-pills button,
@@ -181,11 +111,12 @@ h1 {
 }
 
 .prompt-pills button {
-  min-height: 40px;
-  padding: 9px 14px;
+  min-height: 36px;
+  padding: 7px 12px;
   background: var(--soft);
   color: #344054;
   border-color: var(--line);
+  font-size: 14px;
 }
 
 .prompt-pills button:hover {
@@ -193,19 +124,19 @@ h1 {
 }
 
 .chat-panel {
-  min-height: 0;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
+  grid-template-rows: auto auto auto;
   gap: 12px;
 }
 
 .message-list {
-  min-height: 260px;
+  min-height: 180px;
+  max-height: min(48dvh, 430px);
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px 2px 2px;
+  gap: 12px;
+  padding: 4px 2px 2px;
 }
 
 .message {
@@ -340,60 +271,27 @@ textarea:disabled {
   }
 
   .assistant-shell {
-    min-height: 100dvh;
     gap: 12px;
     padding: 12px;
   }
 
-  .topbar {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .brand-mark {
-    width: 38px;
-    height: 38px;
-  }
-
-  h1 {
-    font-size: 17px;
-  }
-
-  .brand-row p {
-    font-size: 13px;
-  }
-
-  .status-pill {
-    max-width: 100%;
-    min-height: 32px;
-    padding: 6px 10px;
-    white-space: normal;
-  }
-
   .hero-panel {
-    padding: 16px;
-    border-radius: 24px;
-  }
-
-  .hero-copy h2 {
-    font-size: 24px;
+    padding: 12px;
+    border-radius: 18px;
   }
 
   .prompt-pills {
     gap: 8px;
   }
 
-  .step-pills span {
-    width: 100%;
-  }
-
   .prompt-pills button {
-    min-height: 38px;
-    padding: 8px 12px;
+    min-height: 36px;
+    padding: 7px 11px;
   }
 
   .message-list {
-    min-height: 220px;
+    min-height: 170px;
+    max-height: 42dvh;
     gap: 12px;
   }
 

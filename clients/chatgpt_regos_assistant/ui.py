@@ -61,14 +61,6 @@ def _json_script(value: Dict[str, Any]) -> str:
     return json.dumps(value, ensure_ascii=False).replace("<", "\\u003c")
 
 
-def _status_label(ctx: ChatGptRegosAssistantUiContext) -> str:
-    if ctx.openai_api_chat_enabled:
-        return "Готов к работе"
-    if ctx.connected_integration_id:
-        return "Войдите через ChatGPT"
-    return "Откройте из REGOS"
-
-
 def _chat_disabled(ctx: ChatGptRegosAssistantUiContext) -> str:
     return "" if ctx.openai_api_chat_enabled and ctx.connected_integration_id else "disabled"
 
@@ -110,7 +102,6 @@ def render_chatgpt_regos_assistant_ui(ctx: ChatGptRegosAssistantUiContext) -> st
         style_block=style_block,
         safe_title=_escape("REGOS помощник", quote=True),
         safe_mode=_escape(ctx.mode, quote=True),
-        safe_status=_escape(_status_label(ctx)),
         safe_embed_sdk_url=_escape(ctx.embed_sdk_url, quote=True),
         safe_error=_escape(ctx.error),
         chat_disabled=_chat_disabled(ctx),

@@ -8,28 +8,10 @@
 </head>
 <body>
   <main class="assistant-shell" data-mode="{safe_mode}">
-    <header class="topbar">
-      <div class="brand-row">
-        <div class="brand-mark">R</div>
-        <div>
-          <h1>REGOS помощник</h1>
-          <p>Пишите как в обычном чате</p>
-        </div>
-      </div>
-      <div class="status-pill" data-status-line data-mode-badge>{safe_status}</div>
-    </header>
-
     <section class="hero-panel">
       <div class="hero-copy">
         <span class="eyebrow">С чего начать</span>
-        <h2>Что нужно сделать?</h2>
-        <p>Нажмите подсказку ниже или напишите сами. Можно коротко, простыми словами.</p>
-      </div>
-
-      <div class="step-pills" aria-label="Как пользоваться">
-        <span>1. Нажмите подсказку</span>
-        <span>2. Поправьте текст</span>
-        <span>3. Нажмите «Отправить»</span>
+        <p>Нажмите готовую подсказку или напишите свою задачу.</p>
       </div>
 
       <div class="prompt-pills" aria-label="Примеры вопросов">
@@ -40,6 +22,8 @@
         <button type="button" data-prompt="Создай задачу менеджеру: перезвонить клиенту">Создай задачу</button>
         <button type="button" data-prompt="Покажи документы по складу за сегодня">Документы склада</button>
       </div>
+
+      <p class="hint-line">Подсказка вставится в поле ниже. Проверьте текст и нажмите «Отправить».</p>
     </section>
 
     <section class="chat-panel" aria-label="Чат">
@@ -73,8 +57,6 @@
       const textarea = form ? form.querySelector("textarea") : null;
       const messages = document.querySelector("[data-messages]");
       const errorLine = document.querySelector("[data-error]");
-      const statusLine = document.querySelector("[data-status-line]");
-      const modeBadge = document.querySelector("[data-mode-badge]");
       const connectBlock = document.querySelector("[data-chatgpt-connect]");
       const connectButton = document.querySelector("[data-chatgpt-connect-button]");
       const promptButtons = document.querySelectorAll("[data-prompt]");
@@ -101,11 +83,6 @@
         textarea.disabled = isBusy || !available;
         const button = form.querySelector("button[type='submit']");
         if (button) button.disabled = isBusy || !available;
-      }}
-
-      function setStatus(text) {{
-        if (statusLine) statusLine.textContent = text;
-        if (modeBadge) modeBadge.textContent = text;
       }}
 
       function showNotice(text) {{
@@ -173,19 +150,16 @@
 
         if (window.parent === window) {{
           embedAuthenticated = false;
-          setStatus("Откройте из REGOS");
           showNotice("Откройте помощника внутри REGOS.");
           setBusy(false);
           return;
         }}
 
-        setStatus("Входим в REGOS");
         showNotice("");
         setBusy(false);
 
         if (!window.RegosEmbedSDK || typeof window.RegosEmbedSDK.init !== "function") {{
           embedAuthenticated = false;
-          setStatus("Не удалось войти");
           showNotice("Обновите страницу или откройте помощника из REGOS.");
           setBusy(false);
           return;
@@ -202,14 +176,12 @@
               const token = data && (data.embed_session_token || data.embedSessionToken);
               if (!token) {{
                 embedAuthenticated = false;
-                setStatus("Не удалось войти");
                 showNotice("Попробуйте обновить страницу.");
                 setBusy(false);
                 return;
               }}
               embedSessionToken = String(token);
               embedAuthenticated = true;
-              setStatus("Готов к работе");
               showNotice("");
               appendMessage("assistant", "Готово, можно писать задачу.");
               setBusy(false);
@@ -217,14 +189,12 @@
             }},
             onError: function () {{
               embedAuthenticated = false;
-              setStatus("Не удалось войти");
               showNotice("Попробуйте обновить страницу или открыть помощника заново.");
               setBusy(false);
             }}
           }});
         }} catch (error) {{
           embedAuthenticated = false;
-          setStatus("Не удалось войти");
           showNotice("Попробуйте обновить страницу или открыть помощника заново.");
           setBusy(false);
         }}
